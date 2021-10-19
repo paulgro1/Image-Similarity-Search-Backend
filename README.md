@@ -1,3 +1,1 @@
-# KI Portrait Painting Project
-
-Nach Eingabe eines Selbstportraits durch den Nutzer, wird durch eine KI die Emotion, die über das Bild vermittelt wird, erfasst und ein digitales Portrait angefertigt, welches die Emotion künstlerisch widerspiegelt. Wenn die Person auf dem Foto Fröhlichkeit ausstrahlt, so wird die KI ein Bild generieren, welches bspw. sehr bunte Farben enthält. Unsere Projektidee ist stark von dem "Painting Fool Project" inspiriert (http://www.thepaintingfool.com/galleries/emotionally_aware/index.html). Wir möchten es jedoch weiterentwickeln und in eine Webanwendung einbinden und ggf. weitere Parameter wie Uhrzeit und Jahreszeit mit in die Portraitgenerierung einbinden, sodass nicht nur Emotionen den Output beeinflussen.
+# Image Simularity Search Project
