@@ -2,8 +2,8 @@
 
 ### Gruppenstruktur
 
-Frontend: Paul, Anne, Fabian
-Backend: Joris, Julia, Luke
+- Frontend: Paul, Anne, Fabian
+- Backend: Joris, Julia, Luke
 
 ### Tools
 
