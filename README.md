@@ -15,3 +15,9 @@
 
 - Single Page Anwendung 
 - Dataset (Gesichter/Tiere)
+
+
+### Dataset
+
+- Lizenz und Quellen :
+https://www.kaggle.com/ashwingupta3012/human-faces/metadata - CC0: Public Domain, No Copyright
