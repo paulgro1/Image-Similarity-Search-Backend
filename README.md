@@ -1,4 +1,4 @@
-# Image Simularity Search Project
+# Image Similarity Search Project
 
 ### Gruppenstruktur
 
