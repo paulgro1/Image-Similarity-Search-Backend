@@ -10,3 +10,4 @@ dependencies:
   - flask-cors
   - flask-restful
   - sqlalchemy
+  - python-dotenv
