@@ -1,0 +1,13 @@
+name: iss-backend
+channels:
+  - pytorch
+  - anaconda
+  - conda-forge
+dependencies:
+  - python=3.8
+  - faiss-cpu
+  - flask
+  - flask-cors
+  - flask-restful
+  - pymongo
+  - python-dotenv
