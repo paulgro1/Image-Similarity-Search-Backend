@@ -10,27 +10,40 @@ from werkzeug.utils import secure_filename
 import glob
 import os
 
-# Check if data folder is specified, creating one if specified and not yet a directory
+path = os.path.dirname(os.path.dirname(__file__))
 data_folder = os.environ.get("DATA_FOLDER")
+
+# Check if data folder is specified, creating one if specified and not yet a directory
 if data_folder == None:
     print("You need to supply a directory name for the dataset in your .env file!")
     exit(0)
-elif not os.path.isdir(data_folder):
-    os.mkdir(data_folder)
+elif not os.path.isdir(os.path.join(path, data_folder)):
+    os.mkdir(os.path.join(path, data_folder))
     print(f"Created empty directory { data_folder } for dataset. Please insert dataset.")
+
+data_path = os.path.join(path, data_folder)
+fullsize_path = os.path.join(data_path, os.environ.get("DATA_FULLSIZE_FOLDER"))
+thumbnail_path = os.path.join(data_path, os.environ.get("DATA_THUMBNAILS_FOLDER"))
+
+
 
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
 
 # TODO remove hardcoded pictures, use database.
-FILENAMES = { idx: url for idx, url in enumerate(glob.iglob(pathname="Faces Dataset/*")) }
+FILENAMES = { idx: os.path.split(url)[-1] for idx, url in enumerate(glob.iglob(pathname=os.path.join(fullsize_path, "*"))) }
 
 # Set up Flask App using cors
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
-app.config["UPLOAD_FOLDER"] = os.environ.get("UPLOAD_FOLDER")
+# TODO remove
+upload_folder = os.environ.get("UPLOAD_FOLDER")
+upload_folder_path = os.path.join(path, upload_folder)
+if not os.path.isdir(upload_folder_path):
+    os.mkdir(upload_folder_path)
+app.config["UPLOAD_FOLDER"] = os.path.join(path, os.environ.get("UPLOAD_FOLDER"))
 
 
 def abort_if_picture_doesnt_exist(picture_id):
@@ -71,7 +84,7 @@ class Picture(Resource):
         filename = os.path.split(FILENAMES[picture_id])[1]
         print(f"Getting image { picture_id } -> { filename }")
         # TODO output correct?
-        return send_from_directory(directory="../Faces Dataset", filename=filename)
+        return send_from_directory(directory=fullsize_path, filename=filename)
 
 class All_Pictures(Resource):
     """
