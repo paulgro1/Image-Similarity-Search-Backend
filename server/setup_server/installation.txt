@@ -1,11 +1,13 @@
+Reinstall environment if needed!
+
 Installation:
 Open Anaconda Prompt
-Navigate to target directory with environment.yml file in it
+Navigate to target directory with environment.yml file ("server") in it
 enter: 
     "conda env create -f environment.yml" 
     "conda activate iss-backend"
     "code"
-in VSCode > api > app.py:
+in VSCode > server > run.py:
     View > Command Palette > "Python: Select Interpreter" > "~/anaconda3/envs/issbackend/python.exe"
     (In Windows: Windows + Shift + P)
 

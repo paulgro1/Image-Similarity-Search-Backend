@@ -10,6 +10,11 @@ from werkzeug.utils import secure_filename
 import glob
 import os
 
+if __name__ == "__main__":
+    # TODO connect database and server -> correct download
+    # TODO implement correct upload
+    exit("Start via run.py!")
+
 path = os.path.dirname(os.path.dirname(__file__))
 data_folder = os.environ.get("DATA_FOLDER")
 
@@ -143,8 +148,4 @@ api.add_resource(Query, "/upload")
 def main():
     app.run(host=os.environ.get("BACKEND_HOST"), port=os.environ.get("BACKEND_PORT"))
 
-if __name__ == "__main__":
-    # TODO connect database and server -> correct download
-    # TODO implement correct upload
-    exit("Start via run.py!")
-    main()
+

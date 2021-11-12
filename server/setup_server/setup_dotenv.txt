@@ -1,11 +1,11 @@
 You need to install MongoDB!
-Create file in root directory named ".env"
+Create file in directory "server" named ".env"
 set variables with syntax: <name>=<value>
 
 The following lines contain variables with example values, which can be copied into the .env file.
 
 # Server
-BACKEND_HOST=0.0.0.0
+BACKEND_HOST=localhost
 BACKEND_PORT=8080
 
 # Database
