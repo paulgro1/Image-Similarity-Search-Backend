@@ -13,9 +13,9 @@ DATABASE_CLIENT=mongodb://localhost:27017/
 DATABASE_NAME=ISS_BACKEND_DATABASE
 
 # Dataset
-UPLOAD_FOLDER=./upload
+UPLOAD_FOLDER=upload
 # Main directory
-DATA_FOLDER=./data
+DATA_FOLDER=data
 # Full images folder
 DATA_FULLSIZE_FOLDER=fullsize
 # Thumbnails folder
