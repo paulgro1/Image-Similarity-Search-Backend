@@ -2,6 +2,10 @@ import pymongo
 import os
 import glob
 
+if __name__ == "__main__":
+    exit("Start via run.py!")
+
+
 class Database(object):
 
 
@@ -31,6 +35,3 @@ def main():
     # TODO clear database / only add new entries
     Database()
 
-if __name__ == "__main__":
-    exit("Start via run.py!")
-    main()
