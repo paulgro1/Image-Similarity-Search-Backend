@@ -22,9 +22,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
-import api_package.db as db
-database = db.Database()
-database.initialize()
+database = None
 
 # TODO remove
 upload_folder = os.environ.get("UPLOAD_FOLDER")
@@ -168,6 +166,9 @@ api.add_resource(FullsizePicture, "/images/<picture_id>")
 api.add_resource(Query, "/upload")
 
 def main():
+    import api_package.db as db
+    database = db.Database()
+    database.initialize()
     app.run(host=os.environ.get("BACKEND_HOST"), port=os.environ.get("BACKEND_PORT"))
 
 
