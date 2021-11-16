@@ -26,7 +26,6 @@ def main(show_images, k):
     base_path = os.path.dirname(__file__)
 
     training_path = os.path.join(root_path, os.environ.get("DATA_FOLDER"), os.environ.get("DATA_FULLSIZE_FOLDER"))
-    print(training_path)
     training_filenames, training_images = load_images(training_path)
 
     query_path = os.path.join(base_path, "query")
