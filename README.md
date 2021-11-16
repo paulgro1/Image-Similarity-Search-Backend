@@ -24,7 +24,7 @@ https://www.kaggle.com/ashwingupta3012/human-faces/metadata - CC0: Public Domain
 
 ### Dokumentation
 
-- https://gitlab.beuth-hochschule.de/image-similarity-search/image-similarity-search-backend/-/tree/main/documentation
+- https://gitlab.beuth-hochschule.de/image-similarity-search/image-similarity-search-backend/-/tree/development/documentation
 
 ### Prototyp
 
