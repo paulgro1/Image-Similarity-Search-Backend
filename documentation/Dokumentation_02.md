@@ -8,10 +8,13 @@
 
 <h2>Fortschritte</h2>
 Das Frontend kann nun Anfragen an das Backend schicken und Bilder des Datensatzes auf einem Canvas mappen.<br>
+Im Backend können die Bilder eines Datensatzes mit FAISS aufgrund ihrer RGB Werte verglichen werden.<br>
 Die genauen Pfade zu den Bildern des Datensatzes können jetzt in einer MongoDB Datenbank gespeichert werden.<br>
 Der Ablauf der verschiedenen Funktionen, wurde aus Sicht eines Nutzers detailliert in den User Stories beschrieben.<br>
 Diese Abläufe werden ebenfalls in dem erstellten Aktivitätsdiagramm visuell dargestellt.<br>
 Es wird momentan an einer Zoomfunktionalität in D3 gearbeitet, mit welcher es möglich sein soll, aus der Overview heraus verschiedene Bereiche der Map zu vergrößern.<br>
+
+
 
 <h2>Fortschritte Frontend</h2>
 
@@ -40,6 +43,7 @@ Es wird momentan an einer Zoomfunktionalität in D3 gearbeitet, mit welcher es m
 - Aufsetzen der MongoDB/PyMongo Datenbank
 - Anbindung von MongoDB/PyMongo Datenbank an das Backend
 - Finalisierung der Rest API
+- Basic FAISS Image Comparison
 <br><br>
 
 <b>Luke</b> 
