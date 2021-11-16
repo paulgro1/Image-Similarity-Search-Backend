@@ -1,1 +1,13 @@
 GET http://localhost:8080/images/3
+
+###
+
+GET http://localhost:8080/images/thumbnails/3
+
+###
+
+GET http://localhost:8080/images/ids
+
+###
+
+GET http://localhost:8080/images/thumbnails/all
