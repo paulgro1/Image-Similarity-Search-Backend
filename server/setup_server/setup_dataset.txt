@@ -1,0 +1,4 @@
+download Dataset
+create folder "data" in "server" directory
+create folders "thumbnails" and "fullsize" in "data"
+insert downloaded images into the respective folders

@@ -2,7 +2,7 @@
 # from https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
 # to fit our needs
 # IMPORTANT set up conda environment before use -> installation.txt
-from flask import Flask, send_from_directory, url_for
+from flask import Flask, send_from_directory, url_for, send_file
 from flask.globals import request
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Resource, Api
@@ -10,40 +10,28 @@ from werkzeug.utils import secure_filename
 import glob
 import os
 
-path = os.path.dirname(os.path.dirname(__file__))
-data_folder = os.environ.get("DATA_FOLDER")
-
-# Check if data folder is specified, creating one if specified and not yet a directory
-if data_folder == None:
-    print("You need to supply a directory name for the dataset in your .env file!")
-    exit(0)
-elif not os.path.isdir(os.path.join(path, data_folder)):
-    os.mkdir(os.path.join(path, data_folder))
-    print(f"Created empty directory { data_folder } for dataset. Please insert dataset.")
-
-data_path = os.path.join(path, data_folder)
-fullsize_path = os.path.join(data_path, os.environ.get("DATA_FULLSIZE_FOLDER"))
-thumbnail_path = os.path.join(data_path, os.environ.get("DATA_THUMBNAILS_FOLDER"))
-
-
+if __name__ == "__main__":
+    exit("Start via run.py!")
 
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
 
-# TODO remove hardcoded pictures, use database.
-FILENAMES = { idx: os.path.split(url)[-1] for idx, url in enumerate(glob.iglob(pathname=os.path.join(fullsize_path, "*"))) }
 
 # Set up Flask App using cors
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
+import api_package.db as db
+database = db.Database()
+database.initialize()
+
 # TODO remove
 upload_folder = os.environ.get("UPLOAD_FOLDER")
-upload_folder_path = os.path.join(path, upload_folder)
+upload_folder_path = os.path.join(os.environ.get("SERVER_ROOT"), upload_folder)
 if not os.path.isdir(upload_folder_path):
     os.mkdir(upload_folder_path)
-app.config["UPLOAD_FOLDER"] = os.path.join(path, os.environ.get("UPLOAD_FOLDER"))
+app.config["UPLOAD_FOLDER"] = os.path.join(os.environ.get("SERVER_ROOT"), os.environ.get("UPLOAD_FOLDER"))
 
 
 def abort_if_picture_doesnt_exist(picture_id):
@@ -55,7 +43,8 @@ def abort_if_picture_doesnt_exist(picture_id):
     picture_id : int
         id of picture to be assessed
     """
-    if picture_id not in FILENAMES:
+    
+    if not database.is_id_in_database(picture_id):
         abort(404, message=f"Picture {picture_id} not found")
 
 def allowed_file(filename):
@@ -65,7 +54,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-class Picture(Resource):
+class FullsizePicture(Resource):
     """
     TODO Docs
     """
@@ -77,28 +66,65 @@ class Picture(Resource):
         ----------
         picture_id : int
             id of picture to be returned
-        TODO return
+        TODO return, docs
         """
         picture_id = int(picture_id)
         abort_if_picture_doesnt_exist(picture_id)
-        filename = os.path.split(FILENAMES[picture_id])[1]
-        print(f"Getting image { picture_id } -> { filename }")
-        # TODO output correct?
-        return send_from_directory(directory=fullsize_path, filename=filename)
+        print(f"Getting fullsize image { picture_id } ")
+        image = database.get_one_fullsize_by_id(picture_id)
+        if image == None:
+            abort(404, message=f"Picture {picture_id} not found")
+        return send_file(image["fullsize"])
 
-class All_Pictures(Resource):
+class ThumbnailPicture(Resource):
+    """
+    TODO Docs
+    """
+    def get(self, picture_id):
+        """
+        HTTP GET method, returns 1 image from database
+
+        Parameters
+        ----------
+        picture_id : int
+            id of picture to be returned
+        TODO return, docs
+        """
+        picture_id = int(picture_id)
+        abort_if_picture_doesnt_exist(picture_id)
+        print(f"Getting image thumbnail { picture_id } ")
+        image = database.get_one_thumbnail_by_id(picture_id)
+        if image == None:
+            abort(404, message=f"Picture {picture_id} not found")
+        return send_file(image["thumbnail"])
+
+class AllPictureIDs(Resource):
     """
     TODO Docs
     """
     def get(self):
         """
-        HTTP GET method, returns all images from database
-        TODO return
+        TODO docs
         """
-        if len(FILENAMES) != 0:
-            return FILENAMES
-        else:
+        all_ids = database.get_all_ids()
+        if all_ids == None:
             abort(404, message="No Pictures found")
+        return all_ids
+
+class AllPicturesThumbnail(Resource):
+    """
+    TODO Docs
+    TODO change response
+    """
+    def get(self):
+        """
+        HTTP GET method, returns all images from database
+        TODO return docs
+        """
+        all_images = database.get_all_thumbnails()
+        if all_images == None:
+            abort(404, message="No Pictures found")
+        return all_images
 
 # Adaptation of https://stackoverflow.com/questions/28982974/flask-restful-upload-image/42286669#42286669
 class Query(Resource):
@@ -136,15 +162,13 @@ class Debug(Resource):
 
 # Paths
 api.add_resource(Debug, "/")
-api.add_resource(Picture, "/images/<picture_id>")
-api.add_resource(All_Pictures, "/images/all")
+api.add_resource(AllPictureIDs, "/images/ids")
+api.add_resource(AllPicturesThumbnail, "/images/thumbnails/all")
+api.add_resource(ThumbnailPicture, "/images/thumbnails/<picture_id>")
+api.add_resource(FullsizePicture, "/images/<picture_id>")
 api.add_resource(Query, "/upload")
 
 def main():
     app.run(host=os.environ.get("BACKEND_HOST"), port=os.environ.get("BACKEND_PORT"))
 
-if __name__ == "__main__":
-    # TODO connect database and server -> correct download
-    # TODO implement correct upload
-    exit("Start via run.py!")
-    main()
+

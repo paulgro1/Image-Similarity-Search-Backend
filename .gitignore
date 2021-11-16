@@ -25,6 +25,7 @@ creds.js
 
 # Dataset
 data/
+upload/
  
 # Private Files
 *.json
