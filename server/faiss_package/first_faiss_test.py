@@ -26,19 +26,16 @@ def load_images(path):
     return filename_list, database
 
 # Calculating the coordinates of the Images using sklearn t-SNE Method, visualisation only for testing with seaborn scatter chart 
-def tsne(I, selected_images, dataset_images):
-    neighbors = []
-    for i in range(len(I[0])):
-        index = I[0][i]
-        neighbor = dataset_images[index]
-        neighbors.append(neighbor)
-    neighbors.append(selected_images[0])
-    tsne_images = np.array(neighbors, dtype="float32")
-    sns.set(rc={'figure.figsize':(11.7,8.27)})
+def tsne(images):
+    np_images = np.array(images, dtype="float32")
     tsne = TSNE(n_components=2, perplexity=30.0, learning_rate=200.0, init='pca')
-    I_embedded = tsne.fit_transform(tsne_images)
-    sns.scatterplot(x = I_embedded[:,0], y = I_embedded[:,1], legend='full')
+    images_embedded = tsne.fit_transform(np_images)
+    for i in range(len(images)):
+        print(f"Image: {i} Coordinates: {images_embedded[i]}")
+    sns.set(rc={'figure.figsize':(11.7,8.27)})
+    sns.scatterplot(x = images_embedded[:,0], y = images_embedded[:,1], legend='full')
     plt.show()
+    return images_embedded
 
 def main(show_images, k):
     base_path = os.path.dirname(__file__)
@@ -70,10 +67,10 @@ def main(show_images, k):
             Image.open(os.path.join(query_path, query_filename)).show()
             Image.open(os.path.join(training_path, training_filename)).show()
             time.sleep(5)
-    return I, query_images, training_images
+    tsne(training_images)
+    return
 
 if __name__ == "__main__":
     show_images = False # with k = 1 !
-    k = 200 # k nearest neighbours
-    I, query_images, training_images = main(show_images, k)
-    tsne(I, query_images, training_images)
+    k = 10 # k nearest neighbours
+    main(show_images, k)
