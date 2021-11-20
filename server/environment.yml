@@ -12,3 +12,4 @@ dependencies:
   - pymongo
   - python-dotenv
   - pillow
+  - scikit-learn

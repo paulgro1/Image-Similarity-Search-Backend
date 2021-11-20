@@ -1,18 +1,27 @@
 import pymongo
 import os
 import glob
+from gridfs import GridFS
+from PIL import Image
+from . import tsne
+import io
+import numpy as np
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
 class Database(object):
 
-    def __init__(self):
+    def __init__(self, flat_filenames, coordinates):
         super().__init__()
         # Client
         self._client = pymongo.MongoClient(os.environ.get("DATABASE_CLIENT"))
         # Database
         self._db = self._client[os.environ.get("DATABASE_NAME")]
+        # GridFS for image storage
+        self._gridfs = GridFS(self._db)
+
+        self.coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
 
     def reset_col(self, col_name):
         col = self._db[col_name]
@@ -24,42 +33,38 @@ class Database(object):
 
     def initialize(self):
         self.reset_col("images")
-        f_path = os.path.join(os.environ.get("FULLSIZE_PATH"), "*")
-        fullsize_filenames = [ (os.path.split(x)[-1], x) for x in glob.iglob(pathname=f_path) ]
-        t_path = os.path.join(os.environ.get("THUMBNAILS_PATH"), "*")
-        thumbnails_filenames = [ (os.path.split(x)[-1], x) for x in glob.iglob(pathname=t_path) ]
-
-        fullsize_filenames.sort(key=lambda x: x[0])
-        thumbnails_filenames.sort(key=lambda x: x[0])
-
-        f_idx = 0
-        t_idx = 0
-        true_idx = 0
+        self.reset_col("fs.files")
+        self.reset_col("fs.chunks")
+        f_path = os.path.join(os.environ.get("DATA_PATH"), "*")
         images = []
-        while f_idx < len(fullsize_filenames) and t_idx < len(thumbnails_filenames):
-            f_file = fullsize_filenames[f_idx]
-            t_file = thumbnails_filenames[t_idx]
-            if f_file[0] != t_file[0]:
-                if f_file[0] < t_file[0]:
-                    f_idx += 1
-                else:
-                    t_idx += 1
-                continue
+        for idx, f in enumerate(glob.iglob(pathname=f_path)):
+            t_id = None
+            filename = os.path.split(f)[-1]
+            with Image.open(f) as img:
+                # TODO in .env
+                img.thumbnail((128, 128))
+                with io.BytesIO() as output:
+                    img.save(output, format=img.format)
+                    content = output.getvalue()
+                t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}")
+            coords = self.coordinates[self.coordinates[:,0] == filename][0]
+            assert coords[0] == filename
+            x = coords[1]
+            y = coords[2]
             image = {
-                "id": true_idx,
-                "filename": f_file[0],
-                "fullsize": f_file[1],
-                "thumbnail": t_file[1]
+                "id": idx,
+                "filename": filename,
+                "path": f,
+                "thumbnail": t_id,
+                "x": x,
+                "y": y
             }
             images.append(image)
-            f_idx += 1
-            t_idx += 1
-            true_idx += 1
 
         self.col = self._db["images"]
         self.col.insert_many(images)
         self.id_projection = { "id": True }
-        self.fullsize_projection = { "id": True, "filename": True, "fullsize": True }
+        self.fullsize_projection = { "id": True, "filename": True, "path": True }
         self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
 
     def get_one(self, filter, projection):
@@ -78,16 +83,13 @@ class Database(object):
     def get_one_fullsize_by_id(self, id):
         return self.get_one_by_id(id, self.fullsize_projection)
 
-    def get_one_thumbnail_by_id(self, id):
-        return self.get_one_by_id(id, self.thumbnail_projection)
-
-    def get_multiple(self, filter={}, projection={ "id": True, "filename": True, "fullsize": True, "thumbnail": True }):
+    def get_multiple(self, filter={}, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
         as_list = list(self.col.find(filter=filter, projection=projection))
         for d in as_list:
             del d["_id"]
         return as_list
 
-    def get_all(self, projection={ "id": True, "filename": True, "fullsize": True, "thumbnail": True }):
+    def get_all(self, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
         return self.get_multiple({}, projection)
 
     def get_all_ids(self):
@@ -100,11 +102,6 @@ class Database(object):
             return self.get_all(self.fullsize_projection)
         return None
 
-    def get_all_thumbnails(self):
-        if self.count_documents_in_collection() > 0:
-            return self.get_all(self.thumbnail_projection)
-        return None
-
     def get_multiple_by_id(self, ids, projection):
         if ids != None and len(ids) != 0 and self.count_documents_in_collection() > 0:
             filter = {"id": {"$in" : ids}}
@@ -114,6 +111,57 @@ class Database(object):
     def get_multiple_fullsize_by_id(self, ids):
         return self.get_multiple_by_id(ids, self.fullsize_projection)
 
-    def get_multiple_thumbnails_by_id(self, ids):
-        return self.get_multiple_by_id(ids, self.thumbnail_projection)
+    def get_thumbnail_fs_id(self, picture_id):
+        return self.get_one_by_id(picture_id, { "thumbnail": True })["thumbnail"]
 
+    def get_one_thumbnail_by_id(self, entry_id):
+        id = self.get_thumbnail_fs_id(entry_id)
+        return self._gridfs.get(id)
+        
+    def get_all_thumbnails(self):
+        if self.count_documents_in_collection() > 0:
+            result = self._gridfs.find()
+            if result != None:
+                return [ x for x in result ]    
+            return None 
+        return None
+
+    def get_multiple_thumbnails_by_id(self, ids):
+        if self.count_documents_in_collection() > 0:
+            result = self._gridfs.find({ "_id": {"$in" : ids}})
+            if result != None:
+                return [ x for x in result ]
+
+    def get_coordinates(self, id):
+        result = self.get_one_by_id(id, { "x": True, "y": True})
+        if result != None:
+            x = result["x"]
+            y = result["y"]
+            return (x, y)
+        return None
+
+    def get_metadata(self, id):
+        result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True})
+        if result != None:
+            id = result["id"]
+            filename = result["filename"]
+            x = result["x"]
+            y = result["y"]
+            position = (x, y)
+            # TODO  more data
+            return {
+                "id": id,
+                "filename": filename,
+                "position": position
+            }
+        return None
+    
+    def get_all_metadata(self):
+        result = self.get_all({ "id": True, "filename": True, "x": True, "y": True })
+        if result != None:
+            return [ { 
+                "id": x["id"], 
+                "filename": x["filename"], 
+                "position": (x["x"], x["y"]) 
+            } for x in result ]
+        return None
