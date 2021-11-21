@@ -2,16 +2,12 @@
 # from https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
 # to fit our needs
 # IMPORTANT set up conda environment before use -> installation.txt
-from flask import Flask, send_from_directory, url_for, send_file
+from flask import Flask, send_file
 from flask.globals import request
 from flask_cors import CORS
-from flask_restful import reqparse, abort, Resource, Api
-from pymongo import message
-from werkzeug.utils import secure_filename
-import glob
+from flask_restful import abort, Resource, Api
 import os
 import io
-from PIL import Image
 import zipfile
 
 if __name__ == "__main__":
@@ -29,8 +25,9 @@ api = Api(app)
 import api_package.process_images as pi
 flat_images_filenames, flat_images = pi.load_images(os.environ.get("DATA_PATH"))
 
-import api_package.tsne as tsne
-coordinates = tsne.calculate_coordinates(flat_images, True) # TODO True -> False for real coordinates, is slower
+from api_package.tsne import TSNE
+tsne = TSNE()
+coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=False) # TODO True -> False for real coordinates, is slower
 
 import api_package.db as db
 database = db.Database(flat_images_filenames, coordinates)
@@ -166,8 +163,9 @@ class UploadOne(Resource):
             return "error no file send"
         if file and allowed_file(file.filename):
             processed = pi.process_image(file)
+            coordinates = tsne.calculate_coordinates(processed, isuploaded=True, dummy=False) # TODO remove dummy
             D, I = iss.search(processed, k)
-            return { "distances": D.tolist(), "ids": I.tolist() }
+            return { "distances": D.tolist(), "ids": I.tolist(), "coordinates": coordinates.tolist() }
         return "error file not allowed"
 
 class MetadataOneImage(Resource):

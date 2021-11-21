@@ -3,7 +3,6 @@ import os
 import glob
 from gridfs import GridFS
 from PIL import Image
-from . import tsne
 import io
 import numpy as np
 
