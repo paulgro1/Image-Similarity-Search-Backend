@@ -1,5 +1,5 @@
 import numpy as np
-from openTSNE import TSNE as openTNSE
+from openTSNE import TSNE as openTSNE
 
 class TSNE(object):
     
@@ -13,7 +13,7 @@ class TSNE(object):
             return np.random.rand(images.shape[0], 2) * 60000 - 30000
         if not isuploaded:
             np_images = np.array(images, dtype="float32")
-            tsne = openTNSE(initialization="pca", perplexity=30, metric="euclidean", n_jobs=8, verbose=True)
+            tsne = openTSNE(initialization="pca", perplexity=30, metric="euclidean", n_jobs=8, verbose=True)
             images_embedded = tsne.fit(np_images)
             self.coordinates = images_embedded
             return images_embedded  
