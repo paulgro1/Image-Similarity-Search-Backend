@@ -1,13 +1,23 @@
+### Get one fullsize image
+
 GET http://localhost:8080/images/3
 
-###
+### Get one thumbnail
 
 GET http://localhost:8080/images/thumbnails/3
 
-###
+### Get all ids
 
 GET http://localhost:8080/images/ids
 
-###
+### Get all thumbnails
 
 GET http://localhost:8080/images/thumbnails/all
+
+### Get metadata from one image
+
+GET http://localhost:8080/images/3/metadata
+
+### Get metadata from all images
+
+GET http://localhost:8080/images/all/metadata
