@@ -12,6 +12,5 @@ dependencies:
   - pymongo
   - python-dotenv
   - pillow
-  - sklearn
-  - seaborn
-  - matplotlib
+  - opentsne
+  

@@ -5,9 +5,10 @@ import os
 from PIL import Image
 import time
 from dotenv import load_dotenv
-from sklearn.manifold import TSNE
 from matplotlib import pyplot as plt
 import seaborn as sns
+#from openTSNE import TSNE
+from tsne import TSNE
 
 root_path = os.path.dirname(os.path.dirname(__file__))
 dotenv_path = os.path.join(root_path, ".env")
@@ -26,16 +27,24 @@ def load_images(path):
     return filename_list, database
 
 # Calculating the coordinates of the Images using sklearn t-SNE Method, visualisation only for testing with seaborn scatter chart 
-def tsne(images):
+"""
+def tsne(images, query_images):
     np_images = np.array(images, dtype="float32")
-    tsne = TSNE(n_components=2, perplexity=30.0, learning_rate=200.0, init='pca')
-    images_embedded = tsne.fit_transform(np_images)
+    tsne = TSNE(perplexity=30, metric="euclidean", n_jobs=8, initialization="pca", verbose=True)
+    images_embedded = tsne.fit(np_images)
     for i in range(len(images)):
         print(f"Image: {i} Coordinates: {images_embedded[i]}")
     sns.set(rc={'figure.figsize':(11.7,8.27)})
     sns.scatterplot(x = images_embedded[:,0], y = images_embedded[:,1], legend='full')
     plt.show()
+
+    testpoints_embedded = images_embedded.transform(query_images)
+    print(f"Uploaded Image Coordinates: {testpoints_embedded}")
+    sns.set(rc={'figure.figsize':(11.7,8.27)})
+    sns.scatterplot(x = testpoints_embedded[:,0], y = testpoints_embedded[:,1], legend='full')
+    plt.show()
     return images_embedded
+"""
 
 def main(show_images, k):
     base_path = os.path.dirname(__file__)
@@ -67,8 +76,9 @@ def main(show_images, k):
             Image.open(os.path.join(query_path, query_filename)).show()
             Image.open(os.path.join(training_path, training_filename)).show()
             time.sleep(5)
-    tsne(training_images)
-    return
+    tsne = TSNE()
+    tsne.calculate_coordinates(training_images, False, False)
+    tsne.calculate_coordinates(query_images, True, False)
 
 if __name__ == "__main__":
     show_images = False # with k = 1 !
