@@ -1,9 +1,9 @@
-import pymongo
-import os
-import glob
+from pymongo import MongoClient
+from os import path, environ
+from glob import iglob
 from gridfs import GridFS
 from PIL import Image
-import io
+from io import BytesIO
 import numpy as np
 
 if __name__ == "__main__":
@@ -13,10 +13,11 @@ class Database(object):
 
     def __init__(self, flat_filenames, coordinates):
         super().__init__()
+        print("Creating Database")
         # Client
-        self._client = pymongo.MongoClient(os.environ.get("DATABASE_CLIENT"))
+        self._client = MongoClient(environ.get("DATABASE_CLIENT"))
         # Database
-        self._db = self._client[os.environ.get("DATABASE_NAME")]
+        self._db = self._client[environ.get("DATABASE_NAME")]
         # GridFS for image storage
         self._gridfs = GridFS(self._db)
 
@@ -31,18 +32,19 @@ class Database(object):
         return self.col.count_documents(options)
 
     def initialize(self):
+        print("Initializing Database")
         self.reset_col("images")
         self.reset_col("fs.files")
         self.reset_col("fs.chunks")
-        f_path = os.path.join(os.environ.get("DATA_PATH"), "*")
+        f_path = path.join(environ.get("DATA_PATH"), "*")
         images = []
-        for idx, f in enumerate(glob.iglob(pathname=f_path)):
+        for idx, f in enumerate(iglob(pathname=f_path)):
             t_id = None
-            filename = os.path.split(f)[-1]
+            filename = path.split(f)[-1]
             with Image.open(f) as img:
                 # TODO in .env
                 img.thumbnail((128, 128))
-                with io.BytesIO() as output:
+                with BytesIO() as output:
                     img.save(output, format=img.format)
                     content = output.getvalue()
                 t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}")
@@ -65,6 +67,7 @@ class Database(object):
         self.id_projection = { "id": True }
         self.fullsize_projection = { "id": True, "filename": True, "path": True }
         self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
+        print("Database initialized")
 
     def get_one(self, filter, projection):
         if filter == None:
@@ -120,7 +123,7 @@ class Database(object):
     def get_all_thumbnails(self):
         if self.count_documents_in_collection() > 0:
             result = self._gridfs.find()
-            if result != None:
+            if not result is None:
                 return [ x for x in result ]    
             return None 
         return None
@@ -128,12 +131,12 @@ class Database(object):
     def get_multiple_thumbnails_by_id(self, ids):
         if self.count_documents_in_collection() > 0:
             result = self._gridfs.find({ "_id": {"$in" : ids}})
-            if result != None:
+            if not result is None:
                 return [ x for x in result ]
 
     def get_coordinates(self, id):
         result = self.get_one_by_id(id, { "x": True, "y": True})
-        if result != None:
+        if not result is None:
             x = result["x"]
             y = result["y"]
             return (x, y)
@@ -141,7 +144,7 @@ class Database(object):
 
     def get_metadata(self, id):
         result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True})
-        if result != None:
+        if not result is None:
             id = result["id"]
             filename = result["filename"]
             x = result["x"]
@@ -157,7 +160,7 @@ class Database(object):
     
     def get_all_metadata(self):
         result = self.get_all({ "id": True, "filename": True, "x": True, "y": True })
-        if result != None:
+        if not result is None:
             return [ { 
                 "id": x["id"], 
                 "filename": x["filename"], 

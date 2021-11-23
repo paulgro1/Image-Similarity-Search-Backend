@@ -1,4 +1,4 @@
-import faiss
+from faiss import IndexFlatL2
 import numpy as np
 
 if __name__ == "__main__":
@@ -10,6 +10,7 @@ class Faiss(object):
 
     def __init__(self, training_filenames, training_images):
         super().__init__()
+        print("Creating Faiss-Object")
         self.has_index = False
         self.is_trained = False
         self.training_filenames = training_filenames
@@ -19,7 +20,7 @@ class Faiss(object):
         if not "d" in kwargs:
             return
         d = kwargs["d"]
-        index = faiss.IndexFlatL2(d)
+        index = IndexFlatL2(d)
         assert index.is_trained
         return index
 
@@ -30,10 +31,12 @@ class Faiss(object):
             
     
     def index(self, key, **kwargs):
+        print(f"Building index {key}")
         index = None
         if key == self.FlatL2:
             index = self._build_FlatL2(**kwargs)
         self._set_index(index)
+        print("Building index complete")
 
 
     def initialize_index(self):

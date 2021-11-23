@@ -6,31 +6,36 @@ from flask import Flask, send_file
 from flask.globals import request
 from flask_cors import CORS
 from flask_restful import abort, Resource, Api
-import os
-import io
-import zipfile
+from os import environ
+from io import BytesIO
+from zipfile import ZipFile, ZIP_DEFLATED
+from api_package.similarities import get_similarities
+import numpy as np
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+# TODO remove, set to "True" for faster starting
+dummy_coordinates = True
+
+
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
-
 
 # Set up Flask App using cors
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
-import api_package.process_images as pi
-flat_images_filenames, flat_images = pi.load_images(os.environ.get("DATA_PATH"))
+from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
+flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
 
 from api_package.tsne import TSNE
 tsne = TSNE()
-coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=False) # TODO True -> False for real coordinates, is slower
+coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=dummy_coordinates) # TODO True -> False for real coordinates, is slower
 
-import api_package.db as db
-database = db.Database(flat_images_filenames, coordinates)
+from api_package.db import Database
+database = Database(flat_images_filenames, coordinates)
 database.initialize()
 
 from api_package.faiss import Faiss
@@ -77,7 +82,7 @@ class OneFullsize(Resource):
         abort_if_picture_doesnt_exist(picture_id)
         print(f"Getting fullsize image { picture_id } ")
         image = database.get_one_fullsize_by_id(picture_id)
-        if image == None:
+        if image is None:
             abort(404, message=f"Picture {picture_id} not found")
         return send_file(image["path"])
 
@@ -100,7 +105,7 @@ class OneThumbnail(Resource):
         print(f"Getting image thumbnail { picture_id } ")
         image = database.get_one_thumbnail_by_id(picture_id)
         
-        if image == None:
+        if image is None:
             abort(404, message=f"Picture {picture_id} not found")
         return send_file(image, mimetype=image.content_type, attachment_filename=image.filename)
 
@@ -115,11 +120,11 @@ class AllThumbnails(Resource):
         TODO return docs
         """
         all_images = database.get_all_thumbnails()
-        if all_images == None:
+        if all_images is None:
             abort(404, message="No Pictures found")
         # See https://stackoverflow.com/questions/2463770/python-in-memory-zip-library
-        buffer = io.BytesIO()
-        with zipfile.ZipFile(buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+        buffer = BytesIO()
+        with ZipFile(buffer, "a", ZIP_DEFLATED, False) as zip_file:
             for item in all_images:
                 zip_file.writestr(item.filename, item.read())
         buffer.seek(0)
@@ -134,7 +139,7 @@ class AllPictureIDs(Resource):
         TODO docs
         """
         all_ids = database.get_all_ids()
-        if all_ids == None:
+        if all_ids is None:
             abort(404, message="No Pictures found")
         all_ids_list = [ x["id"] for x in all_ids ]
         return all_ids_list
@@ -162,11 +167,47 @@ class UploadOne(Resource):
         if file.filename == "":
             return "error no file send"
         if file and allowed_file(file.filename):
-            processed = pi.process_image(file)
-            coordinates = tsne.calculate_coordinates(processed, isuploaded=True, dummy=False) # TODO remove dummy
+            processed = process_image(file)
+            coordinates = tsne.calculate_coordinates(processed, isuploaded=True, dummy=dummy_coordinates) # TODO remove dummy
             D, I = iss.search(processed, k)
-            return { "distances": D.tolist(), "ids": I.tolist(), "coordinates": coordinates.tolist() }
+            sim_percentages = get_similarities(D, k)
+            return { 
+                "distances": D.tolist(), 
+                "ids": I.tolist(), 
+                "coordinates": coordinates.tolist(),
+                "similarities": sim_percentages
+                }
         return "error file not allowed"
+
+class NNOfExistingImage(Resource):
+    """
+    TODO docs
+    """      
+    def get(self, picture_id):
+        """
+        TODO docs
+        """
+        picture_id = int(picture_id)
+        image = database.get_one_fullsize_by_id(picture_id)
+        if image is None:
+            abort(404, message=f"Picture {picture_id} not found")
+        the_path = image["path"]
+        k = request.json["k"]
+        if k is None or k < 0:
+            abort(404, message=f"k is missing valid value in request body with value {k}")
+        converted_image = load_and_process_one_from_dataset(the_path)
+        D, I = iss.search(converted_image, k)
+        sim_percentages = get_similarities(D, k)
+        # Remove requested Picture
+        assert I[0, 0] == picture_id
+        D = np.delete(D, obj=0, axis=1)
+        I = np.delete(I, obj=0, axis=1)
+        sim_percentages[0].pop(0)
+        return {
+            "distances": D.tolist(),
+            "ids": I.tolist(),
+            "similarities": sim_percentages
+        }
 
 class MetadataOneImage(Resource):
     """
@@ -178,7 +219,7 @@ class MetadataOneImage(Resource):
         """
         picture_id = int(picture_id)
         data = database.get_metadata(picture_id)
-        if data == None:
+        if data is None:
             abort(404, message="An error occured")
         return data
 
@@ -191,7 +232,7 @@ class MetadataAllImages(Resource):
         TODO docs
         """
         data = database.get_all_metadata()
-        if data == None:
+        if data is None:
             abort(404, message="An error occured")
         return data
 
@@ -212,9 +253,10 @@ api.add_resource(OneThumbnail, "/images/thumbnails/<picture_id>")
 api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
 api.add_resource(UploadOne, "/upload")
-#api.add_resource(None, "/faiss/getNN/<picture_id>") TODO
+api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
 
 def main():
-    app.run(host=os.environ.get("BACKEND_HOST"), port=os.environ.get("BACKEND_PORT"))
+    print("Starting app")
+    app.run(host=environ.get("BACKEND_HOST"), port=environ.get("BACKEND_PORT"))
 
 
