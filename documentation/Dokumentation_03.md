@@ -5,24 +5,24 @@
 
 <h3>Anne (@s82881)</h3>
 
-<b>#14 Informationsview</b> 
+<b>#[#14](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/14) Informationsview</b> 
 
 - Die Informationsview wurde angelegt. Dabei wurden Eventlistener an alle D3 Image Objekte angehangen. Da die Informationsview bislang noch mit Testdaten befüllt ist und bislang noch nicht über die Detailview sondern direkt über die Map erreichbar ist, ist das Issue noch nicht abgeschlossen.
 
-<b>#20 Modal Dialog für Informationsview</b><br>
+<b>[#20](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/20) Modal Dialog für Informationsview</b><br>
 
 Der Modaldialog für die Informationsview wurde angelegt. Notwendige Schritte waren :<br>
 - hochauflösendes Bild in Modaldialog anzeigen<br>
-- Slider einbauen Issue <b>#19</b> (closed) der bestimmt wie viele ähnliche Bilder angezeigt werden sollen<br>
+- Slider einbauen Issue <b>[#19](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/19)</b> (closed) der bestimmt wie viele ähnliche Bilder angezeigt werden sollen<br>
 - x ähnliche Bilder anzeigen<br>
 - Informationen zum Bild anzeigen (Dateiname, Größe etc.)<br>
-- Scrollbar einbauen beim Container mit ähnlichen Bildern Issue <b>#24</b> (closed)<br>
+- Scrollbar einbauen beim Container mit ähnlichen Bildern Issue <b>[#24](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/24)</b> (closed)<br>
 - Modaldialog mit echten Bildern aus dem Testdatensatz befüllen Issue <b>#25</b><br>
 
-<b>#19 Slider</b> 
+<b>[#19](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/19) Slider</b> 
 - Slider wurde erfolgreich in den Modaldialog der Informationsview eingebaut, sodass die Anzahl der angezeigten, ähnlichen Bilder verändert werden kann.
 
-<b>#24 Scrollbar</b> 
+<b>[#24](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/24) Scrollbar</b> 
 - Scrollbar wurde im Container eingebaut, der die ähnlichen Bilder zeigt.
 
 
@@ -34,11 +34,11 @@ Der Modaldialog für die Informationsview wurde angelegt. Notwendige Schritte wa
 
 <h3>Fabian (@s78278)</h3>
 
-<b>#8 Datensatz in D3 einbinden</b>
+<b>[#8](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/8) Datensatz in D3 einbinden</b>
 
 - wurde in kleinere Issues aufgeteilt
 
-<b>#26 fetch one image from database</b>
+<b>[#26](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/26) fetch one image from database</b>
 
 - Es wurde ein Thumbnail aus der dem Backend bezogen.
 - Um das Thumbnail zu beziehen wurde die entsprechende URL hardcoded.
@@ -47,14 +47,14 @@ Der Modaldialog für die Informationsview wurde angelegt. Notwendige Schritte wa
 ![](./images/canvas_one_thumbnail_backend.png)<br>
 *Canvas mit einem Thumbnail*<br>
 
-<b>#27 fetch thumbnails from database</b>
+<b>[#27](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/27) fetch thumbnails from database</b>
 
 - Im zweiten Schritt konnte eine frei wählbare Menge an Thumbnails geladen und mit randomisierten Koordinaten übergeben und dargestellt werden.
 
 ![](./images/canvas_all_thumbnails_random.png)<br>
 *Canvas mit allen Thumbnails des Datensatzes*<br>
 
-<b>#28 fetch thumbnails with meta-data from database</b>
+<b>[#28](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/28) fetch thumbnails with meta-data from database</b>
 
 - Im dritten Schritt wurden alle Thumbnails geladen und mit den errechneten Koordinaten übergeben und dargestellt. 
 - Alle Koordinaten wurden für die Darstellung gleichermaßen verändert
@@ -65,11 +65,11 @@ Der Modaldialog für die Informationsview wurde angelegt. Notwendige Schritte wa
 
 <h3>Paul (@s82130)</h3>
 
-<b>#7 Basic Zoom und Pan mit D3 implementieren</b>
+<b>[#7](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/7) Basic Zoom und Pan mit D3 implementieren</b>
 
 - Container "panable" machen und einfache Zoomfunktion zur Vergrößerung der Ansicht implementieren.
 - Basic Zoom und Pan implementiert.
-- Zoom muss verfeinert werden, damit Koordinaten sich beim Ranzoomen nicht überlappen, siehe Issue <b>#15</b> "Zoomfunktionalität"
+- Zoom muss verfeinert werden, damit Koordinaten sich beim Ranzoomen nicht überlappen, siehe Issue <b>[#15](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/15)</b> "Zoomfunktionalität"
 
 ![](./images/zoom_1.png)
 
@@ -79,7 +79,7 @@ Der Modaldialog für die Informationsview wurde angelegt. Notwendige Schritte wa
 *Zoomfunktionalität in der Overview*<br>
 
 
-<b>#15 Zoomfunktionalität</b>
+<b>[#15](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/15) Zoomfunktionalität</b>
 
 - D3 Canvas als Koordinatensystem umsetzen, um "dynamischen" Zoom zu implementieren. D.h., beim Ranzoomen werden die Bilder nicht größer, sondern das Koordinatensystem und somit die Abstände. So kann für User eine übersichtlichere Ansicht erzeugt werden.
 
