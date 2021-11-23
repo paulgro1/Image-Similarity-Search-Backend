@@ -1,6 +1,8 @@
 from sklearn.manifold import TSNE
 import numpy as np
 
+if __name__ == "__main__":
+    exit("Start via run.py!")
 
 # Calculating the coordinates of the Images using sklearn t-SNE Method
 def calculate_coordinates(images, dummy=False):
