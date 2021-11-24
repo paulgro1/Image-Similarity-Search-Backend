@@ -1,16 +1,7 @@
-import numpy as np
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
-
-def get_similarities(D, k):
-    similarities = []
-    for d in range(len(D)):
-        similarities.append([])
-        for i in range(k):
-            distance = np.take(D[d], i)
-            similarity = 1/(1 + distance/1e+9)
-            similarities[d].append(similarity)
-            #print(f" {i+1}. Nearest Image Similarity : {similarity}")
-    return similarities
+def get_similarities2(D):
+    similarities = 1 / (1 + D / 1e+9)
+    return similarities.tolist()
