@@ -16,7 +16,7 @@ if __name__ == "__main__":
     exit("Start via run.py!")
 
 # TODO remove, set to "True" for faster starting
-dummy_coordinates = True
+dummy_coordinates = False
 
 
 # Allowed extensions for uploaded images
