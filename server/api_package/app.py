@@ -16,10 +16,6 @@ import numpy as np
 if __name__ == "__main__":
     exit("Start via run.py!")
 
-# TODO remove, set to "True" for faster starting
-dummy_coordinates = True
-
-
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
 
@@ -32,17 +28,15 @@ from api_package.db import Database
 database = Database()
 from api_package.tsne import TSNE
 tsne = TSNE()
+
+flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
+
 if not database.is_initialized:
-    flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
-
-    coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=dummy_coordinates) # TODO True -> False for real coordinates, is slower
-
+    coordinates = tsne.initialize_coordinates(flat_images)
     database.initialize(flat_images_filenames, coordinates)
+    tsne.save_to_database(database)
 else:
-    coordinates = database.get_all_coordinates()
-    
-    tsne.load_from_database()
-
+    tsne.load_from_database(database)
 
 from api_package.faiss import Faiss
 iss = Faiss(flat_images_filenames, flat_images)
@@ -174,9 +168,9 @@ class UploadOne(Resource):
             return "error no file send"
         if file and allowed_file(file.filename):
             processed = process_image(file)
-            coordinates = tsne.calculate_coordinates(processed, isuploaded=True, dummy=dummy_coordinates) # TODO remove dummy
+            coordinates = tsne.calculate_coordinates(processed)
             D, I = iss.search(processed, k)
-            sim_percentages = get_similarities(D, k)
+            sim_percentages = get_similarities(D)
             return { 
                 "distances": D.tolist(), 
                 "ids": I.tolist(), 

@@ -6,13 +6,15 @@ if __name__ == "__main__":
 
 class TSNE(object):
     
-    def load_from_database(self, coordinates):
-        self.coordinates = coordinates
+    def save_to_database(self, database):
+        print("Saving TSNEEmbedding to database")
+        database.insert_tsne(self.coordinates)
 
-    def initialize_coordinates(self, images, dummy):
-        if dummy:
-            # TODO remove dummy coordinates
-            return np.random.rand(images.shape[0], 2) * 100 - 50
+    def load_from_database(self, database):
+        print("Loading TSNEEmbedding from database")
+        self.coordinates = database.get_tsne()
+
+    def initialize_coordinates(self, images):
         print("Initializing Coordinates")
         np_images = np.array(images, dtype="float32")
         if np_images.ndim == 1:
@@ -24,11 +26,8 @@ class TSNE(object):
         return images_embedded  
 
     # Calculating the coordinates of the Images using opentnse t-SNE Method
-    def calculate_coordinates(self, images, dummy):
+    def calculate_coordinates(self, images):
         print("Calculation new coordinates")
-        if dummy:
-            # TODO remove dummy coordinates
-            return np.random.rand(images.shape[0], 2) * 100 - 50
         np_uploaded_images = np.array(images, dtype="float32")
         if np_uploaded_images.ndim == 1:
             np_uploaded_images = np_uploaded_images.reshape(1, -1)
