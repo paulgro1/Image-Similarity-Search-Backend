@@ -1,0 +1,34 @@
+@baseUrl = http://{{$dotenv BACKEND_HOST}}:{{$dotenv BACKEND_PORT}}
+
+### Get one fullsize image
+
+GET {{baseUrl}}/images/3
+
+### Get one thumbnail
+
+GET {{baseUrl}}/images/thumbnails/3
+
+### Get all ids
+
+GET {{baseUrl}}/images/ids
+
+### Get all thumbnails
+
+GET {{baseUrl}}/images/thumbnails/all
+
+### Get metadata from one image
+
+GET {{baseUrl}}/images/3/metadata
+
+### Get metadata from all images
+
+GET {{baseUrl}}/images/all/metadata
+
+### Get nearest neighbours of existing image
+GET {{baseUrl}}/faiss/getNN/3
+Content-Type: application/json
+
+{
+    "k": 6
+}
+
