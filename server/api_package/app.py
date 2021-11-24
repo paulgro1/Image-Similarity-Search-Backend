@@ -195,9 +195,10 @@ class NNOfExistingImage(Resource):
         k = request.json["k"]
         if k is None or k < 0:
             abort(404, message=f"k is missing valid value in request body with value {k}")
+        k += 1 # Image exists in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
         converted_image = load_and_process_one_from_dataset(the_path)
         D, I = iss.search(converted_image, k)
-        sim_percentages = get_similarities(D, k)
+        sim_percentages = get_similarities(D)
         # Remove requested Picture
         assert I[0, 0] == picture_id
         D = np.delete(D, obj=0, axis=1)
