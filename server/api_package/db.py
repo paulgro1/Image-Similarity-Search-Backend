@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
 class Database(object):
 
-    def __init__(self, flat_filenames, coordinates):
+    def __init__(self):
         super().__init__()
         print("Creating Database")
         # Client
@@ -19,9 +19,28 @@ class Database(object):
         # Database
         self._db = self._client[environ.get("DATABASE_NAME")]
         # GridFS for image storage
+        
+        initialized = True
+        if "images" in self._db.list_collection_names():
+            print("Collection images already exists, checking if database is unchanged")
+            col = self._db["images"]
+            for f in iglob(path.join(environ.get("DATA_PATH"), "*")):
+                f_splitted = path.split(f)[-1]
+                filename = col.find({ "filename": f_splitted })
+                if not filename is None:
+                    continue
+                else:
+                    initialized = False
+                    break
+        else: 
+            initialized = False
+        if initialized:
+            print("Already initialized, skipping initialization")
+        else:
+            print("Database needs to be refreshed")
+        self.is_initialized = initialized
+        
         self._gridfs = GridFS(self._db)
-
-        self.coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
 
     def reset_col(self, col_name):
         col = self._db[col_name]
@@ -31,7 +50,8 @@ class Database(object):
     def count_documents_in_collection(self, options={}):
         return self.col.count_documents(options)
 
-    def initialize(self):
+    def initialize(self, flat_filenames, coordinates):
+        coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
         print("Initializing Database")
         self.reset_col("images")
         self.reset_col("fs.files")
@@ -48,7 +68,7 @@ class Database(object):
                     img.save(output, format=img.format)
                     content = output.getvalue()
                 t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}")
-            coords = self.coordinates[self.coordinates[:,0] == filename][0]
+            coords = coordinates[coordinates[:,0] == filename][0]
             assert coords[0] == filename
             x = coords[1]
             y = coords[2]
@@ -80,7 +100,7 @@ class Database(object):
         return None
 
     def is_id_in_database(self, id):
-        return self.get_one_by_id(id, self.id_projection) != None
+        return not self.get_one_by_id(id, self.id_projection) is None
         
     def get_one_fullsize_by_id(self, id):
         return self.get_one_by_id(id, self.fullsize_projection)
@@ -90,6 +110,9 @@ class Database(object):
         for d in as_list:
             del d["_id"]
         return as_list
+
+    def get_all_coordinates(self):
+        return self.get_multiple({}, { "x": True, "y": True })
 
     def get_all(self, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
         return self.get_multiple({}, projection)

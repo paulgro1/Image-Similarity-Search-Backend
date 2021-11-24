@@ -10,6 +10,7 @@ from os import environ
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
+from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
 import numpy as np
 
 if __name__ == "__main__":
@@ -27,16 +28,21 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
-from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
-flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
-
+from api_package.db import Database
+database = Database()
 from api_package.tsne import TSNE
 tsne = TSNE()
-coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=dummy_coordinates) # TODO True -> False for real coordinates, is slower
+if not database.is_initialized:
+    flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
 
-from api_package.db import Database
-database = Database(flat_images_filenames, coordinates)
-database.initialize()
+    coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=dummy_coordinates) # TODO True -> False for real coordinates, is slower
+
+    database.initialize(flat_images_filenames, coordinates)
+else:
+    coordinates = database.get_all_coordinates()
+    
+    tsne.load_from_database()
+
 
 from api_package.faiss import Faiss
 iss = Faiss(flat_images_filenames, flat_images)
