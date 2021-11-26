@@ -10,14 +10,11 @@ from os import environ
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
-from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
+from api_package.image_helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file
 import numpy as np
 
 if __name__ == "__main__":
     exit("Start via run.py!")
-
-# Allowed extensions for uploaded images
-ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
 
 # Set up Flask App using cors
 app = Flask(__name__)
@@ -56,12 +53,6 @@ def abort_if_picture_doesnt_exist(picture_id):
     
     if not database.is_id_in_database(picture_id):
         abort(404, message=f"Picture {picture_id} not found")
-
-def allowed_file(filename):
-    """
-    TODO docs
-    """
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 class OneFullsize(Resource):

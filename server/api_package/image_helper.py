@@ -6,6 +6,15 @@ import numpy as np
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+# Allowed extensions for uploaded images
+ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
+
+def allowed_file(filename):
+    """
+    TODO docs
+    """
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 def process_image(image):
     converted_image = Image.open(image).convert("RGB")
     resized_image = np.array(converted_image, dtype="float32").ravel()

@@ -6,6 +6,7 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 import pickle
+from api_package.image_helper import allowed_file
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -22,22 +23,35 @@ class Database(object):
         # GridFS for image storage
         
         initialized = True
+        image_not_in_database = False
         if "images" in self._db.list_collection_names() and "tsne" in self._db.list_collection_names():
             print("Collections images and tsne already exist, checking if database is unchanged")
             col = self._db["images"]
+            nr_of_images_asserted = 0
             for f in iglob(path.join(environ.get("DATA_PATH"), "*")):
                 f_splitted = path.split(f)[-1]
-                filename = col.find({ "filename": f_splitted })
-                if not filename is None:
-                    continue
-                else:
-                    initialized = False
-                    break
+                if allowed_file(f_splitted):
+                    filename = col.find({ "filename": f_splitted })
+                    times_in_db = filename.count()
+                    if times_in_db == 1:
+                        nr_of_images_asserted += 1
+                        continue
+                    else:
+                        initialized = False
+                        nr_of_images_asserted = -1
+                        print(f"Found the image {f_splitted} {times_in_db} times in the database")
+                        break
         else: 
             initialized = False
         if initialized:
-            print("Already initialized, skipping initialization")
             self.col = self._db["images"]
+            nr_of_images_in_db = self.col.count_documents({})
+            if nr_of_images_asserted != nr_of_images_in_db:
+                print(f"Number of images in Database ({nr_of_images_in_db}) does not match number of images in folder ({nr_of_images_asserted}), refresh needed")
+                self.col = None
+                initialized = False
+            else:
+                print("Already initialized, skipping initialization")
         else:
             print("Database needs to be refreshed")
         self.is_initialized = initialized
@@ -66,26 +80,27 @@ class Database(object):
         for idx, f in enumerate(iglob(pathname=f_path)):
             t_id = None
             filename = path.split(f)[-1]
-            with Image.open(f) as img:
-                # TODO in .env
-                img.thumbnail((128, 128))
-                with BytesIO() as output:
-                    img.save(output, format=img.format)
-                    content = output.getvalue()
-                t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}", metadata="thumbnail")
-            coords = coordinates[coordinates[:,0] == filename][0]
-            assert coords[0] == filename
-            x = coords[1]
-            y = coords[2]
-            image = {
-                "id": idx,
-                "filename": filename,
-                "path": f,
-                "thumbnail": t_id,
-                "x": x,
-                "y": y
-            }
-            images.append(image)
+            if allowed_file(filename):
+                with Image.open(f) as img:
+                    # TODO in .env
+                    img.thumbnail((128, 128))
+                    with BytesIO() as output:
+                        img.save(output, format=img.format)
+                        content = output.getvalue()
+                    t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}", metadata="thumbnail")
+                coords = coordinates[coordinates[:,0] == filename][0]
+                assert coords[0] == filename
+                x = coords[1]
+                y = coords[2]
+                image = {
+                    "id": idx,
+                    "filename": filename,
+                    "path": f,
+                    "thumbnail": t_id,
+                    "x": x,
+                    "y": y
+                }
+                images.append(image)
 
         self.col = self._db["images"]
         self.col.insert_many(images)
