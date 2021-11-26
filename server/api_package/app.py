@@ -10,14 +10,11 @@ from os import environ
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
+from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
 import numpy as np
 
 if __name__ == "__main__":
     exit("Start via run.py!")
-
-# TODO remove, set to "True" for faster starting
-dummy_coordinates = False
-
 
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
@@ -27,16 +24,19 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
-from api_package.process_images import process_image, load_images, load_and_process_one_from_dataset
-flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
-
+from api_package.db import Database
+database = Database()
 from api_package.tsne import TSNE
 tsne = TSNE()
-coordinates = tsne.calculate_coordinates(flat_images, isuploaded=False, dummy=dummy_coordinates) # TODO True -> False for real coordinates, is slower
 
-from api_package.db import Database
-database = Database(flat_images_filenames, coordinates)
-database.initialize()
+flat_images_filenames, flat_images = load_images(environ.get("DATA_PATH"))
+
+if not database.is_initialized:
+    coordinates = tsne.initialize_coordinates(flat_images)
+    database.initialize(flat_images_filenames, coordinates)
+    tsne.save_to_database(database)
+else:
+    tsne.load_from_database(database)
 
 from api_package.faiss import Faiss
 iss = Faiss(flat_images_filenames, flat_images)
@@ -168,9 +168,9 @@ class UploadOne(Resource):
             return "error no file send"
         if file and allowed_file(file.filename):
             processed = process_image(file)
-            coordinates = tsne.calculate_coordinates(processed, isuploaded=True, dummy=dummy_coordinates) # TODO remove dummy
+            coordinates = tsne.calculate_coordinates(processed)
             D, I = iss.search(processed, k)
-            sim_percentages = get_similarities(D, k)
+            sim_percentages = get_similarities(D)
             return { 
                 "distances": D.tolist(), 
                 "ids": I.tolist(), 
@@ -183,7 +183,7 @@ class NNOfExistingImage(Resource):
     """
     TODO docs
     """      
-    def get(self, picture_id):
+    def post(self, picture_id):
         """
         TODO docs
         """

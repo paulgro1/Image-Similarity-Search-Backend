@@ -5,13 +5,14 @@ from gridfs import GridFS
 from PIL import Image
 from io import BytesIO
 import numpy as np
+import pickle
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
 class Database(object):
 
-    def __init__(self, flat_filenames, coordinates):
+    def __init__(self):
         super().__init__()
         print("Creating Database")
         # Client
@@ -19,9 +20,32 @@ class Database(object):
         # Database
         self._db = self._client[environ.get("DATABASE_NAME")]
         # GridFS for image storage
+        
+        initialized = True
+        if "images" in self._db.list_collection_names() and "tsne" in self._db.list_collection_names():
+            print("Collections images and tsne already exist, checking if database is unchanged")
+            col = self._db["images"]
+            for f in iglob(path.join(environ.get("DATA_PATH"), "*")):
+                f_splitted = path.split(f)[-1]
+                filename = col.find({ "filename": f_splitted })
+                if not filename is None:
+                    continue
+                else:
+                    initialized = False
+                    break
+        else: 
+            initialized = False
+        if initialized:
+            print("Already initialized, skipping initialization")
+            self.col = self._db["images"]
+        else:
+            print("Database needs to be refreshed")
+        self.is_initialized = initialized
+        
         self._gridfs = GridFS(self._db)
-
-        self.coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
+        self.id_projection = { "id": True }
+        self.fullsize_projection = { "id": True, "filename": True, "path": True }
+        self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
 
     def reset_col(self, col_name):
         col = self._db[col_name]
@@ -31,7 +55,8 @@ class Database(object):
     def count_documents_in_collection(self, options={}):
         return self.col.count_documents(options)
 
-    def initialize(self):
+    def initialize(self, flat_filenames, coordinates):
+        coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
         print("Initializing Database")
         self.reset_col("images")
         self.reset_col("fs.files")
@@ -47,8 +72,8 @@ class Database(object):
                 with BytesIO() as output:
                     img.save(output, format=img.format)
                     content = output.getvalue()
-                t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}")
-            coords = self.coordinates[self.coordinates[:,0] == filename][0]
+                t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}", metadata="thumbnail")
+            coords = coordinates[coordinates[:,0] == filename][0]
             assert coords[0] == filename
             x = coords[1]
             y = coords[2]
@@ -64,10 +89,22 @@ class Database(object):
 
         self.col = self._db["images"]
         self.col.insert_many(images)
-        self.id_projection = { "id": True }
-        self.fullsize_projection = { "id": True, "filename": True, "path": True }
-        self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
         print("Database initialized")
+
+    def insert_tsne(self, tsne_embedding):
+        self.reset_col("tsne")
+        the_col = self._db["tsne"]
+        dumped_class = pickle.dumps(tsne_embedding)
+        the_id = self._gridfs.put(dumped_class, metadata="tsne")
+        the_col.insert_one({ "embedding": the_id })
+
+    def get_tsne(self):
+        the_col = self._db["tsne"]
+        assert the_col.count_documents({}) != 0
+        the_id = the_col.find({})[0]["embedding"]
+        dumped_class = self._gridfs.find({ "_id": the_id })[0].read()
+        tsne_embedding = pickle.loads(dumped_class)
+        return tsne_embedding
 
     def get_one(self, filter, projection):
         if filter == None:
@@ -80,7 +117,7 @@ class Database(object):
         return None
 
     def is_id_in_database(self, id):
-        return self.get_one_by_id(id, self.id_projection) != None
+        return not self.get_one_by_id(id, self.id_projection) is None
         
     def get_one_fullsize_by_id(self, id):
         return self.get_one_by_id(id, self.fullsize_projection)
@@ -90,6 +127,13 @@ class Database(object):
         for d in as_list:
             del d["_id"]
         return as_list
+
+    def get_all_coordinates_as_array(self) -> np.ndarray:
+        coords = self.col.find({}, { "x": True, "y": True })
+        lines = []
+        for line in coords:
+            lines.append([line["x"], line["y"]])
+        return np.array(lines, dtype="float64")
 
     def get_all(self, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
         return self.get_multiple({}, projection)
@@ -122,7 +166,7 @@ class Database(object):
         
     def get_all_thumbnails(self):
         if self.count_documents_in_collection() > 0:
-            result = self._gridfs.find()
+            result = self._gridfs.find({ "metadata" : "thumbnail" })
             if not result is None:
                 return [ x for x in result ]    
             return None 
@@ -130,7 +174,7 @@ class Database(object):
 
     def get_multiple_thumbnails_by_id(self, ids):
         if self.count_documents_in_collection() > 0:
-            result = self._gridfs.find({ "_id": {"$in" : ids}})
+            result = self._gridfs.find({ "_id": {"$in" : ids}, "metadata": "thumbnail" })
             if not result is None:
                 return [ x for x in result ]
 
