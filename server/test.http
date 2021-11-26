@@ -25,7 +25,7 @@ GET {{baseUrl}}/images/3/metadata
 GET {{baseUrl}}/images/all/metadata
 
 ### Get nearest neighbours of existing image
-GET {{baseUrl}}/faiss/getNN/3
+POST {{baseUrl}}/faiss/getNN/3
 Content-Type: application/json
 
 {

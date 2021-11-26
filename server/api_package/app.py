@@ -183,7 +183,7 @@ class NNOfExistingImage(Resource):
     """
     TODO docs
     """      
-    def get(self, picture_id):
+    def post(self, picture_id):
         """
         TODO docs
         """
