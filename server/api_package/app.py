@@ -9,6 +9,8 @@ from flask_restful import abort, Resource, Api
 from os import environ
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
+
+from pymongo import message
 from api_package.similarities import get_similarities
 from api_package.image_helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file
 import numpy as np
@@ -137,7 +139,7 @@ class AllPictureIDs(Resource):
 
 
 # Adaptation of https://stackoverflow.com/questions/28982974/flask-restful-upload-image/42286669#42286669
-class UploadOne(Resource):
+class Upload(Resource):
     """
     See https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
     TODO Docs
@@ -149,26 +151,31 @@ class UploadOne(Resource):
         
         TODO return
         """
-        if "img" not in request.files:
-            abort(404, message="No image found")
         if "k" not in request.form:
             abort(404, message="No k found")
-        file = request.files["img"]
         k = int(request.form["k"])
-        if file.filename == "":
-            return "error no file send"
-        if file and allowed_file(file.filename):
-            processed = process_image(file)
-            coordinates = tsne.calculate_coordinates(processed)
-            D, I = iss.search(processed, k)
-            sim_percentages = get_similarities(D)
-            return { 
-                "distances": D.tolist(), 
-                "ids": I.tolist(), 
-                "coordinates": coordinates.tolist(),
-                "similarities": sim_percentages
-                }
-        return "error file not allowed"
+        nr_of_files = len(request.files)
+        print(f"Uploaded {nr_of_files} files")
+        if nr_of_files == 0:
+            abort(404, message="No images send")
+        images = []
+        for item in request.files.items():
+           the_file = item[1]
+           if allowed_file(the_file.filename):
+                images.append(process_image(the_file))
+        nr_of_allowed_files = len(images)
+        print(f"Uploaded {nr_of_allowed_files} allowed files")
+        if nr_of_allowed_files == 0:
+            abort(404, message="No allowed files send")
+        coordinates = tsne.calculate_coordinates(images)
+        D, I = iss.search(images, k)
+        sim_percentages = get_similarities(D)
+        return { 
+            "distances": D.tolist(), 
+            "ids": I.tolist(), 
+            "coordinates": coordinates.tolist(),
+            "similarities": sim_percentages
+            }
 
 class NNOfExistingImage(Resource):
     """
@@ -191,10 +198,14 @@ class NNOfExistingImage(Resource):
         D, I = iss.search(converted_image, k)
         sim_percentages = get_similarities(D)
         # Remove requested Picture
-        assert I[0, 0] == picture_id
-        D = np.delete(D, obj=0, axis=1)
-        I = np.delete(I, obj=0, axis=1)
-        sim_percentages[0].pop(0)
+        spot = np.argwhere(I == picture_id)
+        if spot.shape[0] == 0:
+            spot = I.shape[1] - 1
+        else:
+            spot = spot[0, 1]
+        D = np.delete(D, obj=spot, axis=1)
+        I = np.delete(I, obj=spot, axis=1)
+        sim_percentages[0].pop(spot)
         return {
             "distances": D.tolist(),
             "ids": I.tolist(),
@@ -244,7 +255,7 @@ api.add_resource(MetadataAllImages, "/images/all/metadata")
 api.add_resource(OneThumbnail, "/images/thumbnails/<picture_id>")
 api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
-api.add_resource(UploadOne, "/upload")
+api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
 
 def main():

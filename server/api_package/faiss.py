@@ -48,6 +48,7 @@ class Faiss(object):
 
 
     def search(self, images, k):
+        images = np.array(images, dtype="float32")
         if images.ndim == 1:
             images = images[np.newaxis, ...]
         D, I = self.faiss_index.search(images, k)
