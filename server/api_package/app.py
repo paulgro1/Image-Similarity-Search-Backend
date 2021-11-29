@@ -154,6 +154,8 @@ class Upload(Resource):
         if "k" not in request.form:
             abort(404, message="No k found")
         k = int(request.form["k"])
+        if k < 1:
+            abort(404, message=f"Need to have k > 0; {k} is invalid")
         nr_of_files = len(request.files)
         print(f"Uploaded {nr_of_files} files")
         if nr_of_files == 0:
@@ -191,7 +193,7 @@ class NNOfExistingImage(Resource):
             abort(404, message=f"Picture {picture_id} not found")
         the_path = image["path"]
         k = request.json["k"]
-        if k is None or k < 0:
+        if k is None or k < 1:
             abort(404, message=f"k is missing valid value in request body with value {k}")
         k += 1 # Image exists in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
         converted_image = load_and_process_one_from_dataset(the_path)
