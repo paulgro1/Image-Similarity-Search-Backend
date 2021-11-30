@@ -116,7 +116,7 @@ Ob dies effizienter passieren kann, wird in #45 exploriert
 - Es wird nun beim ersten Laden der Bilder und beim Upload von Bildern aus dem Frontend überprüft, ob die Bildgrößen übereinstimmen
 - Das Zuschneiden wurde nicht erledigt und wird in #44 weitergeführt
 
-![](./images/size_images.png)<br><br>
+<img src="./images/size_images.png"  width="400"><br>
 *Response auf get size*
 
 <b>#39 BUG Route /faiss/getNN/<id> erlaubt keinen request body</b>
@@ -141,10 +141,10 @@ Ob dies effizienter passieren kann, wird in #45 exploriert
 - Es stellte sich bei der Implementierung der MultipleFullsize Route heraus, dass diese keinen Vorteil gegenüber der wiederholten Anfrage auf OneFullsize hätte, denn die Fullsize Images werden nur in einer sehr begrenzten Anzahl, in der Informationsview, im Frontend benötigt.
 Deshalb wird diese Funktion zunächst weggelassen.
 
-![](./images/multiple_thumbnails.png)<br><br>
+<img src="./images/multiple_thumbnails.png"  width="400"><br>
 *Response für mehrere Thumbnails - Zip komprimiert*
 
-![](./images/multiple_metadata.png)<br><br>
+<img src="./images/multiple_metadata.png"  width="400"><br>
 *Response für mehrere Metadaten*
 
 
@@ -164,11 +164,11 @@ Deshalb wird diese Funktion zunächst weggelassen.
 
 - Code wurde generell nochmal etwas umgeschrieben und allgemeiner gehalten
 
-![](./images/descriptor.png)<br><br>
+<img src="./images/descriptor.png"  width="400"><br>
 
 - Mit Hilfe der ORB Funktionen wie zum Beispiel, detectAndCompute(), die Descriptoren der jeweiligen Bilder gespeichert, um darauf die Deskriptoren des Query Bildes und die aus der Datenbank zu vergleichen. 
 
-![](./images/matches.png)<br><br>
+<img src="./images/matches.png"  width="400"><br>
 
 - Bei Nutzung des "BFMatchers" und der Funktion knnMatch() enstand Problem: Es ließen sich die Anzahl der ähnlichsten Bilder (hier wurde eine Aussortierung vorgenommen, um nur die besten/ ähnlichsten Matches angezeigt zu bekommen), sowie die Ähnlichkeiten, welche in einem Int- Wert (siehe im Bild bei Good Matches, Beispiel: [<DMatch 0x7f79d8b50d70>]) angegeben wurden, ausgeben, jedoch gab es keine Auskunft, um welche Bilder es sich wirklich handelt. Deshalb habe ich versucht die Namen der Bilder mit den jeweiligen Deskriptoren mit Hilfe der zip Funktion zu einem Dictionary zu verbinden, um auch die Namen der ähnlichsten Bilder zurückzubekommen.
 
