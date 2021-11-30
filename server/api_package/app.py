@@ -28,7 +28,7 @@ tsne = TSNE()
 
 flat_images_filenames, flat_images, load_success = load_images(environ.get("DATA_PATH"))
 if not load_success:
-    abort(404, message="Loading images failed, images sizes incorrect")
+    exit("Loading images failed, images sizes incorrect")
 
 if not database.is_initialized:
     coordinates = tsne.initialize_coordinates(flat_images)
