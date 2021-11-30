@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from os import path, environ
-from glob import iglob
+from glob import iglob, glob
 from gridfs import GridFS
 from PIL import Image
 from io import BytesIO
@@ -20,10 +20,8 @@ class Database(object):
         self._client = MongoClient(environ.get("DATABASE_CLIENT"))
         # Database
         self._db = self._client[environ.get("DATABASE_NAME")]
-        # GridFS for image storage
         
         initialized = True
-        image_not_in_database = False
         if "images" in self._db.list_collection_names() and "tsne" in self._db.list_collection_names():
             print("Collections images and tsne already exist, checking if database is unchanged")
             col = self._db["images"]
@@ -56,6 +54,7 @@ class Database(object):
             print("Database needs to be refreshed")
         self.is_initialized = initialized
         
+        # GridFS for image storage
         self._gridfs = GridFS(self._db)
         self.id_projection = { "id": True }
         self.fullsize_projection = { "id": True, "filename": True, "path": True }
@@ -75,15 +74,21 @@ class Database(object):
         self.reset_col("images")
         self.reset_col("fs.files")
         self.reset_col("fs.chunks")
-        f_path = path.join(environ.get("DATA_PATH"), "*")
+
+        thumbnail_width = environ.get("THUMBNAIL_WIDTH")
+        thumbnail_height = environ.get("THUMBNAIL_HEIGHT")
+        if thumbnail_width is None or thumbnail_height is None:
+            exit("Please update your .env file! Missing thumbnail sizes")
+        thumbnail_size = (thumbnail_width, thumbnail_height)
+        
         images = []
+        f_path = path.join(environ.get("DATA_PATH"), "*")
         for idx, f in enumerate(iglob(pathname=f_path)):
             t_id = None
             filename = path.split(f)[-1]
             if allowed_file(filename):
                 with Image.open(f) as img:
-                    # TODO in .env
-                    img.thumbnail((128, 128))
+                    img.thumbnail(thumbnail_size)
                     with BytesIO() as output:
                         img.save(output, format=img.format)
                         content = output.getvalue()
@@ -101,7 +106,6 @@ class Database(object):
                     "y": y
                 }
                 images.append(image)
-
         self.col = self._db["images"]
         self.col.insert_many(images)
         print("Database initialized")
@@ -169,6 +173,22 @@ class Database(object):
             return self.get_multiple(filter, projection)
         return None
 
+    def are_all_ids_in_database(self, ids):
+        if ids is None:
+            return False, "no ids given!"
+        if not isinstance(ids, list):
+            ids = [ids]
+        result = self.get_multiple_by_id(ids, { "id": True })
+        result_list = list(result)
+        success = len(result_list) == len(ids)
+        if success:
+            return True, None
+        else:
+            result_list = [ int(x["id"]) for x in result_list ]
+            # See https://stackoverflow.com/questions/3462143/get-difference-between-two-lists
+            not_present = list(set(ids) - set(result_list))
+            return False, not_present
+
     def get_multiple_fullsize_by_id(self, ids):
         return self.get_multiple_by_id(ids, self.fullsize_projection)
 
@@ -189,7 +209,9 @@ class Database(object):
 
     def get_multiple_thumbnails_by_id(self, ids):
         if self.count_documents_in_collection() > 0:
-            result = self._gridfs.find({ "_id": {"$in" : ids}, "metadata": "thumbnail" })
+            fs_ids = self.get_multiple_by_id(ids, { "thumbnail": True })
+            fs_ids = [ x["thumbnail"] for x in fs_ids ]
+            result = self._gridfs.find({ "_id": {"$in" : fs_ids}, "metadata": "thumbnail" })
             if not result is None:
                 return [ x for x in result ]
 
@@ -204,19 +226,23 @@ class Database(object):
     def get_metadata(self, id):
         result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True})
         if not result is None:
-            id = result["id"]
-            filename = result["filename"]
-            x = result["x"]
-            y = result["y"]
-            position = (x, y)
-            # TODO  more data
             return {
-                "id": id,
-                "filename": filename,
-                "position": position
+                "id": result["id"],
+                "filename": result["filename"],
+                "position": (result["x"], result["y"])
             }
         return None
     
+    def get_multiple_metadata(self, ids):
+        result = self.get_multiple_by_id(ids, { "id": True, "filename": True, "x": True, "y": True})
+        if not result is None:
+            return [ { 
+                "id": x["id"], 
+                "filename": x["filename"], 
+                "position": (x["x"], x["y"]) 
+            } for x in result ]
+        return None
+
     def get_all_metadata(self):
         result = self.get_all({ "id": True, "filename": True, "x": True, "y": True })
         if not result is None:

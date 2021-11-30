@@ -4,3 +4,5 @@ conda env create -f environment.yml
 
 Only start from run.py!
 Open directory "server"!
+
+Check if .env is up to date -> setup_dotenv.txt

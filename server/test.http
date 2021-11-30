@@ -32,3 +32,28 @@ Content-Type: application/json
     "k": 6
 }
 
+### Get multiple thumbnails by id
+
+POST {{baseUrl}}/images/thumbnails/multiple
+Content-Type: application/json
+
+{
+    "picture_ids": [
+        1, 2, 3, 4, 30
+    ]
+}
+
+### Get metadata from multiple images
+
+POST {{baseUrl}}/images/multiple/metadata
+Content-Type: application/json
+
+{
+    "picture_ids": [
+        1, 2, 3, 4, 30
+    ]
+}
+
+### Get size of images in database
+
+GET {{baseUrl}}/images/size
