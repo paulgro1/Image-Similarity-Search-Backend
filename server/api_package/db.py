@@ -79,7 +79,7 @@ class Database(object):
         thumbnail_height = environ.get("THUMBNAIL_HEIGHT")
         if thumbnail_width is None or thumbnail_height is None:
             exit("Please update your .env file! Missing thumbnail sizes")
-        thumbnail_size = (thumbnail_width, thumbnail_height)
+        thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
         
         images = []
         f_path = path.join(environ.get("DATA_PATH"), "*")
