@@ -88,6 +88,21 @@ aktueller Stand:
 
 <h3>Paul (@s82130)</h3>
 
+<b>[#15](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/15) Zoomfunktionalität</b>
+
+- Map immer noch statisch
+- D3MapNeu.js durchgetestet, trotzdem den Versursacher des Bugs nicht gefunden
+- andere Implementierung ausprobiert, gleiches Problem.
+
+<b>[#23](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/23) Zoomfunktionalität</b>
+
+- Recherche, wie man folgende Stack Ansicht mit D3.js umsetzen könnte:
+
+![](./images/map.png)<br>
+*Mögliche Stack-Ansicht in der Overview*<br>
+
+- Sonst habe ich keinen weiteren Fortschritt erreicht, da ich vom 29.11. - 01.12. an einer starken Mandelentzündung erkrankt bin.
+
 <br><br>
 
 <h2>Fortschritte Backend</h2>
