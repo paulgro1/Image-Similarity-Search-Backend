@@ -12,6 +12,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
 from api_package.image_helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file
 import numpy as np
+from math import floor
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -29,19 +30,40 @@ tsne = TSNE()
 flat_images_filenames, flat_images, load_success = load_images(environ.get("DATA_PATH"))
 if not load_success:
     exit("Loading images failed, images sizes incorrect")
+if flat_images.shape[0] < 1:
+    exit("Need to have data ind data folder!")
 
-if not database.is_initialized:
-    coordinates = tsne.initialize_coordinates(flat_images)
-    database.initialize(flat_images_filenames, coordinates)
-    tsne.save_to_database(database)
-else:
-    tsne.load_from_database(database)
+coordinates = tsne.initialize_coordinates(flat_images)
+database.initialize(flat_images_filenames, coordinates)
 
 from api_package.faiss import Faiss
-iss = Faiss(flat_images_filenames, flat_images)
-iss.index(Faiss.FlatL2, d=flat_images[0].shape[0])
-assert iss.has_index
-iss.initialize_index()
+iss = Faiss()
+flatL2_success = iss.build_index(
+    Faiss.FlatL2, 
+    flat_images_filenames, 
+    flat_images, 
+    d=flat_images[0].shape[0]
+    )
+if not flatL2_success:
+    exit("Failed building FlatL2 index")
+
+centroids = int(max(floor(flat_images.shape[0] / 39), 1))
+probes_per_iteration = int(max(centroids / 10, 1))
+ivfflat_success = iss.build_index(
+    Faiss.IVFFlat, 
+    flat_images_filenames, 
+    flat_images, 
+    nlist=centroids, 
+    nprobe=probes_per_iteration, 
+    d=flat_images[0].shape[0]
+    )
+if not ivfflat_success:
+    exit("Failed building IVFFlat index")
+
+assert iss.change_index(Faiss.FlatL2)
+
+flat_images = None
+flat_images_filenames = None
 
 def abort_if_pictures_dont_exist(picture_ids):
     """
@@ -297,6 +319,26 @@ class ImagesSize(Resource):
             "height": environ.get("FULLSIZE_HEIGHT")
         }
 
+class GetAllFaissIndices(Resource):
+    """
+    TODO docs
+    """
+    def get(self):
+        return iss.get_all_indices_keys()
+
+class ChangeActiveFaissIndex(Resource):
+    """
+    TODO docs
+    """
+    def post(self, index_key):
+        if index_key is None:
+            abort(404, message="no index key send")
+        success = iss.change_index(index_key)
+        if success:
+            return "success!"
+        else:
+            abort(404, message="index change failed")
+
 class Debug(Resource):
     """
     Temporary class for debugging TODO remove
@@ -317,9 +359,11 @@ api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
 api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
+api.add_resource(GetAllFaissIndices, "/faiss/index/all")
+api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 
 def main():
     print("Starting app")
-    app.run(host=environ.get("BACKEND_HOST"), port=environ.get("BACKEND_PORT"))
+    app.run(host=environ.get("BACKEND_HOST"), port=environ.get("BACKEND_PORT"), threaded=True)
 
 

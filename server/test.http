@@ -25,11 +25,11 @@ GET {{baseUrl}}/images/3/metadata
 GET {{baseUrl}}/images/all/metadata
 
 ### Get nearest neighbours of existing image
-POST {{baseUrl}}/faiss/getNN/3
+POST {{baseUrl}}/faiss/getNN/264
 Content-Type: application/json
 
 {
-    "k": 6
+    "k": 20
 }
 
 ### Get multiple thumbnails by id
@@ -57,3 +57,12 @@ Content-Type: application/json
 ### Get size of images in database
 
 GET {{baseUrl}}/images/size
+
+
+### Get all faiss indices
+
+GET {{baseUrl}}/faiss/index/all
+
+### Change current faiss index
+
+POST {{baseUrl}}/faiss/index/IndexIVFFlat

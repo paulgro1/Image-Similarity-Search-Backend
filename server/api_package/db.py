@@ -21,39 +21,6 @@ class Database(object):
         # Database
         self._db = self._client[environ.get("DATABASE_NAME")]
         
-        initialized = True
-        if "images" in self._db.list_collection_names() and "tsne" in self._db.list_collection_names():
-            print("Collections images and tsne already exist, checking if database is unchanged")
-            col = self._db["images"]
-            nr_of_images_asserted = 0
-            for f in iglob(path.join(environ.get("DATA_PATH"), "*")):
-                f_splitted = path.split(f)[-1]
-                if allowed_file(f_splitted):
-                    filename = col.find({ "filename": f_splitted })
-                    times_in_db = filename.count()
-                    if times_in_db == 1:
-                        nr_of_images_asserted += 1
-                        continue
-                    else:
-                        initialized = False
-                        nr_of_images_asserted = -1
-                        print(f"Found the image {f_splitted} {times_in_db} times in the database")
-                        break
-        else: 
-            initialized = False
-        if initialized:
-            self.col = self._db["images"]
-            nr_of_images_in_db = self.col.count_documents({})
-            if nr_of_images_asserted != nr_of_images_in_db:
-                print(f"Number of images in Database ({nr_of_images_in_db}) does not match number of images in folder ({nr_of_images_asserted}), refresh needed")
-                self.col = None
-                initialized = False
-            else:
-                print("Already initialized, skipping initialization")
-        else:
-            print("Database needs to be refreshed")
-        self.is_initialized = initialized
-        
         # GridFS for image storage
         self._gridfs = GridFS(self._db)
         self.id_projection = { "id": True }
@@ -109,21 +76,6 @@ class Database(object):
         self.col = self._db["images"]
         self.col.insert_many(images)
         print("Database initialized")
-
-    def insert_tsne(self, tsne_embedding):
-        self.reset_col("tsne")
-        the_col = self._db["tsne"]
-        dumped_class = pickle.dumps(tsne_embedding)
-        the_id = self._gridfs.put(dumped_class, metadata="tsne")
-        the_col.insert_one({ "embedding": the_id })
-
-    def get_tsne(self):
-        the_col = self._db["tsne"]
-        assert the_col.count_documents({}) != 0
-        the_id = the_col.find({})[0]["embedding"]
-        dumped_class = self._gridfs.find({ "_id": the_id })[0].read()
-        tsne_embedding = pickle.loads(dumped_class)
-        return tsne_embedding
 
     def get_one(self, filter, projection):
         if filter == None:
