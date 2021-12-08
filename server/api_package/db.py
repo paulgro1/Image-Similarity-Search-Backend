@@ -7,6 +7,7 @@ from io import BytesIO
 import numpy as np
 import pickle
 from api_package.image_helper import allowed_file
+from faiss import serialize_index, deserialize_index
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -41,6 +42,7 @@ class Database(object):
         self.reset_col("images")
         self.reset_col("fs.files")
         self.reset_col("fs.chunks")
+        self.reset_col("faiss")
 
         thumbnail_width = environ.get("THUMBNAIL_WIDTH")
         thumbnail_height = environ.get("THUMBNAIL_HEIGHT")
@@ -76,6 +78,28 @@ class Database(object):
         self.col = self._db["images"]
         self.col.insert_many(images)
         print("Database initialized")
+
+    def save_index(self, key, index):
+        print(f"saving index {key}")
+        serialized = serialize_index(index)
+        dump = pickle.dumps(serialized)
+        the_id = self._gridfs.put(dump, filename=key, metadata="faiss")
+        the_obj = {
+            "index_id": the_id,
+            "key": key
+        }
+        self._db["faiss"].insert_one(the_obj)
+        self._db["faiss"].getPlanCache().clear()
+    
+    def load_index(self, key):
+        print(f"loading index {key}")
+        the_col = self._db["faiss"]
+        assert the_col.count_documents({}) != 0
+        the_id = the_col.find_one({ "key": key })["index_id"]
+        the_col.getPlanCache().clear()
+        dump = self._gridfs.find({ "_id": the_id })[0].read()
+        index = deserialize_index(pickle.loads(dump))
+        return index
 
     def get_one(self, filter, projection):
         if filter == None:

@@ -1,5 +1,8 @@
-from faiss import IndexFlatL2, IndexIVFFlat, METRIC_L2
+from faiss import IndexFlatL2, IndexIVFFlat, METRIC_L2, write_index, read_index
 import numpy as np
+from os import path, environ, mkdir
+from shutil import rmtree
+import gc
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -8,12 +11,18 @@ class Faiss(object):
     FlatL2 = "IndexFlatL2"
     IVFFlat = "IndexIVFFlat"
     indices = {
-        FlatL2: None,
-        IVFFlat: None
+        FlatL2: False,
+        IVFFlat: False
     }
 
     def __init__(self):
         super().__init__()
+        root = environ.get("SERVER_ROOT")
+        folder_path = path.join(root, "faisstemp")
+        if path.isdir(folder_path):
+            rmtree(folder_path)
+        mkdir(folder_path)
+        
         self.has_index = False
         print("Creating Faiss-Object")
         
@@ -48,22 +57,27 @@ class Faiss(object):
             return True
         return False
 
-    def change_index(self, key):
+    def change_index(self, key, database):
         if key is None:
             print("No key given")
             return False
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
-        index = self.indices[key]
+        if not self.indices[key]:
+            print(f"{key} is not build yet")
+        index = database.load_index(key)
         if index is None:
-            print(f"Index with key {key} isn't build yet")
+            print(f"Index {key} load failed")
             return False
         return self._set_index(key, index)
     
-    def build_index(self, key, training_filenames, training_images, **kwargs):
+    def build_index(self, key, training_filenames, training_images, database, **kwargs):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
+            return False
+        if self.indices[key]:
+            print(f"{key} is already build")
             return False
         print(f"Building index {key}")
         index = None
@@ -73,12 +87,15 @@ class Faiss(object):
             index = self._build_IVFFlat(training_images, **kwargs)
         if index is None:
             return False
-        self.indices[key] = index
+        self.indices[key] = True
         print("Building index complete")
 
         print("Initializing index")
         index.add(training_images)
         print("Amount of vectors in index:", index.ntotal)
+        database.save_index(key, index)
+        del index
+        gc.collect()
         return True
 
     def search(self, images, k):
@@ -92,12 +109,6 @@ class Faiss(object):
         D, I = self.faiss_index.search(images, k)
         print(I)
         return D, I
-
-    def get_index(self, key):
-        if key in self.indices.keys():
-            return self.indices[key]
-        else:
-            return None
 
     def get_all_indices_keys(self):
         return [ key for key in self.indices.keys() ]

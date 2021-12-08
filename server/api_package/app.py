@@ -13,6 +13,7 @@ from api_package.similarities import get_similarities
 from api_package.image_helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file
 import numpy as np
 from math import floor
+import gc
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -36,12 +37,16 @@ if flat_images.shape[0] < 1:
 coordinates = tsne.initialize_coordinates(flat_images)
 database.initialize(flat_images_filenames, coordinates)
 
+del coordinates
+gc.collect()
+
 from api_package.faiss import Faiss
 iss = Faiss()
 flatL2_success = iss.build_index(
     Faiss.FlatL2, 
     flat_images_filenames, 
     flat_images, 
+    database,
     d=flat_images[0].shape[0]
     )
 if not flatL2_success:
@@ -53,6 +58,7 @@ ivfflat_success = iss.build_index(
     Faiss.IVFFlat, 
     flat_images_filenames, 
     flat_images, 
+    database,
     nlist=centroids, 
     nprobe=probes_per_iteration, 
     d=flat_images[0].shape[0]
@@ -60,10 +66,11 @@ ivfflat_success = iss.build_index(
 if not ivfflat_success:
     exit("Failed building IVFFlat index")
 
-assert iss.change_index(Faiss.FlatL2)
+assert iss.change_index(Faiss.FlatL2, database)
 
-flat_images = None
-flat_images_filenames = None
+del flat_images
+del flat_images_filenames
+gc.collect()
 
 def abort_if_pictures_dont_exist(picture_ids):
     """
@@ -333,7 +340,7 @@ class ChangeActiveFaissIndex(Resource):
     def post(self, index_key):
         if index_key is None:
             abort(404, message="no index key send")
-        success = iss.change_index(index_key)
+        success = iss.change_index(index_key, database)
         if success:
             return "success!"
         else:
