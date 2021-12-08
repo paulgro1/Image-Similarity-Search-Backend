@@ -59,10 +59,10 @@ Content-Type: application/json
 GET {{baseUrl}}/images/size
 
 
-### Get all faiss indices
+### DEPRECATED Get all faiss indices
 
-GET {{baseUrl}}/faiss/index/all
+### GET {{baseUrl}}/faiss/index/all
 
-### Change current faiss index
+### DEPRECATED Change current faiss index
 
-POST {{baseUrl}}/faiss/index/IndexIVFFlat
+### POST {{baseUrl}}/faiss/index/IndexIVFFlat

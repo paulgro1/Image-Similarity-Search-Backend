@@ -10,18 +10,17 @@ if __name__ == "__main__":
 class Faiss(object):
     FlatL2 = "IndexFlatL2"
     IVFFlat = "IndexIVFFlat"
+    # indices = {
+    #     FlatL2: False,
+    #     IVFFlat: False
+    # }
     indices = {
-        FlatL2: False,
-        IVFFlat: False
+        FlatL2: None,
+        IVFFlat: None
     }
 
     def __init__(self):
         super().__init__()
-        root = environ.get("SERVER_ROOT")
-        folder_path = path.join(root, "faisstemp")
-        if path.isdir(folder_path):
-            rmtree(folder_path)
-        mkdir(folder_path)
         
         self.has_index = False
         print("Creating Faiss-Object")
@@ -64,9 +63,10 @@ class Faiss(object):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
-        if not self.indices[key]:
-            print(f"{key} is not build yet")
-        index = database.load_index(key)
+        # if not self.indices[key]:
+        #     print(f"{key} is not build yet")
+        # index = database.load_index(key)
+        index = self.indices[key]
         if index is None:
             print(f"Index {key} load failed")
             return False
@@ -76,9 +76,9 @@ class Faiss(object):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
-        if self.indices[key]:
-            print(f"{key} is already build")
-            return False
+        # if self.indices[key]:
+        #     print(f"{key} is already build")
+        #     return False
         print(f"Building index {key}")
         index = None
         if key == self.FlatL2:
@@ -87,15 +87,16 @@ class Faiss(object):
             index = self._build_IVFFlat(training_images, **kwargs)
         if index is None:
             return False
-        self.indices[key] = True
+        # self.indices[key] = True
+        self.indices[key] = index
         print("Building index complete")
 
         print("Initializing index")
         index.add(training_images)
         print("Amount of vectors in index:", index.ntotal)
-        database.save_index(key, index)
-        del index
-        gc.collect()
+        # database.save_index(key, index)
+        # del index
+        # gc.collect()
         return True
 
     def search(self, images, k):

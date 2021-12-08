@@ -52,6 +52,7 @@ flatL2_success = iss.build_index(
 if not flatL2_success:
     exit("Failed building FlatL2 index")
 
+"""
 centroids = int(max(floor(flat_images.shape[0] / 39), 1))
 probes_per_iteration = int(max(centroids / 10, 1))
 ivfflat_success = iss.build_index(
@@ -65,6 +66,9 @@ ivfflat_success = iss.build_index(
     )
 if not ivfflat_success:
     exit("Failed building IVFFlat index")
+
+
+"""
 
 assert iss.change_index(Faiss.FlatL2, database)
 
@@ -326,12 +330,14 @@ class ImagesSize(Resource):
             "height": environ.get("FULLSIZE_HEIGHT")
         }
 
+
 class GetAllFaissIndices(Resource):
     """
     TODO docs
     """
     def get(self):
         return iss.get_all_indices_keys()
+
 
 class ChangeActiveFaissIndex(Resource):
     """
@@ -366,8 +372,8 @@ api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
 api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
-api.add_resource(GetAllFaissIndices, "/faiss/index/all")
-api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
+# api.add_resource(GetAllFaissIndices, "/faiss/index/all")
+# api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 
 def main():
     print("Starting app")

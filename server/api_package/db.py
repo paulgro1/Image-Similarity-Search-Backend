@@ -79,6 +79,7 @@ class Database(object):
         self.col.insert_many(images)
         print("Database initialized")
 
+    """
     def save_index(self, key, index):
         print(f"saving index {key}")
         serialized = serialize_index(index)
@@ -89,18 +90,19 @@ class Database(object):
             "key": key
         }
         self._db["faiss"].insert_one(the_obj)
-        self._db["faiss"].getPlanCache().clear()
+        self._db.command({"planCacheClear" : "faiss"})
     
     def load_index(self, key):
         print(f"loading index {key}")
         the_col = self._db["faiss"]
         assert the_col.count_documents({}) != 0
         the_id = the_col.find_one({ "key": key })["index_id"]
-        the_col.getPlanCache().clear()
+        self._db.command({"planCacheClear" : "faiss"})
         dump = self._gridfs.find({ "_id": the_id })[0].read()
         index = deserialize_index(pickle.loads(dump))
         return index
-
+    """
+    
     def get_one(self, filter, projection):
         if filter == None:
             return None
