@@ -107,7 +107,7 @@ mit den Daten der gewählten Bilder (Größe und Position) ein Rechteck auf Canv
 
 *Diese Woche in das Frontend gewechselt*
 
-<b>[#24](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/24) SIFT/ORB Algorithm closed</b>
+<b>#24 SIFT/ORB Algorithm closed</b>
 
 <b>[#45](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/45) Resize Images after Upload</b>
 
