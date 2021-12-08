@@ -42,7 +42,7 @@ Anzahl der angezeigten nächsten Nachbarn bei hochgeladenen Bildern nicht nachtr
 - Bild ändert seine Opacity bei einem click, jedoch spricht es noch nicht in den ausgangszustand zurück
 - Problem wurde mit einem "state", der jeweils vorher abgefragt wird gelöst
 - Ausgangszustand wird jetzt beim zweiten click auch erreicht
-- markStyle muss noch angapsst werden, leider nimmt das gewählte object nicht die zugewiesene border an. -> behandlung folgt in Issue #42 (closed)
+- markStyle muss noch angapsst werden, leider nimmt das gewählte object nicht die zugewiesene border an. -> behandlung folgt in Issue [#42](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/42) (closed)
 
 <b>[#43](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/43) Markieren der nächsten Nachbarn bei single-click</b>
 
@@ -50,11 +50,11 @@ Anzahl der angezeigten nächsten Nachbarn bei hochgeladenen Bildern nicht nachtr
 erster Lösungsansatz, die gefundenen Nachbarn mit d3 genau wie das gewählte Bild zu manipulieren ist gescheiter
 - zweite Idee: Sie über ihre eindeutige ID im DOM auszuwählen und darüber ihren Style zu ändern war die bessere Lösung
 - nachträglich wurde dem svgCanvas noch eine klick-Funktion übergeben damit die Markierung der Bilder entfernt wird
-- markStyle muss noch angepasst werden, leider nimmt das gewählte objekt nicht die zugewiesene border an. -> behandlung folgt in Issue #42 (closed)
+- markStyle muss noch angepasst werden, leider nimmt das gewählte objekt nicht die zugewiesene border an. -> behandlung folgt in Issue [#42](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/42) (closed)
 
 <b>[#42](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/42) markStyle des angeklickten Bildes anpassen</b>
 
-- Problem aus Issue #36 (closed) und Issue #43 (closed)
+- Problem aus Issue [#36](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/36) (closed) und Issue [#43](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/43) (closed)
 - markStyle muss noch angepasst werden, leider nimmt das gewählte objekt nicht die zugewiesene Border an.
 - Elemente haben keine "border"- style angenommen
 - Erkenntnis: 
