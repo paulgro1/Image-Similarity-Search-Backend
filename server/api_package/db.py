@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 import pickle
-from api_package.image_helper import allowed_file
+from api_package.helper import allowed_file
 from faiss import serialize_index, deserialize_index
 
 if __name__ == "__main__":
@@ -49,7 +49,7 @@ class Database(object):
         if thumbnail_width is None or thumbnail_height is None:
             exit("Please update your .env file! Missing thumbnail sizes")
         thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
-        
+        actual_thumbnail_size = None
         images = []
         f_path = path.join(environ.get("DATA_PATH"), "*")
         for idx, f in enumerate(iglob(pathname=f_path)):
@@ -58,6 +58,8 @@ class Database(object):
             if allowed_file(filename):
                 with Image.open(f) as img:
                     img.thumbnail(thumbnail_size)
+                    if actual_thumbnail_size is None:
+                        actual_thumbnail_size = img.size
                     with BytesIO() as output:
                         img.save(output, format=img.format)
                         content = output.getvalue()
@@ -77,6 +79,8 @@ class Database(object):
                 images.append(image)
         self.col = self._db["images"]
         self.col.insert_many(images)
+        environ["ACTUAL_THUMBNAIL_WIDTH"] = str(actual_thumbnail_size[0])
+        environ["ACTUAL_THUMBNAIL_HEIGHT"] = str(actual_thumbnail_size[1])
         print("Database initialized")
 
     """
@@ -207,6 +211,14 @@ class Database(object):
             return {
                 "id": result["id"],
                 "filename": result["filename"],
+                "image_size": {
+                    "width": environ.get("FULLSIZE_WIDTH"),
+                    "height": environ.get("FULLSIZE_HEIGHT")
+                },
+                "thumbnail_size": {
+                    "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
+                    "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
+                },    
                 "position": (result["x"], result["y"])
             }
         return None
@@ -217,7 +229,15 @@ class Database(object):
             return [ { 
                 "id": x["id"], 
                 "filename": x["filename"], 
-                "position": (x["x"], x["y"]) 
+                "position": (x["x"], x["y"]),
+                "image_size": {
+                    "width": environ.get("FULLSIZE_WIDTH"),
+                    "height": environ.get("FULLSIZE_HEIGHT")
+                },
+                "thumbnail_size": {
+                    "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
+                    "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
+                }, 
             } for x in result ]
         return None
 
@@ -227,6 +247,14 @@ class Database(object):
             return [ { 
                 "id": x["id"], 
                 "filename": x["filename"], 
-                "position": (x["x"], x["y"]) 
+                "position": (x["x"], x["y"]),
+                "image_size": {
+                    "width": environ.get("FULLSIZE_WIDTH"),
+                    "height": environ.get("FULLSIZE_HEIGHT")
+                },
+                "thumbnail_size": {
+                    "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
+                    "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
+                }, 
             } for x in result ]
         return None

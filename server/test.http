@@ -58,6 +58,10 @@ Content-Type: application/json
 
 GET {{baseUrl}}/images/size
 
+### Get size of thumbnails
+
+GET {{baseUrl}}/images/thumbnails/size
+
 
 ### Get all faiss indices
 
@@ -66,3 +70,7 @@ GET {{baseUrl}}/faiss/index/all
 ### Change current faiss index
 
 POST {{baseUrl}}/faiss/index/IndexIVFFlat
+
+### Analyse the dataset
+
+GET {{baseUrl}}/images/analyseDataset

@@ -45,3 +45,37 @@ def load_and_process_one_from_dataset(the_path):
     full_path = path.join(environ.get("DATA_PATH"), the_path)
     resized_image, _ = process_image(full_path)
     return np.array(resized_image, dtype="float32")
+
+def analyse_dataset(images, coordinates):
+    coord_min = np.amin(coordinates, axis=0)
+    x_min = coord_min[0]
+    y_min = coord_min[1]
+    coord_max = np.amax(coordinates, axis=0)
+    x_max = coord_max[0]
+    y_max = coord_max[1]
+    coord_average = np.sum(coordinates, axis=0) / coordinates.shape[0]
+    x_average = coord_average[0]
+    y_average = coord_average[1]
+    return {
+        "coordinates": {
+            "min_x": x_min,
+            "max_x": x_max,
+            "min_y": y_min,
+            "max_y": y_max,
+            "average_x": x_average,
+            "average_y": y_average
+        },
+        "images": {
+            "amount_of_images": images.shape[0],
+            "image_size": {
+                "width": environ.get("FULLSIZE_WIDTH"),
+                "height": environ.get("FULLSIZE_HEIGHT")
+            },
+            "thumbnail_size": {
+                "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
+                "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
+            },    
+        }
+
+    }
+    

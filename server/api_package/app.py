@@ -10,7 +10,7 @@ from os import environ
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
-from api_package.image_helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file
+from api_package.helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file, analyse_dataset
 import numpy as np
 from math import floor
 import gc
@@ -36,6 +36,8 @@ if flat_images.shape[0] < 1:
 
 coordinates = tsne.initialize_coordinates(flat_images)
 database.initialize(flat_images_filenames, coordinates)
+
+analysed_dataset = analyse_dataset(flat_images, coordinates)
 
 del coordinates
 gc.collect()
@@ -330,6 +332,15 @@ class ImagesSize(Resource):
             "height": environ.get("FULLSIZE_HEIGHT")
         }
 
+class ThumbnailSize(Resource):
+    """
+    TODO docs
+    """
+    def get(self):
+        return {
+            "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
+            "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
+        }    
 
 class GetAllFaissIndices(Resource):
     """
@@ -352,6 +363,13 @@ class ChangeActiveFaissIndex(Resource):
         else:
             abort(404, message="index change failed")
 
+class AnalyseDataset(Resource):
+    """
+    TODO docs
+    """
+    def get(self):
+        return analysed_dataset
+
 class Debug(Resource):
     """
     Temporary class for debugging TODO remove
@@ -363,7 +381,9 @@ class Debug(Resource):
 api.add_resource(Debug, "/")
 api.add_resource(AllPictureIDs, "/images/ids")
 api.add_resource(ImagesSize, "/images/size")
+api.add_resource(AnalyseDataset, "/images/analyseDataset")
 api.add_resource(AllThumbnails, "/images/thumbnails/all")
+api.add_resource(ThumbnailSize, "/images/thumbnails/size")
 api.add_resource(MultipleThumbnails, "/images/thumbnails/multiple")
 api.add_resource(OneThumbnail, "/images/thumbnails/<picture_id>")
 api.add_resource(MetadataAllImages, "/images/all/metadata")
