@@ -18,3 +18,6 @@ DATA_FOLDER=data
 # Thumbnails
 THUMBNAIL_WIDTH=128
 THUMBNAIL_HEIGHT=128
+
+# Setting for PCA, which reduces the original dimensions to this value for coordinate calculation with openTSNE 
+REDUCE_IMAGE_TO_DIMS=50

@@ -27,7 +27,6 @@ def main():
     
     environ["DATA_PATH"] = data_path
     environ["SERVER_ROOT"] = the_path
-    environ["REDUCE_IMAGE_TO_DIMS"] = "50"
 
     import api_package.app as app
     app.main()
