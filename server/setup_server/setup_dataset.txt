@@ -1,3 +1,0 @@
-download Dataset
-create folder "data" in "server" directory
-insert downloaded images into the folder
