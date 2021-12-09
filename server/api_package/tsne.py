@@ -15,6 +15,8 @@ class TSNE(object):
             np_images = np_images.reshape(1, -1)
         dims = int(environ.get("REDUCE_IMAGE_TO_DIMS"))
         print(f"Reducing dimensions to {dims}")
+        if dims > images.shape[0]:
+            exit(f"Number of samples ({images.shape[0]}) needs to be greater or equal to the desired dimensions ({dims}) for PCA!")
         self.pca = PCA(n_components=dims)
         reduced_images = self.pca.fit_transform(np_images)
         tsne = openTSNE(initialization="pca", perplexity=40, metric="euclidean", n_jobs=-1, verbose=True)
