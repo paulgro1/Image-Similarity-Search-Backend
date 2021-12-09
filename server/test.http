@@ -29,7 +29,7 @@ POST {{baseUrl}}/faiss/getNN/264
 Content-Type: application/json
 
 {
-    "k": 20
+    "k": 50
 }
 
 ### Get multiple thumbnails by id
@@ -59,10 +59,10 @@ Content-Type: application/json
 GET {{baseUrl}}/images/size
 
 
-### DEPRECATED Get all faiss indices
+### Get all faiss indices
 
-### GET {{baseUrl}}/faiss/index/all
+GET {{baseUrl}}/faiss/index/all
 
-### DEPRECATED Change current faiss index
+### Change current faiss index
 
-### POST {{baseUrl}}/faiss/index/IndexIVFFlat
+POST {{baseUrl}}/faiss/index/IndexIVFFlat

@@ -56,7 +56,7 @@ class Faiss(object):
             return True
         return False
 
-    def change_index(self, key, database):
+    def change_index(self, key):
         if key is None:
             print("No key given")
             return False
@@ -72,7 +72,7 @@ class Faiss(object):
             return False
         return self._set_index(key, index)
     
-    def build_index(self, key, training_filenames, training_images, database, **kwargs):
+    def build_index(self, key, training_filenames, training_images, **kwargs):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False

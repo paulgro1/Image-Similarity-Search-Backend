@@ -45,21 +45,18 @@ iss = Faiss()
 flatL2_success = iss.build_index(
     Faiss.FlatL2, 
     flat_images_filenames, 
-    flat_images, 
-    database,
+    flat_images,
     d=flat_images[0].shape[0]
     )
 if not flatL2_success:
     exit("Failed building FlatL2 index")
 
-"""
 centroids = int(max(floor(flat_images.shape[0] / 39), 1))
 probes_per_iteration = int(max(centroids / 10, 1))
 ivfflat_success = iss.build_index(
     Faiss.IVFFlat, 
     flat_images_filenames, 
-    flat_images, 
-    database,
+    flat_images,
     nlist=centroids, 
     nprobe=probes_per_iteration, 
     d=flat_images[0].shape[0]
@@ -67,10 +64,7 @@ ivfflat_success = iss.build_index(
 if not ivfflat_success:
     exit("Failed building IVFFlat index")
 
-
-"""
-
-assert iss.change_index(Faiss.FlatL2, database)
+assert iss.change_index(Faiss.FlatL2)
 
 del flat_images
 del flat_images_filenames
@@ -346,7 +340,7 @@ class ChangeActiveFaissIndex(Resource):
     def post(self, index_key):
         if index_key is None:
             abort(404, message="no index key send")
-        success = iss.change_index(index_key, database)
+        success = iss.change_index(index_key)
         if success:
             return "success!"
         else:
@@ -372,8 +366,8 @@ api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
 api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
-# api.add_resource(GetAllFaissIndices, "/faiss/index/all")
-# api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
+api.add_resource(GetAllFaissIndices, "/faiss/index/all")
+api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 
 def main():
     print("Starting app")
