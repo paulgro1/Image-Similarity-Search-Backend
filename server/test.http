@@ -43,6 +43,17 @@ Content-Type: application/json
     ]
 }
 
+### Get multiple fullsize by id
+
+POST {{baseUrl}}/images/multiple
+Content-Type: application/json
+
+{
+    "picture_ids": [
+        1, 2, 3, 4, 30
+    ]
+}
+
 ### Get metadata from multiple images
 
 POST {{baseUrl}}/images/multiple/metadata

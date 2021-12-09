@@ -63,7 +63,14 @@ class Database(object):
                     with BytesIO() as output:
                         img.save(output, format=img.format)
                         content = output.getvalue()
-                    t_id = self._gridfs.put(content, content_type=Image.MIME[img.format], filename=f"{filename}_thumbnail.{str(img.format).lower()}", metadata="thumbnail")
+                    only_filename, extension = path.splitext(filename)
+                    t_id = self._gridfs.put(
+                        content, 
+                        content_type=Image.MIME[img.format], 
+                        filename=f"{only_filename}_thumbnail{extension}", 
+                        metadata="thumbnail", 
+                        id=idx
+                        )
                 coords = coordinates[coordinates[:,0] == filename][0]
                 assert coords[0] == filename
                 x = coords[1]

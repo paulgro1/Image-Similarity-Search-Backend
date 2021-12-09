@@ -6,7 +6,7 @@ from flask import Flask, send_file
 from flask.globals import request
 from flask_cors import CORS
 from flask_restful import abort, Resource, Api
-from os import environ
+from os import environ, path
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
@@ -14,6 +14,7 @@ from api_package.helper import process_image, load_images, load_and_process_one_
 import numpy as np
 from math import floor
 import gc
+from PIL import Image
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -109,6 +110,35 @@ class OneFullsize(Resource):
             abort(404, message=f"Picture {picture_id} not found")
         return send_file(image["path"])
 
+class MultipleFullsize(Resource):
+    """
+    TODO Docs
+    """
+    def post(self):
+        """
+        HTTP GET method, returns multiple thumbnails from database
+
+        TODO return, docs
+        """
+        picture_ids = request.json["picture_ids"]
+        abort_if_pictures_dont_exist(picture_ids)
+        print(f"Getting fullsize for ids { picture_ids } ")
+        images = database.get_multiple_fullsize_by_id(picture_ids)
+        if images is None:
+            abort(404, message=f"Picture(s) {picture_ids} not found")
+        # See https://stackoverflow.com/questions/2463770/python-in-memory-zip-library
+        buffer = BytesIO()
+        with ZipFile(buffer, "a", ZIP_DEFLATED, False) as zip_file:
+            for item in images:
+                with Image.open(item["path"]) as img:
+                    filename = path.split(item["path"])[-1]
+                    with BytesIO() as output:
+                        img.save(output, format=img.format)
+                        the_id = item["id"]
+                        zip_file.writestr(f"{the_id}_{filename}", output.getvalue())
+        buffer.seek(0)
+        return send_file(buffer, attachment_filename="fullsize.zip", as_attachment=True)
+
 class OneThumbnail(Resource):
     """
     TODO Docs
@@ -152,7 +182,8 @@ class MultipleThumbnails(Resource):
         buffer = BytesIO()
         with ZipFile(buffer, "a", ZIP_DEFLATED, False) as zip_file:
             for item in images:
-                zip_file.writestr(item.filename, item.read())
+                the_id = item.id
+                zip_file.writestr(f"{the_id}_{item.filename}", item.read())
         buffer.seek(0)
         return send_file(buffer, attachment_filename="thumbnails.zip", as_attachment=True)
 
@@ -173,7 +204,8 @@ class AllThumbnails(Resource):
         buffer = BytesIO()
         with ZipFile(buffer, "a", ZIP_DEFLATED, False) as zip_file:
             for item in all_images:
-                zip_file.writestr(item.filename, item.read())
+                the_id = item.id
+                zip_file.writestr(f"{the_id}_{item.filename}", item.read())
         buffer.seek(0)
         return send_file(buffer, attachment_filename="thumbnails.zip", as_attachment=True)
 
@@ -190,7 +222,6 @@ class AllPictureIDs(Resource):
             abort(404, message="No Pictures found")
         all_ids_list = [ x["id"] for x in all_ids ]
         return all_ids_list
-
 
 # Adaptation of https://stackoverflow.com/questions/28982974/flask-restful-upload-image/42286669#42286669
 class Upload(Resource):
@@ -370,15 +401,7 @@ class AnalyseDataset(Resource):
     def get(self):
         return analysed_dataset
 
-class Debug(Resource):
-    """
-    Temporary class for debugging TODO remove
-    """
-    def get(self):
-        return "Server is running"
-
 # Paths
-api.add_resource(Debug, "/")
 api.add_resource(AllPictureIDs, "/images/ids")
 api.add_resource(ImagesSize, "/images/size")
 api.add_resource(AnalyseDataset, "/images/analyseDataset")
@@ -387,6 +410,7 @@ api.add_resource(ThumbnailSize, "/images/thumbnails/size")
 api.add_resource(MultipleThumbnails, "/images/thumbnails/multiple")
 api.add_resource(OneThumbnail, "/images/thumbnails/<picture_id>")
 api.add_resource(MetadataAllImages, "/images/all/metadata")
+api.add_resource(MultipleFullsize, "/images/multiple")
 api.add_resource(MetadataMultipleImages, "/images/multiple/metadata")
 api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
@@ -398,5 +422,3 @@ api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 def main():
     print("Starting app")
     app.run(host=environ.get("BACKEND_HOST"), port=environ.get("BACKEND_PORT"), threaded=True)
-
-
