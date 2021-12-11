@@ -249,10 +249,12 @@ class Upload(Resource):
         if nr_of_files == 0:
             abort(404, message="No images send")
         images = []
+        filenames = []
         correct_image_shape = (int(environ.get("FULLSIZE_WIDTH")), int(environ.get("FULLSIZE_HEIGHT")))
         for item in request.files.items():
             the_file = item[1]
             if allowed_file(the_file.filename):
+                filenames.append(the_file.filename)
                 new_image, new_image_shape = process_image(the_file)
                 if new_image_shape != correct_image_shape:
                     print(f"Image has incorrect size with {new_image_shape}")
@@ -266,6 +268,7 @@ class Upload(Resource):
         D, I = iss.search(images, k)
         sim_percentages = get_similarities(D)
         return { 
+            "uploaded_filenames": filenames,
             "distances": D.tolist(), 
             "ids": I.tolist(), 
             "coordinates": coordinates.tolist(),
@@ -305,6 +308,7 @@ class NNOfExistingImage(Resource):
         I = np.delete(I, obj=spot, axis=1)
         sim_percentages[0].pop(spot)
         return {
+            "requested_id": picture_id,
             "distances": D.tolist(),
             "ids": I.tolist(),
             "similarities": sim_percentages
