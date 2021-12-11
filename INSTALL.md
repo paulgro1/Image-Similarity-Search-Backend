@@ -2,7 +2,7 @@
 
 ### (1) Benötigte Software:
 
-- [MongoDB](https://www.mongodb.com/) oder [MongoDBCompass](https://www.mongodb.com/products/compass)
+- [MongoDB](https://www.mongodb.com/try/download/community)
 - [Anaconda](https://www.anaconda.com/)
 - Code Editor wie [VSCode](https://code.visualstudio.com/)
 
