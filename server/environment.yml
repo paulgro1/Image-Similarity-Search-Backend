@@ -13,4 +13,5 @@ dependencies:
   - python-dotenv
   - pillow
   - opentsne
+  - flask-swagger-ui
   

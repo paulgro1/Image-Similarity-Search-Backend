@@ -6,7 +6,8 @@ from flask import Flask, send_file
 from flask.globals import request
 from flask_cors import CORS
 from flask_restful import abort, Resource, Api
-from os import environ, path
+from os import environ, path, mkdir
+from shutil import rmtree
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from api_package.similarities import get_similarities
@@ -15,6 +16,7 @@ import numpy as np
 from math import floor
 import gc
 from PIL import Image
+from flask_swagger_ui import get_swaggerui_blueprint
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -24,16 +26,31 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 
+# https://sean-bradley.medium.com/add-swagger-ui-to-your-python-flask-api-683bfbb32b36
+### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Image Similarty Search Backend"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
+
 from api_package.db import Database
 database = Database()
 from api_package.tsne import TSNE
 tsne = TSNE()
 
 flat_images_filenames, flat_images, load_success = load_images(environ.get("DATA_PATH"))
+
 if not load_success:
     exit("Loading images failed, images sizes incorrect")
 if flat_images.shape[0] < 1:
-    exit("Need to have data ind data folder!")
+    exit("Need to have data in data folder!")
 
 coordinates = tsne.initialize_coordinates(flat_images)
 database.initialize(flat_images_filenames, coordinates)
@@ -288,7 +305,7 @@ class NNOfExistingImage(Resource):
         if image is None:
             abort(404, message=f"Picture {picture_id} not found")
         the_path = image["path"]
-        k = request.json["k"]
+        k = int(request.json["k"])
         if k is None or k < 1:
             abort(404, message=f"k is missing valid value in request body with value {k}")
         nr_of_files_in_database = database.count_documents_in_collection() - 1

@@ -2,6 +2,7 @@ import numpy as np
 from openTSNE import TSNE as openTSNE
 from sklearn.decomposition._pca import PCA
 from os import environ
+from math import ceil
 
 if __name__ == "__main__":
     exit("Start via run.py!")
@@ -13,13 +14,25 @@ class TSNE(object):
         np_images = np.array(images, dtype="float32")
         if np_images.ndim == 1:
             np_images = np_images.reshape(1, -1)
+        nr_of_samples = np_images.shape[0]
         dims = int(environ.get("REDUCE_IMAGE_TO_DIMS"))
         print(f"Reducing dimensions to {dims}")
-        if dims > images.shape[0]:
-            exit(f"Number of samples ({images.shape[0]}) needs to be greater or equal to the desired dimensions ({dims}) for PCA!")
+        if dims > nr_of_samples:
+            exit(f"Number of samples ({nr_of_samples}) needs to be greater or equal to the desired dimensions ({dims}) for PCA!")
         self.pca = PCA(n_components=dims)
         reduced_images = self.pca.fit_transform(np_images)
-        tsne = openTSNE(initialization="pca", perplexity=40, metric="euclidean", n_jobs=-1, verbose=True)
+        # https://www.reneshbedre.com/blog/tsne.html
+        learningrate = max(nr_of_samples / 12, 200)
+        perplexity = min(max(5, nr_of_samples / 10), 100)
+        tsne = openTSNE(
+            initialization="pca", 
+            perplexity=perplexity, 
+            metric="euclidean", 
+            n_jobs=-1, 
+            verbose=True, 
+            neighbors="exact", 
+            learning_rate=learningrate
+            )
         images_embedded = tsne.fit(reduced_images)
         self.coordinates = images_embedded
         print("Coordinates initialized")

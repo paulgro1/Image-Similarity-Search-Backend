@@ -45,6 +45,7 @@ $ conda install -c anaconda pymongo
 $ conda install -c conda-forge python-dotenv
 $ conda install -c conda-forge pillow
 $ conda install -c conda-forge opentsne
+$ conda install -c conda-forge flask-swagger-ui
 ```
 
 ### (4) .env Datei
