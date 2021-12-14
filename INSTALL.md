@@ -45,7 +45,7 @@ $ conda install -c anaconda pymongo
 $ conda install -c conda-forge python-dotenv
 $ conda install -c conda-forge pillow
 $ conda install -c conda-forge opentsne
-$ conda install -c conda-forge flask-swagger-ui
+$ pip install flask-swagger-ui
 ```
 
 ### (4) .env Datei
@@ -114,8 +114,11 @@ Nun kann die Datei `run.py` ausgeführt werden. Dafür gibt es verschiedene Wege
 
 ### (7) Funktionen testen
 
-Mit der Datei `test.http` und der Extension [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) für VSCode
-können die Funktionen des Backends getestet werden. Nur der Image Upload sollte in Kombination mit dem Frontend getestet werden.
+Mit der Route `{BACKEND_HOST}:{BACKEND_PORT}/swagger` (für die richtigen Werte bitte [diesen Absatz](#4-env-datei) referenzieren) kann auf die Dokumentation von allen 
+verfügbaren Routen zugeriffen werden. Dies ist möglich durch das Modul [Swagger](https://pypi.org/project/flask-swagger-ui/). Auf dieser Dokumentationsroute können ebenfalls
+alle Routen getestet werden.  
+Außerdem können mit der Datei `test.http` und der Extension [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) für VSCode
+die Funktionen des Backends auch getestet werden.
 
 ### (8) Troubleshooting
 

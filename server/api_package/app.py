@@ -29,7 +29,7 @@ api = Api(app)
 # https://sean-bradley.medium.com/add-swagger-ui-to-your-python-flask-api-683bfbb32b36
 ### swagger specific ###
 SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.json'
+API_URL = '/static/swagger.yml'
 SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
