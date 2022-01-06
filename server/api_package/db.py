@@ -265,3 +265,21 @@ class Database(object):
                 }, 
             } for x in result ]
         return None
+
+    def get_one_filename(self, id):
+        return self.get_one_by_id(id, { "filename": True })["filename"]
+
+    def ids_to_filenames(self, ids):
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        filenames = []
+        for row in ids:
+            c_filenames = []
+            for item in row:
+                c_filenames.append(self.get_one_filename(int(item)))
+            filenames.append(c_filenames)
+        return filenames

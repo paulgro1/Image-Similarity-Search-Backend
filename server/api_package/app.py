@@ -284,10 +284,12 @@ class Upload(Resource):
         coordinates = tsne.calculate_coordinates(images)
         D, I = iss.search(images, k)
         sim_percentages = get_similarities(D)
+        neighbour_filenames = database.ids_to_filenames(I)
         return { 
             "uploaded_filenames": filenames,
             "distances": D.tolist(), 
             "ids": I.tolist(), 
+            "neighbour_filenames": neighbour_filenames,
             "coordinates": coordinates.tolist(),
             "similarities": sim_percentages
             }
@@ -324,10 +326,13 @@ class NNOfExistingImage(Resource):
         D = np.delete(D, obj=spot, axis=1)
         I = np.delete(I, obj=spot, axis=1)
         sim_percentages[0].pop(spot)
+        neighbour_filenames = database.ids_to_filenames(I)
         return {
             "requested_id": picture_id,
+            "requested_filename": image["filename"],
             "distances": D.tolist(),
             "ids": I.tolist(),
+            "neighbour_filenames": neighbour_filenames,
             "similarities": sim_percentages
         }
 

@@ -55,8 +55,8 @@ paths:
                     items: string
                     description: Filenames of uploaded images, to reference other data
                     example: [
-                      image1,
-                      image2
+                      "img1.png",
+                      "img2.png"
                     ]
                   distances:
                     type: array
@@ -79,6 +79,16 @@ paths:
                     items:
                       type: array
                       items: integer
+                  neighbour_filenames:
+                    type: array
+                    description: filenames of nearest neighbours
+                    example: [
+                      ["img1.png", "img2.png", "img3.png"],
+                      ["img4.png", "img5.png", "img6.png"]
+                    ]
+                    items:
+                      type: array
+                      items: string
                   coordinates:
                     type: array
                     descripton: Calculated coordinates of uploaded images
@@ -136,6 +146,10 @@ paths:
                     type: integer
                     description: id of image in database, whose neighbours were found
                     example: 1
+                  requested_filename:
+                    type: string
+                    description: filename of image in database
+                    example: img1.png
                   distances:
                     type: array
                     description: Distances between uploaded images and nearest neighbours
@@ -155,6 +169,15 @@ paths:
                     items:
                       type: array
                       items: integer
+                  neighbour_filenames:
+                    type: array
+                    description: filenames of nearest neighbours
+                    example: [
+                      ["img1.png", "img2.png", "img3.png"]
+                    ]
+                    items:
+                      type: array
+                      items: string
                   similarities:
                     type: array
                     description: Distances converted in similarty percentages
