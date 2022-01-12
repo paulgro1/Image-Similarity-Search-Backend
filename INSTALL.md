@@ -73,6 +73,9 @@ THUMBNAIL_HEIGHT=128
 # Setting for PCA, which reduces the original dimensions to this value for coordinate calculation with openTSNE 
 # Needs to be less than or equal to the number of samples in DATA_FOLDER!
 REDUCE_IMAGE_TO_DIMS=50
+
+# Default amount of centroids for k-means clustering
+NUM_CENTROIDS=10
 ```
 
 ### (5) Einbinden eines Datasets

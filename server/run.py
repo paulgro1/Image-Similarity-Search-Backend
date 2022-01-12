@@ -9,7 +9,7 @@ def main():
     
     # Check if .env file exists
     if not path.exists(dotenv_path):
-        exit("You need to specify environment variables in a .env file! See setup_dotenv.txt")
+        exit("You need to specify environment variables in a .env file! See INSTALL.md")
 
     # Load .env file
     load_dotenv(dotenv_path=dotenv_path)

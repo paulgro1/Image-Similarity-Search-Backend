@@ -10,6 +10,8 @@ from os import environ, path, mkdir
 from shutil import rmtree
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
+
+from scipy.sparse import data
 from api_package.similarities import get_similarities
 from api_package.helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file, analyse_dataset
 import numpy as np
@@ -53,7 +55,13 @@ if flat_images.shape[0] < 1:
     exit("Need to have data in data folder!")
 
 coordinates = tsne.initialize_coordinates(flat_images)
-database.initialize(flat_images_filenames, coordinates)
+num_centroids = environ.get("NUM_CENTROIDS")
+if num_centroids is None:
+    exit("Please update your .env file! Missing number of centroids")
+from api_package.kmeans import KMeansWrapper
+kmeans = KMeansWrapper(coordinates)
+kmeans.cluster(int(num_centroids))
+database.initialize(flat_images_filenames, coordinates, kmeans.labels)
 
 analysed_dataset = analyse_dataset(flat_images, coordinates)
 
@@ -282,6 +290,7 @@ class Upload(Resource):
         if nr_of_allowed_files == 0:
             abort(404, message="No allowed files send")
         coordinates = tsne.calculate_coordinates(images)
+        labels = kmeans.predict(coordinates)
         D, I = iss.search(images, k)
         sim_percentages = get_similarities(D)
         neighbour_filenames = database.ids_to_filenames(I)
@@ -291,7 +300,8 @@ class Upload(Resource):
             "ids": I.tolist(), 
             "neighbour_filenames": neighbour_filenames,
             "coordinates": coordinates.tolist(),
-            "similarities": sim_percentages
+            "similarities": sim_percentages,
+            "cluster_centers": labels.tolist()
             }
 
 class NNOfExistingImage(Resource):
@@ -327,13 +337,15 @@ class NNOfExistingImage(Resource):
         I = np.delete(I, obj=spot, axis=1)
         sim_percentages[0].pop(spot)
         neighbour_filenames = database.ids_to_filenames(I)
+        label = database.get_one_label(picture_id)
         return {
             "requested_id": picture_id,
             "requested_filename": image["filename"],
             "distances": D.tolist(),
             "ids": I.tolist(),
             "neighbour_filenames": neighbour_filenames,
-            "similarities": sim_percentages
+            "similarities": sim_percentages,
+            "cluster_center": int(label)
         }
 
 class MetadataOneImage(Resource):
@@ -427,6 +439,22 @@ class AnalyseDataset(Resource):
     def get(self):
         return analysed_dataset
 
+class ChangeNumberOfKMeansCentroids(Resource):
+    """
+    TODO docs
+    """
+    def post(self):
+        nr_of_centroids = request.json["nr_of_centroids"]
+        if nr_of_centroids is None:
+            abort(404, message="No value for number of centroids given")
+        kmeans.cluster(int(nr_of_centroids))
+        database.update_labels(kmeans.labels)
+        return f"k-means now uses {len(kmeans.cluster_centers)} centroids"
+
+    def get(self):
+        return kmeans.cluster_centers.tolist()
+
+
 # Paths
 api.add_resource(AllPictureIDs, "/images/ids")
 api.add_resource(ImagesSize, "/images/size")
@@ -444,6 +472,7 @@ api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
 api.add_resource(GetAllFaissIndices, "/faiss/index/all")
 api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
+api.add_resource(ChangeNumberOfKMeansCentroids, "/kmeans/centroids")
 
 def main():
     print("Starting app")

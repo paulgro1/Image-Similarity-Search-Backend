@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 from os import path, environ
 from glob import iglob, glob
 from gridfs import GridFS
@@ -36,13 +36,13 @@ class Database(object):
     def count_documents_in_collection(self, options={}):
         return self.col.count_documents(options)
 
-    def initialize(self, flat_filenames, coordinates):
-        coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates), axis=1)
+    def initialize(self, flat_filenames, coordinates, labels):
+        coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
         print("Initializing Database")
         self.reset_col("images")
         self.reset_col("fs.files")
         self.reset_col("fs.chunks")
-        self.reset_col("faiss")
+        # self.reset_col("faiss")
 
         thumbnail_width = environ.get("THUMBNAIL_WIDTH")
         thumbnail_height = environ.get("THUMBNAIL_HEIGHT")
@@ -51,8 +51,9 @@ class Database(object):
         thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
         actual_thumbnail_size = None
         images = []
-        f_path = path.join(environ.get("DATA_PATH"), "*")
-        for idx, f in enumerate(iglob(pathname=f_path)):
+        base_path = environ.get("DATA_PATH")
+        for idx, item in enumerate(coordinates):
+            f = path.join(base_path, item[0])
             t_id = None
             filename = path.split(f)[-1]
             if allowed_file(filename):
@@ -71,17 +72,17 @@ class Database(object):
                         metadata="thumbnail", 
                         id=idx
                         )
-                coords = coordinates[coordinates[:,0] == filename][0]
-                assert coords[0] == filename
-                x = coords[1]
-                y = coords[2]
+                x = item[1]
+                y = item[2]
+                cluster_center = item[3]
                 image = {
                     "id": idx,
                     "filename": filename,
                     "path": f,
                     "thumbnail": t_id,
                     "x": x,
-                    "y": y
+                    "y": y,
+                    "cluster_center": cluster_center
                 }
                 images.append(image)
         self.col = self._db["images"]
@@ -213,7 +214,7 @@ class Database(object):
         return None
 
     def get_metadata(self, id):
-        result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True})
+        result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True, "cluster_center": True})
         if not result is None:
             return {
                 "id": result["id"],
@@ -226,12 +227,13 @@ class Database(object):
                     "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
                     "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
                 },    
-                "position": (result["x"], result["y"])
+                "position": (result["x"], result["y"]),
+                "cluster_center": result["cluster_center"]
             }
         return None
     
     def get_multiple_metadata(self, ids):
-        result = self.get_multiple_by_id(ids, { "id": True, "filename": True, "x": True, "y": True})
+        result = self.get_multiple_by_id(ids, { "id": True, "filename": True, "x": True, "y": True, "cluster_center": True})
         if not result is None:
             return [ { 
                 "id": x["id"], 
@@ -244,12 +246,13 @@ class Database(object):
                 "thumbnail_size": {
                     "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
                     "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
-                }, 
+                },
+                "cluster_center": x["cluster_center"] 
             } for x in result ]
         return None
 
     def get_all_metadata(self):
-        result = self.get_all({ "id": True, "filename": True, "x": True, "y": True })
+        result = self.get_all({ "id": True, "filename": True, "x": True, "y": True, "cluster_center": True })
         if not result is None:
             return [ { 
                 "id": x["id"], 
@@ -262,7 +265,8 @@ class Database(object):
                 "thumbnail_size": {
                     "width": environ.get("ACTUAL_THUMBNAIL_WIDTH"),
                     "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
-                }, 
+                },
+                "cluster_center": x["cluster_center"] 
             } for x in result ]
         return None
 
@@ -283,3 +287,12 @@ class Database(object):
                 c_filenames.append(self.get_one_filename(int(item)))
             filenames.append(c_filenames)
         return filenames
+
+    def update_labels(self, labels):
+        updateOps = [
+            UpdateOne({ "id": idx }, { "$set": { "cluster_center": int(item) }}) for idx, item in enumerate(labels)
+        ]
+        self.col.bulk_write(updateOps)
+
+    def get_one_label(self, id):
+        return self.get_metadata(id)["cluster_center"]
