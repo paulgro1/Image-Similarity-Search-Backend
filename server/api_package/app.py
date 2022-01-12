@@ -452,7 +452,16 @@ class ChangeNumberOfKMeansCentroids(Resource):
         return f"k-means now uses {len(kmeans.cluster_centers)} centroids"
 
     def get(self):
-        return kmeans.cluster_centers.tolist()
+        cluster_list = [ 
+            { 
+                "id": idx, 
+                "cluster_center": item 
+            } for idx, item in enumerate(kmeans.cluster_centers.tolist()) 
+        ]
+        return {
+            "nr_of_centroids": len(cluster_list),
+            "cluster_centers": cluster_list
+        }
 
 
 # Paths

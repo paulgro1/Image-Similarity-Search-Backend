@@ -202,18 +202,30 @@ paths:
       summary: Get the position of all centroids
       responses:
         '200':
-          application/json:
-            schema:
-              type: array
-              example: [
-                [-10.32, 2.01],
-                [20.33, 1.33]
-              ]
-              items:
-                type: array
-                items:
-                  type: number
-                  format: float
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nr_of_centroids:
+                    type: integer
+                    example: 1
+                    description: Current amount of centroids
+                  cluster_centers:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        description: id of cluster center
+                      cluster center:
+                        type: array
+                        items:
+                          type: number
+                          format: float
+                        description: Values for each cluster center
+                        example: [-10.32, 2.01]
     post:
       tags: [
         Get nearest neighbour(s)
