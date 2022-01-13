@@ -45,6 +45,7 @@ $ conda install -c anaconda pymongo
 $ conda install -c conda-forge python-dotenv
 $ conda install -c conda-forge pillow
 $ conda install -c conda-forge opentsne
+$ conda install -c conda-forge m2crypto
 $ pip install flask-swagger-ui
 ```
 
@@ -76,6 +77,9 @@ REDUCE_IMAGE_TO_DIMS=50
 
 # Default amount of centroids for k-means clustering
 NUM_CENTROIDS=10
+
+# Secret key for flask app, just use a random string
+FLASK_SECRET_KEY=<insert_random_string_here>
 ```
 
 ### (5) Einbinden eines Datasets

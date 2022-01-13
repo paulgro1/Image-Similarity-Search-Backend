@@ -112,6 +112,11 @@ paths:
                     items: integer
                     description: Corresponding cluster centers
                     example: [5, 1]
+                  new_ids:
+                    type: array
+                    items: integer
+                    description: Newly created ids for uploaded images
+                    example: [200, 201]
   # 2
   /faiss/getNN/{picture_id}:
     post:
@@ -199,7 +204,7 @@ paths:
       tags: [
         Get nearest neighbour(s)
       ]
-      summary: Get the position of all centroids
+      summary: Get the position and amount of all centroids
       responses:
         '200':
           description: OK

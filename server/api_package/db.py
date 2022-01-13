@@ -42,6 +42,7 @@ class Database(object):
         self.reset_col("images")
         self.reset_col("fs.files")
         self.reset_col("fs.chunks")
+        self.reset_col("sessions")
         # self.reset_col("faiss")
 
         thumbnail_width = environ.get("THUMBNAIL_WIDTH")
@@ -87,6 +88,7 @@ class Database(object):
                 images.append(image)
         self.col = self._db["images"]
         self.col.insert_many(images)
+        self.next_id = images[-1]["id"] + 1
         environ["ACTUAL_THUMBNAIL_WIDTH"] = str(actual_thumbnail_size[0])
         environ["ACTUAL_THUMBNAIL_HEIGHT"] = str(actual_thumbnail_size[1])
         print("Database initialized")
@@ -114,6 +116,26 @@ class Database(object):
         index = deserialize_index(pickle.loads(dump))
         return index
     """
+
+    def is_session_key_in_db(self, key):
+        if key is None:
+            return False
+        result = self._db["sessions"].find_one({"key": key})
+        return result is not None
+
+    def insert_session_key(self, key):
+        self._db["sessions"].insert_one({ "key": key, "value": self.next_id })
+
+    def get_next_ids(self, key, amount=1):
+        current_next_value = self._db["sessions"].find_one_and_update(
+            { "key": key }, { "$inc": { "value": amount } }
+        )
+        if current_next_value is not None and "value" in current_next_value:
+            current_next_value = int(current_next_value["value"])
+            if amount == 1:
+                return [current_next_value]
+            else:
+                return list(range(current_next_value, current_next_value + amount))
     
     def get_one(self, filter, projection):
         if filter == None:

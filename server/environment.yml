@@ -13,6 +13,7 @@ dependencies:
   - python-dotenv
   - pillow
   - opentsne >=0.4
+  - m2crypto
   - pip
   - pip:
     - flask-swagger-ui

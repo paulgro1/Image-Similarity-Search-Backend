@@ -108,7 +108,6 @@ class Faiss(object):
             images = images[np.newaxis, ...]
         print(f"Searching index {type(self.faiss_index).__name__}")
         D, I = self.faiss_index.search(images, k)
-        print(I)
         return D, I
 
     def get_all_indices_keys(self):

@@ -3,15 +3,13 @@
 # to fit our needs
 # IMPORTANT set up conda environment before use -> installation.txt
 from flask import Flask, send_file
-from flask.globals import request
+from flask.globals import request, g
 from flask_cors import CORS
 from flask_restful import abort, Resource, Api
 from os import environ, path, mkdir
 from shutil import rmtree
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
-
-from scipy.sparse import data
 from api_package.similarities import get_similarities
 from api_package.helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file, analyse_dataset
 import numpy as np
@@ -27,6 +25,11 @@ if __name__ == "__main__":
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
+
+secret_key = environ["FLASK_SECRET_KEY"]
+if not secret_key:
+    exit("No secret key present!")
+app.config["SECRET_KEY"] = secret_key
 
 # https://sean-bradley.medium.com/add-swagger-ui-to-your-python-flask-api-683bfbb32b36
 ### swagger specific ###
@@ -97,6 +100,11 @@ assert iss.change_index(Faiss.FlatL2)
 del flat_images
 del flat_images_filenames
 gc.collect()
+
+from api_package.authenticate import SessionKeyAuthenticator
+auth = SessionKeyAuthenticator(database)
+app.before_request(auth.generate_authenticator())
+app.after_request(auth.generate_after_request_handler())
 
 def abort_if_pictures_dont_exist(picture_ids):
     """
@@ -289,6 +297,7 @@ class Upload(Resource):
         print(f"Uploaded {nr_of_allowed_files} allowed files")
         if nr_of_allowed_files == 0:
             abort(404, message="No allowed files send")
+        new_ids = database.get_next_ids(g.local_variables.get("api_session_token"), nr_of_allowed_files)
         coordinates = tsne.calculate_coordinates(images)
         labels = kmeans.predict(coordinates)
         D, I = iss.search(images, k)
@@ -296,6 +305,7 @@ class Upload(Resource):
         neighbour_filenames = database.ids_to_filenames(I)
         return { 
             "uploaded_filenames": filenames,
+            "new_ids": new_ids,
             "distances": D.tolist(), 
             "ids": I.tolist(), 
             "neighbour_filenames": neighbour_filenames,
