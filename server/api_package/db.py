@@ -36,6 +36,9 @@ class Database(object):
     def count_documents_in_collection(self, options={}):
         return self.col.count_documents(options)
 
+    def is_db_empty(self):
+        return self.count_documents_in_collection() <= 0
+
     def initialize(self, flat_filenames, coordinates, labels):
         coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
         print("Initializing Database")
@@ -143,7 +146,7 @@ class Database(object):
         return self.col.find_one(filter, projection=projection)
 
     def get_one_by_id(self, id, projection):
-        if id != None and self.count_documents_in_collection() > 0:
+        if id != None and not self.is_db_empty():
             return self.get_one({"id": id}, projection)
         return None
 
@@ -170,17 +173,17 @@ class Database(object):
         return self.get_multiple({}, projection)
 
     def get_all_ids(self):
-        if self.count_documents_in_collection() > 0:
+        if not self.is_db_empty():
             return self.get_all(self.id_projection)
         return None
 
     def get_all_fullsize(self):
-        if self.count_documents_in_collection() > 0:
+        if not self.is_db_empty():
             return self.get_all(self.fullsize_projection)
         return None
 
     def get_multiple_by_id(self, ids, projection):
-        if ids != None and len(ids) != 0 and self.count_documents_in_collection() > 0:
+        if ids != None and len(ids) != 0 and not self.is_db_empty():
             filter = {"id": {"$in" : ids}}
             return self.get_multiple(filter, projection)
         return None
@@ -212,7 +215,7 @@ class Database(object):
         return self._gridfs.get(id)
         
     def get_all_thumbnails(self):
-        if self.count_documents_in_collection() > 0:
+        if not self.is_db_empty():
             result = self._gridfs.find({ "metadata" : "thumbnail" })
             if not result is None:
                 return [ x for x in result ]    
@@ -220,7 +223,7 @@ class Database(object):
         return None
 
     def get_multiple_thumbnails_by_id(self, ids):
-        if self.count_documents_in_collection() > 0:
+        if not self.is_db_empty():
             fs_ids = self.get_multiple_by_id(ids, { "thumbnail": True })
             fs_ids = [ x["thumbnail"] for x in fs_ids ]
             result = self._gridfs.find({ "_id": {"$in" : fs_ids}, "metadata": "thumbnail" })

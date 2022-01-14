@@ -22,7 +22,7 @@ def process_image(image):
     resized_image = np.array(converted_image, dtype="float32").ravel()
     return resized_image, image_shape
 
-def load_images(the_path):
+def _load_images(the_path):
     filename_list = []
     image_list = []
     correct_shape = None
@@ -32,14 +32,40 @@ def load_images(the_path):
         if correct_shape is None:
             correct_shape = image_shape
         elif correct_shape != image_shape:
-            return None, None, False
+            return None, None, False, None
         filename_list.append(filename)
         image_list.append(resized_image)
-    environ["FULLSIZE_WIDTH"] = str(correct_shape[0])
-    environ["FULLSIZE_HEIGHT"] = str(correct_shape[1])
     names = np.array(filename_list)
     images = np.array(image_list, dtype="float32")
+    return names, images, True, correct_shape
+
+def load_images(the_path):
+    names, images, success, correct_shape = _load_images(the_path)
+    if success and correct_shape is not None:
+        environ["FULLSIZE_WIDTH"] = str(correct_shape[0])
+        environ["FULLSIZE_HEIGHT"] = str(correct_shape[1])
     return names, images, True
+
+def load_images_by_id(ids, db) -> tuple((bool, np.ndarray, list, str)):
+    images = db.get_multiple_by_id(ids, None)
+    if images is None:
+        return False, None, None, "Error retrieving images from database"
+    p_images = []
+    all_images = []
+    for image in images:
+        p_image, _ = process_image(image["path"])
+        p_images.append(p_image)
+        all_images.append({
+            "id": image["id"],
+            "filename": image["filename"],
+            "position": {
+                "x": image["x"],
+                "y": image["y"]
+            },
+            "cluster_center": image["cluster_center"]
+        })
+    p_images = np.array(p_images, dtype="float32")
+    return True, p_images, all_images, None
 
 def load_and_process_one_from_dataset(the_path):
     full_path = path.join(environ.get("DATA_PATH"), the_path)

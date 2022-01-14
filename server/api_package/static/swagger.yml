@@ -199,6 +199,165 @@ paths:
                     description: Corresponding cluster center
                     example: 1
   # 3
+  /faiss/getNN/multiple/{k}:
+    post:
+      parameters:
+        - in: path
+          name: k
+          schema:
+            type: integer
+            example: 10
+          required: true
+          description: k nearest neighbours to be found
+      tags: [
+        Get nearest neighbour(s)
+      ]
+      summary: Route for getting the nearest neighbours of multiple images present in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                picture_ids:
+                  type: array
+                  items: integer
+                  example: [1, 2, 3]
+                  description: ids of the images in the database, whose neighbours shall be found
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                      description: id of base image
+                    filename:
+                      type: string 
+                      example: "1.png"
+                      description: filename of base image
+                    position:
+                      type: object
+                      properties:
+                        x:
+                          type: number
+                          format: float
+                          example: 1.02
+                          description: x position of base image
+                        y:
+                          type: number
+                          format: float
+                          example: -1.02
+                          description: y position of base image
+                    cluster_center:
+                      type: integer
+                      example: 3
+                      description: corresponding cluster center of base image
+                    neighbour_ids:
+                      type: array
+                      example: [2, 3, 4]
+                      items:
+                        type: integer
+                      description: ids of k nearest neighbours
+                    distances:
+                      type: array
+                      example: [2999, 3999, 5999]
+                      items:
+                        type: integer
+                      description: distances to k nearest neighbours
+                    similarities:
+                      type: array
+                      example: [0.44, 0.33, 0.11]
+                      items:
+                        type: number
+                        format: float
+                      description: similarity in percent to k nearest neighbours
+                    neighbour_filenames:
+                      type: array
+                      example: ["2.png", "3.png", "4.png"]
+                      items:
+                        type: string
+                      description: filenames of nearest neighbours
+    get:
+      parameters:
+        - in: path
+          name: k
+          schema:
+            type: integer
+            example: 10
+          required: true
+          description: k nearest neighbours to be found
+      tags: [
+        Get nearest neighbour(s)
+      ]
+      summary: Route for getting the nearest neighbours of all images present in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                      description: id of base image
+                    filename:
+                      type: string 
+                      example: "1.png"
+                      description: filename of base image
+                    position:
+                      type: object
+                      properties:
+                        x:
+                          type: number
+                          format: float
+                          example: 1.02
+                          description: x position of base image
+                        y:
+                          type: number
+                          format: float
+                          example: -1.02
+                          description: y position of base image
+                    cluster_center:
+                      type: integer
+                      example: 3
+                      description: corresponding cluster center of base image
+                    neighbour_ids:
+                      type: array
+                      example: [2, 3, 4]
+                      items:
+                        type: integer
+                      description: ids of k nearest neighbours
+                    distances:
+                      type: array
+                      example: [2999, 3999, 5999]
+                      items:
+                        type: integer
+                      description: distances to k nearest neighbours
+                    similarities:
+                      type: array
+                      example: [0.44, 0.33, 0.11]
+                      items:
+                        type: number
+                        format: float
+                      description: similarity in percent to k nearest neighbours
+                    neighbour_filenames:
+                      type: array
+                      example: ["2.png", "3.png", "4.png"]
+                      items:
+                        type: string
+                      description: filenames of nearest neighbours
+  # 4
   /kmeans/centroids:
     get:
       tags: [

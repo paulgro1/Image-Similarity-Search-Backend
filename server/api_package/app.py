@@ -10,8 +10,8 @@ from os import environ, path, mkdir
 from shutil import rmtree
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
-from api_package.similarities import get_similarities
-from api_package.helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file, analyse_dataset
+from api_package.similarities import get_similarities, get_similarities_as_array
+from api_package.helper import process_image, load_images, load_and_process_one_from_dataset, allowed_file, analyse_dataset, load_images_by_id
 import numpy as np
 from math import floor
 import gc
@@ -256,6 +256,23 @@ class AllPictureIDs(Resource):
         all_ids_list = [ x["id"] for x in all_ids ]
         return all_ids_list
 
+def is_k_valid(k, id_from_database=False):
+    if k is None:
+        return False, "k is None", k
+    if not type(k) is int:
+        try:
+            k = int(k)
+        except ValueError as e:
+            abort(500, message=e)
+    if k < 1:
+        return False, f"{k} < 1, value too small"
+    nr_of_files_in_database = database.count_documents_in_collection()
+    if id_from_database:
+        nr_of_files_in_database -= 1 # excluding the file itself
+    if k > nr_of_files_in_database:
+        return False, f"k {k} is bigger than the (other) {nr_of_files_in_database} images in the index!", k
+    return True, None, k
+
 # Adaptation of https://stackoverflow.com/questions/28982974/flask-restful-upload-image/42286669#42286669
 class Upload(Resource):
     """
@@ -269,14 +286,12 @@ class Upload(Resource):
         
         TODO return
         """
-        if "k" not in request.form:
+        if not "k" in request.form:
             abort(404, message="No k found")
-        k = int(request.form["k"])
-        if k < 1:
-            abort(404, message=f"Need to have k > 0; {k} is invalid")
-        nr_of_files_in_database = database.count_documents_in_collection()
-        if k > nr_of_files_in_database:
-            abort(404, message=f"k {k} is bigger than the {nr_of_files_in_database} images in the index!")
+        k = request.form["k"]
+        success, error, k = is_k_valid(k)
+        if not success:
+            abort(404, message=error)
         nr_of_files = len(request.files)
         print(f"Uploaded {nr_of_files} file(s)")
         if nr_of_files == 0:
@@ -327,13 +342,13 @@ class NNOfExistingImage(Resource):
         if image is None:
             abort(404, message=f"Picture {picture_id} not found")
         the_path = image["path"]
+        if not "k" in request.json:
+            abort(404, message="k is missing in request body")
         k = int(request.json["k"])
-        if k is None or k < 1:
-            abort(404, message=f"k is missing valid value in request body with value {k}")
-        nr_of_files_in_database = database.count_documents_in_collection() - 1
-        if k > nr_of_files_in_database:
-            abort(404, message=f"k {k} is bigger than the {nr_of_files_in_database} valid images in the index!")
-        k += 1 # Image exists in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
+        success, error, k = is_k_valid(k, id_from_database=True)
+        if not success:
+            abort(404, message=error)
+        k += 1  # Image exists in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
         converted_image = load_and_process_one_from_dataset(the_path)
         D, I = iss.search(converted_image, k)
         sim_percentages = get_similarities(D)
@@ -358,6 +373,77 @@ class NNOfExistingImage(Resource):
             "cluster_center": int(label)
         }
 
+class NNOfExistingImages(Resource):
+    """
+    TODO docs
+    """ 
+
+    def verify_k(self, k):
+        success, error, k = is_k_valid(k, id_from_database=True)
+        if not success:
+            return False, None, error
+        k += 1  # Image(s) exist(s) in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
+        return True, k, None
+
+    def multiple(self, k, ids):
+        """
+        TODO docs
+        """
+        k_success, k, error = self.verify_k(k)
+        if not k_success:
+            abort(404, message=error)
+        load_success, images, description, error = load_images_by_id(ids, database)
+        if not load_success:
+            abort(500, message="An error occured while loading the images")
+        print(f"Searching with shape {images.shape}")
+        D, I = iss.search(images, k)
+        sim_percentages = get_similarities_as_array(D)
+        for idx, id in enumerate(ids):
+            desc = description[idx]
+            assert desc["id"] == id
+            nn = np.array(I[idx,:])
+            dist = np.array(D[idx,:])
+            sims = np.array(sim_percentages[idx,:])
+            spot = np.argwhere(nn == id)
+            if spot.shape[0] == 0:
+                spot = nn.shape[1] - 1
+            else:
+                spot = spot[0]
+            nn = np.delete(nn, obj=spot)
+            dist = np.delete(dist, obj=spot)
+            sims = np.delete(sims, obj=spot)
+            desc["neighbour_ids"] = nn.tolist()
+            desc["distances"] = dist.tolist()
+            desc["similarities"]  = sims.tolist()
+            filenames = database.ids_to_filenames(nn)
+            desc["neighbour_filenames"] = filenames
+
+        return description
+
+    def get(self, k):
+        """
+        For all images in database
+        TODO docs
+        """
+        if database.is_db_empty():
+            abort(404, message="No images in database")
+        ids = [ item["id"] for item in database.get_all_ids() ]
+        return self.multiple(k, ids)
+
+
+    def post(self, k):
+        """
+        For images specified in body in picture_ids
+        TODO docs
+        """
+        if database.is_db_empty():
+            abort(404, message="No images in database")
+        if not "picture_ids" in request.json:
+            abort(404, message="No picture_ids present in json body!")
+        ids = [ int(the_id) for the_id in request.json["picture_ids"] ]
+        abort_if_pictures_dont_exist(ids)
+        return self.multiple(k, ids)
+        
 class MetadataOneImage(Resource):
     """
     TODO docs
@@ -489,6 +575,7 @@ api.add_resource(OneFullsize, "/images/<picture_id>")
 api.add_resource(MetadataOneImage, "/images/<picture_id>/metadata")
 api.add_resource(Upload, "/upload")
 api.add_resource(NNOfExistingImage, "/faiss/getNN/<picture_id>")
+api.add_resource(NNOfExistingImages, "/faiss/getNN/multiple/<k>")
 api.add_resource(GetAllFaissIndices, "/faiss/index/all")
 api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 api.add_resource(ChangeNumberOfKMeansCentroids, "/kmeans/centroids")

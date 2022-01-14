@@ -2,6 +2,9 @@ import M2Crypto
 import base64
 from flask import g, request
 
+if __name__ == "__main__":
+    exit("Start via run.py!")
+
 class SessionKeyAuthenticator(object):
 
     def __init__(self, db):

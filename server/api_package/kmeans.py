@@ -1,6 +1,9 @@
 import numpy as np
 from sklearn.cluster import KMeans
 
+if __name__ == "__main__":
+    exit("Start via run.py!")
+
 class KMeansWrapper(object):
     
     def __init__(self, coordinates):
