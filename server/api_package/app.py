@@ -23,7 +23,11 @@ if __name__ == "__main__":
 
 # Set up Flask App using cors
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(
+    app, 
+    resources={r"/*": {"origins": "*"}}, 
+    expose_headers=["api_session_token", "content-type", "content-length"],
+)
 api = Api(app)
 
 secret_key = environ["FLASK_SECRET_KEY"]
