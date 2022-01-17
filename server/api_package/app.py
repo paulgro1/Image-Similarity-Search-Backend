@@ -292,6 +292,7 @@ class Upload(Resource):
         success, error, k = is_k_valid(k)
         if not success:
             abort(404, message=error)
+        print("k is", k)
         nr_of_files = len(request.files)
         print(f"Uploaded {nr_of_files} file(s)")
         if nr_of_files == 0:
@@ -317,13 +318,16 @@ class Upload(Resource):
         labels = kmeans.predict(coordinates)
         D, I = iss.search(images, k)
         sim_percentages = get_similarities(D)
-        neighbour_filenames = database.ids_to_filenames(I)
+        res = database.ids_to_various(I, filename=True, cluster_center=True)
+        neighbour_filenames = res["filename"]
+        neighbour_cluster_centers = res["cluster_center"]
         return { 
             "uploaded_filenames": filenames,
             "new_ids": new_ids,
             "distances": D.tolist(), 
             "ids": I.tolist(), 
             "neighbour_filenames": neighbour_filenames,
+            "neighbour_cluster_centers": neighbour_cluster_centers,
             "coordinates": coordinates.tolist(),
             "similarities": sim_percentages,
             "cluster_centers": labels.tolist()
@@ -361,16 +365,19 @@ class NNOfExistingImage(Resource):
         D = np.delete(D, obj=spot, axis=1)
         I = np.delete(I, obj=spot, axis=1)
         sim_percentages[0].pop(spot)
-        neighbour_filenames = database.ids_to_filenames(I)
-        label = database.get_one_label(picture_id)
+        res = database.ids_to_various(I, filename=True, cluster_center=True)
+        neighbour_filenames = res["filename"]
+        neighbour_cluster_centers = res["cluster_center"]
+        cluster_center = database.get_one_label(picture_id)
         return {
             "requested_id": picture_id,
             "requested_filename": image["filename"],
             "distances": D.tolist(),
             "ids": I.tolist(),
             "neighbour_filenames": neighbour_filenames,
+            "neighbour_cluster_centers": neighbour_cluster_centers,
             "similarities": sim_percentages,
-            "cluster_center": int(label)
+            "cluster_center": int(cluster_center)
         }
 
 class NNOfExistingImages(Resource):
@@ -415,8 +422,9 @@ class NNOfExistingImages(Resource):
             desc["neighbour_ids"] = nn.tolist()
             desc["distances"] = dist.tolist()
             desc["similarities"]  = sims.tolist()
-            filenames = database.ids_to_filenames(nn)
-            desc["neighbour_filenames"] = filenames
+            res = database.ids_to_various(nn, filename=True, cluster_center=True)
+            desc["neighbour_filenames"] = res["filename"][0]
+            desc["neighbour_cluster_centers"] = res["cluster_center"][0]
 
         return description
 

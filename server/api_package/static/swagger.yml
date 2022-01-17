@@ -89,6 +89,16 @@ paths:
                     items:
                       type: array
                       items: string
+                  neighbour_cluster_centers:
+                    type: array
+                    items: 
+                      type: array
+                      items: integer
+                    description: Corresponding cluster centers
+                    example: [
+                      [5, 1, 2],
+                      [2, 1, 9]
+                    ]
                   coordinates:
                     type: array
                     descripton: Calculated coordinates of uploaded images
@@ -188,6 +198,15 @@ paths:
                     items:
                       type: array
                       items: string
+                  neighbour_cluster_centers:
+                    type: array
+                    items: 
+                      type: array
+                      items: integer
+                    description: Corresponding cluster centers
+                    example: [
+                      [5, 1, 2]
+                    ]
                   similarities:
                     type: array
                     description: Distances converted in similarty percentages
@@ -284,6 +303,11 @@ paths:
                       items:
                         type: string
                       description: filenames of nearest neighbours
+                    neighbour_cluster_centers:
+                      type: array
+                      items: integer
+                      description: Corresponding cluster centers
+                      example: [5, 1, 2]
     get:
       parameters:
         - in: path
@@ -357,6 +381,11 @@ paths:
                       items:
                         type: string
                       description: filenames of nearest neighbours
+                    neighbour_cluster_centers:
+                      type: array
+                      items: integer
+                      description: Corresponding cluster centers
+                      example: [5, 1, 2]
   # 4
   /kmeans/centroids:
     get:

@@ -1,4 +1,4 @@
-from pymongo import MongoClient, UpdateOne
+from pymongo import MongoClient, UpdateOne, ASCENDING
 from os import path, environ
 from glob import iglob, glob
 from gridfs import GridFS
@@ -8,9 +8,14 @@ import numpy as np
 import pickle
 from api_package.helper import allowed_file
 from faiss import serialize_index, deserialize_index
+from api_package.helper import timing
+from pandas import DataFrame
 
 if __name__ == "__main__":
     exit("Start via run.py!")
+
+def do_nothing(item):
+    return item
 
 class Database(object):
 
@@ -27,6 +32,16 @@ class Database(object):
         self.id_projection = { "id": True }
         self.fullsize_projection = { "id": True, "filename": True, "path": True }
         self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
+        self.possible_search_parameters = ["_id", "id", "filename", "path", "thumnbnail", "x", "y", "cluster_center"]
+        self.type_reg = {
+            "id": int,
+            "filename": str,
+            "path": str,
+            "x": float,
+            "y": float,
+            "thumbnail": do_nothing,
+            "cluster_center": int
+        }
 
     def reset_col(self, col_name):
         col = self._db[col_name]
@@ -91,6 +106,7 @@ class Database(object):
                 images.append(image)
         self.col = self._db["images"]
         self.col.insert_many(images)
+        self.col.create_index([("id", ASCENDING)])
         self.next_id = images[-1]["id"] + 1
         environ["ACTUAL_THUMBNAIL_WIDTH"] = str(actual_thumbnail_size[0])
         environ["ACTUAL_THUMBNAIL_HEIGHT"] = str(actual_thumbnail_size[1])
@@ -181,7 +197,7 @@ class Database(object):
         if not self.is_db_empty():
             return self.get_all(self.fullsize_projection)
         return None
-
+    
     def get_multiple_by_id(self, ids, projection):
         if ids != None and len(ids) != 0 and not self.is_db_empty():
             filter = {"id": {"$in" : ids}}
@@ -297,6 +313,37 @@ class Database(object):
 
     def get_one_filename(self, id):
         return self.get_one_by_id(id, { "filename": True })["filename"]
+
+    def ids_to_various(self, ids, **kwargs):
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        values_correct = all(key in self.possible_search_parameters for key in kwargs.keys())
+        if not values_correct:
+            return None
+        query = { key: True for key in kwargs.keys() }
+        query["id"] = True
+        results = { key: [] for key in query.keys() }
+        for row in ids:
+            row = row.tolist()
+            df = DataFrame(list(self.get_multiple_by_id(row, query)))
+            lists = { key: [] for key in query.keys() }
+            for idx in row:
+                item = df.loc[df["id"] == idx].to_dict()
+                for key, val in item.items():
+                    lists[key].append(
+                        self.type_reg[key](
+                            list(
+                                val.values()
+                            )[0]
+                        )
+                    )
+            for key in query.keys():
+                results[key].append(lists[key])
+        return results
 
     def ids_to_filenames(self, ids):
         if ids is None:

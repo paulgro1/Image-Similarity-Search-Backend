@@ -2,9 +2,22 @@ from PIL import Image
 from os import path, environ
 from glob import iglob
 import numpy as np
+from functools import wraps
+from time import time
 
 if __name__ == "__main__":
     exit("Start via run.py!")
+
+# See https://stackoverflow.com/a/27737385
+def timing(f):
+    @wraps(f)
+    def wrap(*args, **kw):
+        ts = time()
+        result = f(*args, **kw)
+        te = time()
+        print(f"func:{f.__name__} args:[{args}, {kw}] took: {te-ts:2.4f} sec")
+        return result
+    return wrap
 
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
