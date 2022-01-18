@@ -21,24 +21,31 @@ class SessionKeyAuthenticator(object):
     def generate_authenticator(self):
         # See https://stackoverflow.com/a/32514167
         def wrapper():
-            if request.path != "/upload":
+            if request.path != "/upload":  # TODO remove
+                print("not upload")
                 return
             if not "local_variables" in g:
                 g.local_variables = {}
-            if not "api_session_token" in request.headers\
-                or not self.db.is_session_key_in_db(request.headers.get("api_session_token")):
+            key = None
+            if "Api-Session-Token" in request.headers\
+                and request.headers["Api-Session-Token"] != "undefined":
+                key = request.headers["Api-Session-Token"].encode("utf-8")
+                print("key in:", key)
+                if not self.db.is_session_key_in_db(key):
+                    print("Generating new key")
+                    key = self.generate_session_key() 
+            else:
                 print("Generating new key")
                 key = self.generate_session_key()
-                g.local_variables["api_session_token"] = key
-            else:
-                g.local_variables["api_session_token"] = request.headers.get("api_session_token")
+            g.local_variables["Api-Session-Token"] = key
         return wrapper
 
     def generate_after_request_handler(self):
         def wrapper(response):
-            if not hasattr(g, "local_variables") or "api_session_token" not in g.local_variables:
+            if not hasattr(g, "local_variables") or "Api-Session-Token" not in g.local_variables:
                 return response
-            key = g.local_variables.pop("api_session_token")
-            response.headers["api_session_token"] = key
+            key = g.local_variables.pop("Api-Session-Token")
+            print("key out:", key)
+            response.headers["Api-Session-Token"] = key
             return response
         return wrapper

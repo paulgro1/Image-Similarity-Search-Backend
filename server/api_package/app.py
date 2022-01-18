@@ -1,8 +1,8 @@
 # For basic functionality we expanded and modified the example 
 # from https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
 # to fit our needs
-# IMPORTANT set up conda environment before use -> installation.txt
-from flask import Flask, send_file
+# IMPORTANT set up conda environment before use -> INSTALL.md
+from flask import Flask, send_file, make_response
 from flask.globals import request, g
 from flask_cors import CORS
 from flask_restful import abort, Resource, Api
@@ -26,7 +26,7 @@ app = Flask(__name__)
 CORS(
     app, 
     resources={r"/*": {"origins": "*"}}, 
-    expose_headers=["api_session_token", "content-type", "content-length"],
+    expose_headers=["Api-Session-Token", "Content-Type", "Content-Length"],
 )
 api = Api(app)
 
@@ -317,7 +317,7 @@ class Upload(Resource):
         print(f"Uploaded {nr_of_allowed_files} allowed files")
         if nr_of_allowed_files == 0:
             abort(404, message="No allowed files send")
-        new_ids = database.get_next_ids(g.local_variables.get("api_session_token"), nr_of_allowed_files)
+        new_ids = database.get_next_ids(g.local_variables["Api-Session-Token"], nr_of_allowed_files)
         coordinates = tsne.calculate_coordinates(images)
         labels = kmeans.predict(coordinates)
         D, I = iss.search(images, k)
@@ -571,6 +571,14 @@ class ChangeNumberOfKMeansCentroids(Resource):
             "cluster_centers": cluster_list
         }
 
+class GetSessionToken(Resource):
+
+
+    def get(self):
+        resp = make_response("success")
+        resp.headers["Api-Session-Token"] = auth.generate_session_key()
+        return resp
+
 
 # Paths
 api.add_resource(AllPictureIDs, "/images/ids")
@@ -591,6 +599,7 @@ api.add_resource(NNOfExistingImages, "/faiss/getNN/multiple/<k>")
 api.add_resource(GetAllFaissIndices, "/faiss/index/all")
 api.add_resource(ChangeActiveFaissIndex, "/faiss/index/<index_key>")
 api.add_resource(ChangeNumberOfKMeansCentroids, "/kmeans/centroids")
+api.add_resource(GetSessionToken, "/authenticate")
 
 def main():
     print("Starting app")

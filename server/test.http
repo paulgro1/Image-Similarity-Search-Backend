@@ -85,3 +85,6 @@ POST {{baseUrl}}/faiss/index/IndexIVFFlat
 ### Analyse the dataset
 
 GET {{baseUrl}}/images/analyseDataset
+
+### auth
+GET {{baseUrl}}/authenticate
