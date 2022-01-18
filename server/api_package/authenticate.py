@@ -35,8 +35,7 @@ class SessionKeyAuthenticator(object):
                     print("Generating new key")
                     key = self.generate_session_key() 
             else:
-                print("Generating new key")
-                key = self.generate_session_key()
+                return
             g.local_variables["Api-Session-Token"] = key
         return wrapper
 
