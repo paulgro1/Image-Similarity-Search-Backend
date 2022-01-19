@@ -28,7 +28,7 @@ class SessionKeyAuthenticator(object):
         db.get_instance().insert_session_key(key)
         return key
 
-    def generate_authenticator(self) -> Callable[[None], None]:
+    def generate_authenticator(self) -> 'Callable[[None], None]':
         # See https://stackoverflow.com/a/32514167
         def wrapper():
             if not "local_variables" in g:
@@ -46,7 +46,7 @@ class SessionKeyAuthenticator(object):
             g.local_variables["Api-Session-Token"] = key
         return wrapper
 
-    def generate_after_request_handler(self) -> Callable[[Any], Any]:
+    def generate_after_request_handler(self) -> 'Callable[[Any], Any]':
         def wrapper(response: Any):
             if not hasattr(g, "local_variables") or "Api-Session-Token" not in g.local_variables:
                 return response
