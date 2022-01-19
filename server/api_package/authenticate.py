@@ -21,9 +21,6 @@ class SessionKeyAuthenticator(object):
     def generate_authenticator(self):
         # See https://stackoverflow.com/a/32514167
         def wrapper():
-            if request.path != "/upload":  # TODO remove
-                print("not upload")
-                return
             if not "local_variables" in g:
                 g.local_variables = {}
             key = None
