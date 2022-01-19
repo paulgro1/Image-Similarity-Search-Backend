@@ -30,7 +30,7 @@ CORS(
 )
 api = Api(app)
 
-secret_key = environ["FLASK_SECRET_KEY"]
+secret_key = environ.get("FLASK_SECRET_KEY")
 if not secret_key:
     exit("No secret key present!")
 app.config["SECRET_KEY"] = secret_key
@@ -49,11 +49,17 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 ### end swagger specific ###
 
-from api_package.db import Database
-database = Database()
+# Setup database
+#from api_package.db import Database
+#database = Database()
+import api_package.db as db
+database = db.get_instance()
+
+# Setup t-SNE
 from api_package.tsne import TSNE
 tsne = TSNE()
 
+# Load images
 flat_images_filenames, flat_images, load_success = load_images(environ.get("DATA_PATH"))
 
 if not load_success:
@@ -61,20 +67,28 @@ if not load_success:
 if flat_images.shape[0] < 1:
     exit("Need to have data in data folder!")
 
+# Calculate coordinates
 coordinates = tsne.initialize_coordinates(flat_images)
+
+# Calculate clusters
 num_centroids = environ.get("NUM_CENTROIDS")
 if num_centroids is None:
     exit("Please update your .env file! Missing number of centroids")
 from api_package.kmeans import KMeansWrapper
 kmeans = KMeansWrapper(coordinates)
 kmeans.cluster(int(num_centroids))
+
+# Initialize database
 database.initialize(flat_images_filenames, coordinates, kmeans.labels)
 
+# Analyse dataset
 analysed_dataset = analyse_dataset(flat_images, coordinates)
 
 del coordinates
 gc.collect()
 
+# Initialize faiss indices
+# IndexFlatL2
 from api_package.faiss import Faiss
 iss = Faiss()
 flatL2_success = iss.build_index(
@@ -86,6 +100,7 @@ flatL2_success = iss.build_index(
 if not flatL2_success:
     exit("Failed building FlatL2 index")
 
+# IndexIVFFlat
 centroids = int(max(floor(flat_images.shape[0] / 39), 1))
 probes_per_iteration = int(max(centroids / 10, 1))
 ivfflat_success = iss.build_index(
@@ -99,12 +114,14 @@ ivfflat_success = iss.build_index(
 if not ivfflat_success:
     exit("Failed building IVFFlat index")
 
+# Change current index to IndexFlatL2
 assert iss.change_index(Faiss.FlatL2)
 
 del flat_images
 del flat_images_filenames
 gc.collect()
 
+# Initialize api session key generator
 from api_package.authenticate import SessionKeyAuthenticator
 auth = SessionKeyAuthenticator(database)
 app.before_request(auth.generate_authenticator())

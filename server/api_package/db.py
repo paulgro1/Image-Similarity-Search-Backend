@@ -14,6 +14,11 @@ from pandas import DataFrame
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+_instance = None
+
+def get_instance():
+    return _instance
+
 def do_nothing(item):
     return item
 
@@ -29,10 +34,14 @@ class Database(object):
         
         # GridFS for image storage
         self._gridfs = GridFS(self._db)
+
+        # Projections
         self.id_projection = { "id": True }
         self.fullsize_projection = { "id": True, "filename": True, "path": True }
         self.thumbnail_projection = { "id": True, "filename": True, "thumbnail": True }
         self.possible_search_parameters = ["_id", "id", "filename", "path", "thumnbnail", "x", "y", "cluster_center"]
+
+        # Casting for each column
         self.type_reg = {
             "id": int,
             "filename": str,
@@ -42,6 +51,11 @@ class Database(object):
             "thumbnail": do_nothing,
             "cluster_center": int
         }
+
+        # Singletonesque pattern
+        global _instance
+        if _instance is None:
+            _instance = self
 
     def reset_col(self, col_name):
         col = self._db[col_name]
@@ -55,7 +69,7 @@ class Database(object):
         return self.count_documents_in_collection() <= 0
 
     def initialize(self, flat_filenames, coordinates, labels):
-        coordinates = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
+        data = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
         print("Initializing Database")
         self.reset_col("images")
         self.reset_col("fs.files")
@@ -71,7 +85,7 @@ class Database(object):
         actual_thumbnail_size = None
         images = []
         base_path = environ.get("DATA_PATH")
-        for idx, item in enumerate(coordinates):
+        for idx, item in enumerate(data):
             f = path.join(base_path, item[0])
             t_id = None
             filename = path.split(f)[-1]
@@ -368,3 +382,5 @@ class Database(object):
 
     def get_one_label(self, id):
         return self.get_metadata(id)["cluster_center"]
+
+_instance = Database()
