@@ -4,12 +4,21 @@ from sklearn.cluster import KMeans
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+_instance = None
+
+def get_instance():
+    return _instance
+
 class KMeansWrapper(object):
     
-    def __init__(self, coordinates):
+    def __init__(self):
         super().__init__()
         print("Creating KMeans object")
-        self.coordinates = np.array(coordinates)
+        
+        # Singletonesque pattern
+        global _instance
+        if _instance is None:
+            _instance = self
 
     @property
     def cluster_centers(self) -> np.ndarray:
@@ -20,6 +29,20 @@ class KMeansWrapper(object):
     def labels(self) -> np.ndarray:
         if self.current_cluster is not None:
             return self.current_cluster.labels_
+
+    @property
+    def coordinates(self):
+        return self._coordinates
+
+    @coordinates.setter
+    def coordinates(self, value):
+        self._coordinates = value
+
+    @staticmethod
+    def initialize(coordinates):
+        global _instance
+        _instance.coordinates = np.array(coordinates)
+        print("Initialized kmeans")
 
     def cluster(self, num_clusters):
         print(f"Clustering with {num_clusters} centroids")
@@ -41,3 +64,4 @@ class KMeansWrapper(object):
         labels = self.current_cluster.predict(data)
         return labels
         
+_instance = KMeansWrapper()

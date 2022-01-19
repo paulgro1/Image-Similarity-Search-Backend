@@ -1,21 +1,31 @@
 import M2Crypto
 import base64
 from flask import g, request
+import api_package.db as db
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+_instance = None
+
+def get_instance():
+    return _instance
+
 class SessionKeyAuthenticator(object):
 
-    def __init__(self, db):
+    def __init__(self):
         super().__init__()
-        self.db = db
+
+        # Singletonesque pattern
+        global _instance
+        if _instance is None:
+            _instance = self
 
     def generate_session_key(self):
         key = base64.b64encode(M2Crypto.m2.rand_bytes(16))
-        while self.db.is_session_key_in_db(key):
+        while db.get_instance().is_session_key_in_db(key):
             key = base64.b64encode(M2Crypto.m2.rand_bytes(16))
-        self.db.insert_session_key(key)
+        db.get_instance().insert_session_key(key)
         return key
 
     def generate_authenticator(self):
@@ -28,7 +38,7 @@ class SessionKeyAuthenticator(object):
                 and request.headers["Api-Session-Token"] != "undefined":
                 key = request.headers["Api-Session-Token"].encode("utf-8")
                 print("key in:", key)
-                if not self.db.is_session_key_in_db(key):
+                if not db.get_instance().is_session_key_in_db(key):
                     print("Generating new key")
                     key = self.generate_session_key() 
             else:
@@ -45,3 +55,5 @@ class SessionKeyAuthenticator(object):
             response.headers["Api-Session-Token"] = key
             return response
         return wrapper
+
+_instance = SessionKeyAuthenticator()

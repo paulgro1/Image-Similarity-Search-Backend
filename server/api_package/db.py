@@ -160,15 +160,20 @@ class Database(object):
         self._db["sessions"].insert_one({ "key": key, "value": self.next_id })
 
     def get_next_ids(self, key, amount=1):
-        current_next_value = self._db["sessions"].find_one_and_update(
-            { "key": key }, { "$inc": { "value": amount } }
-        )
-        if current_next_value is not None and "value" in current_next_value:
-            current_next_value = int(current_next_value["value"])
-            if amount == 1:
-                return [current_next_value]
+        if key is not None:
+            current_next_value = self._db["sessions"].find_one_and_update(
+                { "key": key }, { "$inc": { "value": amount } }
+            )
+            if current_next_value is not None and "value" in current_next_value:
+                current_next_value = int(current_next_value["value"])
             else:
-                return list(range(current_next_value, current_next_value + amount))
+                current_next_value = self.next_id
+        else:
+            current_next_value = self.next_id
+        if amount == 1:
+            return [current_next_value]
+        else:
+            return list(range(current_next_value, current_next_value + amount))
     
     def get_one(self, filter, projection):
         if filter == None:

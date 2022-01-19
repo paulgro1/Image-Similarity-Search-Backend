@@ -2,12 +2,23 @@ import numpy as np
 from openTSNE import TSNE as openTSNE
 from sklearn.decomposition._pca import PCA
 from os import environ
-from math import ceil
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+_instance = None
+
+def get_instance():
+    return _instance
+
 class TSNE(object):
+
+    def __init__(self):
+        super().__init__()
+
+        global _instance
+        if _instance is None:
+            _instance = self
 
     def initialize_coordinates(self, images):
         print("Initializing Coordinates")
@@ -53,3 +64,5 @@ class TSNE(object):
         uploaded_embedded = self.coordinates.transform(reduced_images)
         print(f"Uploaded Image Coordinates:\n{uploaded_embedded}")
         return uploaded_embedded  
+
+_instance = TSNE()

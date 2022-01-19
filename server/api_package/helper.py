@@ -4,9 +4,11 @@ from glob import iglob
 import numpy as np
 from functools import wraps
 from time import time
+from flask_restful import abort
 
 if __name__ == "__main__":
     exit("Start via run.py!")
+
 
 # See https://stackoverflow.com/a/27737385
 def timing(f):
@@ -27,6 +29,37 @@ def allowed_file(filename):
     TODO docs
     """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def abort_if_pictures_dont_exist(picture_ids, db):
+    """
+    Terminates request, if given picture_id(s) is/are not present within the database
+    
+    Parameters
+    ----------
+    picture_id : int
+        id of picture to be assessed
+    """
+    success, possible_missing_ids = db.are_all_ids_in_database(picture_ids)
+    if not success:
+        print(f"Image(s) with id(s) {possible_missing_ids} is/are not in the database!")
+        abort(404, message=f"Picture(s) {possible_missing_ids} not found")
+
+def is_k_valid(k, db, id_from_database=False):
+    if k is None:
+        return False, "k is None", k
+    if not type(k) is int:
+        try:
+            k = int(k)
+        except ValueError as e:
+            abort(500, message=e)
+    if k < 1:
+        return False, f"{k} < 1, value too small"
+    nr_of_files_in_database = db.count_documents_in_collection()
+    if id_from_database:
+        nr_of_files_in_database -= 1 # excluding the file itself
+    if k > nr_of_files_in_database:
+        return False, f"k {k} is bigger than the (other) {nr_of_files_in_database} images in the index!", k
+    return True, None, k
 
 def process_image(image):
     with Image.open(image) as img:
@@ -85,6 +118,12 @@ def load_and_process_one_from_dataset(the_path):
     resized_image, _ = process_image(full_path)
     return np.array(resized_image, dtype="float32")
 
+analysed_dataset = None
+
+def get_analysed_dataset():
+    global analysed_dataset
+    return analysed_dataset
+
 def analyse_dataset(images, coordinates):
     coord_min = np.amin(coordinates, axis=0)
     x_min = coord_min[0]
@@ -95,7 +134,7 @@ def analyse_dataset(images, coordinates):
     coord_average = np.sum(coordinates, axis=0) / coordinates.shape[0]
     x_average = coord_average[0]
     y_average = coord_average[1]
-    return {
+    global analysed_dataset; analysed_dataset = {
         "coordinates": {
             "min_x": x_min,
             "max_x": x_max,
@@ -115,6 +154,5 @@ def analyse_dataset(images, coordinates):
                 "height": environ.get("ACTUAL_THUMBNAIL_HEIGHT")
             },    
         }
-
     }
     

@@ -7,6 +7,11 @@ import gc
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+_instance = None
+
+def get_instance():
+    return _instance
+
 class Faiss(object):
     FlatL2 = "IndexFlatL2"
     IVFFlat = "IndexIVFFlat"
@@ -24,6 +29,9 @@ class Faiss(object):
         
         self.has_index = False
         print("Creating Faiss-Object")
+        global _instance
+        if _instance is None:
+            _instance = self
         
     def _build_FlatL2(self, **kwargs):
         if not "d" in kwargs:
@@ -109,7 +117,8 @@ class Faiss(object):
         print(f"Searching index {type(self.faiss_index).__name__}")
         D, I = self.faiss_index.search(images, k)
         return D, I
-
+    
     def get_all_indices_keys(self):
         return [ key for key in self.indices.keys() ]
             
+_instance = Faiss()
