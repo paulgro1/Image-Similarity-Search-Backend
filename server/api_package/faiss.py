@@ -3,14 +3,12 @@ import numpy as np
 from os import path, environ, mkdir
 from shutil import rmtree
 import gc
+from typing import Literal, Tuple, Union, Any
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
 _instance = None
-
-def get_instance():
-    return _instance
 
 class Faiss(object):
     FlatL2 = "IndexFlatL2"
@@ -24,7 +22,7 @@ class Faiss(object):
         IVFFlat: None
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         
         self.has_index = False
@@ -33,7 +31,7 @@ class Faiss(object):
         if _instance is None:
             _instance = self
         
-    def _build_FlatL2(self, **kwargs):
+    def _build_FlatL2(self, **kwargs: 'dict[str, Any]') -> 'Union[Any, None]':
         if not "d" in kwargs:
             return None
         d = kwargs["d"]
@@ -41,7 +39,7 @@ class Faiss(object):
         assert index.is_trained
         return index
 
-    def _build_IVFFlat(self, images, **kwargs):
+    def _build_IVFFlat(self, images: np.ndarray, **kwargs: 'dict[str, Any]') -> 'Union[Any, None]':
         if not "nlist" in kwargs or not "nprobe" in kwargs or not "d" in kwargs:
             print(f"Missing kwargs, need quantizer, nlist, nprobe, d: \n{kwargs}")
             return None
@@ -56,7 +54,7 @@ class Faiss(object):
         index.nprobe = nprobe
         return index
 
-    def _set_index(self, key, index):
+    def _set_index(self, key: str, index: Any) -> bool:
         if index != None:
             self.faiss_index = index
             self.has_index = True
@@ -64,7 +62,7 @@ class Faiss(object):
             return True
         return False
 
-    def change_index(self, key):
+    def change_index(self, key: str) -> bool:
         if key is None:
             print("No key given")
             return False
@@ -80,7 +78,7 @@ class Faiss(object):
             return False
         return self._set_index(key, index)
     
-    def build_index(self, key, training_filenames, training_images, **kwargs):
+    def build_index(self, key: str, training_filenames: np.ndarray, training_images: np.ndarray, **kwargs: 'dict[str, Any]') -> bool:
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
@@ -107,7 +105,7 @@ class Faiss(object):
         # gc.collect()
         return True
 
-    def search(self, images, k):
+    def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndarray], None]':
         if not self.has_index: 
             print("No index present!")
             return None
@@ -118,7 +116,10 @@ class Faiss(object):
         D, I = self.faiss_index.search(images, k)
         return D, I
     
-    def get_all_indices_keys(self):
+    def get_all_indices_keys(self) -> 'list[str]':
         return [ key for key in self.indices.keys() ]
-            
+
+def get_instance() -> Faiss:
+    return _instance
+
 _instance = Faiss()

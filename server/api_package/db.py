@@ -1,3 +1,4 @@
+from typing import Any, Union, Tuple, Literal
 from pymongo import MongoClient, UpdateOne, ASCENDING
 from os import path, environ
 from glob import iglob, glob
@@ -16,15 +17,12 @@ if __name__ == "__main__":
 
 _instance = None
 
-def get_instance():
-    return _instance
-
-def do_nothing(item):
+def do_nothing(item: Any) -> Any:
     return item
 
 class Database(object):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         print("Creating Database")
         # Client
@@ -57,18 +55,18 @@ class Database(object):
         if _instance is None:
             _instance = self
 
-    def reset_col(self, col_name):
+    def reset_col(self, col_name: str) -> None:
         col = self._db[col_name]
         col.drop()
         col.drop_indexes()
 
-    def count_documents_in_collection(self, options={}):
+    def count_documents_in_collection(self, options: dict={}) -> int:
         return self.col.count_documents(options)
 
-    def is_db_empty(self):
+    def is_db_empty(self) -> bool:
         return self.count_documents_in_collection() <= 0
 
-    def initialize(self, flat_filenames, coordinates, labels):
+    def initialize(self, flat_filenames: np.ndarray, coordinates: np.ndarray, labels: np.ndarray) -> None:
         data = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
         print("Initializing Database")
         self.reset_col("images")
@@ -150,16 +148,16 @@ class Database(object):
         return index
     """
 
-    def is_session_key_in_db(self, key):
+    def is_session_key_in_db(self, key: bytes) -> bool:
         if key is None:
             return False
         result = self._db["sessions"].find_one({"key": key})
         return result is not None
 
-    def insert_session_key(self, key):
+    def insert_session_key(self, key: bytes) -> None:
         self._db["sessions"].insert_one({ "key": key, "value": self.next_id })
 
-    def get_next_ids(self, key, amount=1):
+    def get_next_ids(self, key: bytes, amount: int=1) -> 'list[int]':
         if key is not None:
             current_next_value = self._db["sessions"].find_one_and_update(
                 { "key": key }, { "$inc": { "value": amount } }
@@ -175,23 +173,23 @@ class Database(object):
         else:
             return list(range(current_next_value, current_next_value + amount))
     
-    def get_one(self, filter, projection):
+    def get_one(self, filter: dict, projection: dict) -> 'Union[Any, None]':
         if filter == None:
             return None
         return self.col.find_one(filter, projection=projection)
 
-    def get_one_by_id(self, id, projection):
+    def get_one_by_id(self, id: int, projection: dict) -> 'Union[Any, None]':
         if id != None and not self.is_db_empty():
             return self.get_one({"id": id}, projection)
         return None
 
-    def is_id_in_database(self, id):
+    def is_id_in_database(self, id: int) -> bool:
         return not self.get_one_by_id(id, self.id_projection) is None
         
-    def get_one_fullsize_by_id(self, id):
+    def get_one_fullsize_by_id(self, id: int) -> 'Union[Any, None]':
         return self.get_one_by_id(id, self.fullsize_projection)
 
-    def get_multiple(self, filter={}, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
+    def get_multiple(self, filter: dict={}, projection: dict={ "id": True, "filename": True, "path": True, "thumbnail": True }) -> 'list[Any]':
         as_list = list(self.col.find(filter=filter, projection=projection))
         for d in as_list:
             del d["_id"]
@@ -204,26 +202,26 @@ class Database(object):
             lines.append([line["x"], line["y"]])
         return np.array(lines, dtype="float64")
 
-    def get_all(self, projection={ "id": True, "filename": True, "path": True, "thumbnail": True }):
+    def get_all(self, projection: dict={ "id": True, "filename": True, "path": True, "thumbnail": True }) -> 'list[Any]':
         return self.get_multiple({}, projection)
 
-    def get_all_ids(self):
+    def get_all_ids(self) -> 'Union[list[Any], None]':
         if not self.is_db_empty():
             return self.get_all(self.id_projection)
         return None
 
-    def get_all_fullsize(self):
+    def get_all_fullsize(self) -> 'Union[list[Any], None]':
         if not self.is_db_empty():
             return self.get_all(self.fullsize_projection)
         return None
     
-    def get_multiple_by_id(self, ids, projection):
+    def get_multiple_by_id(self, ids: 'list[int]', projection: dict) -> 'Union[list[Any], None]':
         if ids != None and len(ids) != 0 and not self.is_db_empty():
             filter = {"id": {"$in" : ids}}
             return self.get_multiple(filter, projection)
         return None
 
-    def are_all_ids_in_database(self, ids):
+    def are_all_ids_in_database(self, ids: 'list[int]') -> 'Union[Tuple[Literal[False], str], Tuple[Literal[True], None]]':
         if ids is None:
             return False, "no ids given!"
         if not isinstance(ids, list):
@@ -239,17 +237,17 @@ class Database(object):
             not_present = list(set(ids) - set(result_list))
             return False, not_present
 
-    def get_multiple_fullsize_by_id(self, ids):
+    def get_multiple_fullsize_by_id(self, ids: 'list[int]') -> 'Union[list[Any], None]':
         return self.get_multiple_by_id(ids, self.fullsize_projection)
 
-    def get_thumbnail_fs_id(self, picture_id):
+    def get_thumbnail_fs_id(self, picture_id: int) -> 'Union[Any, None]':
         return self.get_one_by_id(picture_id, { "thumbnail": True })["thumbnail"]
 
-    def get_one_thumbnail_by_id(self, entry_id):
+    def get_one_thumbnail_by_id(self, entry_id: int) -> 'Union[Any, None]':
         id = self.get_thumbnail_fs_id(entry_id)
         return self._gridfs.get(id)
         
-    def get_all_thumbnails(self):
+    def get_all_thumbnails(self) -> 'Union[list[Any], None]':
         if not self.is_db_empty():
             result = self._gridfs.find({ "metadata" : "thumbnail" })
             if not result is None:
@@ -257,7 +255,7 @@ class Database(object):
             return None 
         return None
 
-    def get_multiple_thumbnails_by_id(self, ids):
+    def get_multiple_thumbnails_by_id(self, ids: 'list[int]') -> 'Union[list[Any], None]':
         if not self.is_db_empty():
             fs_ids = self.get_multiple_by_id(ids, { "thumbnail": True })
             fs_ids = [ x["thumbnail"] for x in fs_ids ]
@@ -265,7 +263,7 @@ class Database(object):
             if not result is None:
                 return [ x for x in result ]
 
-    def get_coordinates(self, id):
+    def get_coordinates(self, id: int) -> 'Union[Tuple[float, float], None]':
         result = self.get_one_by_id(id, { "x": True, "y": True})
         if not result is None:
             x = result["x"]
@@ -273,7 +271,7 @@ class Database(object):
             return (x, y)
         return None
 
-    def get_metadata(self, id):
+    def get_metadata(self, id: int) -> dict:
         result = self.get_one_by_id(id, { "id": True, "filename": True, "x": True, "y": True, "cluster_center": True})
         if not result is None:
             return {
@@ -292,7 +290,7 @@ class Database(object):
             }
         return None
     
-    def get_multiple_metadata(self, ids):
+    def get_multiple_metadata(self, ids: 'list[int]') -> 'list[dict]':
         result = self.get_multiple_by_id(ids, { "id": True, "filename": True, "x": True, "y": True, "cluster_center": True})
         if not result is None:
             return [ { 
@@ -311,7 +309,7 @@ class Database(object):
             } for x in result ]
         return None
 
-    def get_all_metadata(self):
+    def get_all_metadata(self) -> 'list[dict]':
         result = self.get_all({ "id": True, "filename": True, "x": True, "y": True, "cluster_center": True })
         if not result is None:
             return [ { 
@@ -330,10 +328,10 @@ class Database(object):
             } for x in result ]
         return None
 
-    def get_one_filename(self, id):
+    def get_one_filename(self, id: int) -> str:
         return self.get_one_by_id(id, { "filename": True })["filename"]
 
-    def ids_to_various(self, ids, **kwargs):
+    def ids_to_various(self, ids: 'list[int]', **kwargs: 'dict[str, bool]') -> 'Union[dict[str, list[Any]], None]':
         if ids is None:
             return None
         if not isinstance(ids, np.ndarray):
@@ -364,7 +362,7 @@ class Database(object):
                 results[key].append(lists[key])
         return results
 
-    def ids_to_filenames(self, ids):
+    def ids_to_filenames(self, ids: 'list[int]') -> 'Union[list[str], None]':
         if ids is None:
             return None
         if not isinstance(ids, np.ndarray):
@@ -379,13 +377,16 @@ class Database(object):
             filenames.append(c_filenames)
         return filenames
 
-    def update_labels(self, labels):
+    def update_labels(self, labels: 'list[int]') -> None:
         updateOps = [
             UpdateOne({ "id": idx }, { "$set": { "cluster_center": int(item) }}) for idx, item in enumerate(labels)
         ]
         self.col.bulk_write(updateOps)
 
-    def get_one_label(self, id):
+    def get_one_label(self, id: int) -> Any:
         return self.get_metadata(id)["cluster_center"]
+
+def get_instance() -> Database:
+    return _instance
 
 _instance = Database()

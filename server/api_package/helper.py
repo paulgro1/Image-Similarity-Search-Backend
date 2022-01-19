@@ -5,15 +5,17 @@ import numpy as np
 from functools import wraps
 from time import time
 from flask_restful import abort
+from collections.abc import Callable
+from typing import Any, Union, NoReturn, Literal, Tuple
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
 
 # See https://stackoverflow.com/a/27737385
-def timing(f):
+def timing(f: 'Callable[[Any], Any]') -> 'Callable[[Any, Any], Any]':
     @wraps(f)
-    def wrap(*args, **kw):
+    def wrap(*args, **kw) -> Any:
         ts = time()
         result = f(*args, **kw)
         te = time()
@@ -24,13 +26,13 @@ def timing(f):
 # Allowed extensions for uploaded images
 ALLOWED_EXTENSIONS = { "png", "jpg", "jpeg" }
 
-def allowed_file(filename):
+def allowed_file(filename: str) -> bool:
     """
     TODO docs
     """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def abort_if_pictures_dont_exist(picture_ids, db):
+def abort_if_pictures_dont_exist(picture_ids: 'list[int]', db: Any) -> 'Union[None, NoReturn]':
     """
     Terminates request, if given picture_id(s) is/are not present within the database
     
@@ -44,7 +46,7 @@ def abort_if_pictures_dont_exist(picture_ids, db):
         print(f"Image(s) with id(s) {possible_missing_ids} is/are not in the database!")
         abort(404, message=f"Picture(s) {possible_missing_ids} not found")
 
-def is_k_valid(k, db, id_from_database=False):
+def is_k_valid(k: int, db: Any, id_from_database: bool=False) -> 'Union[Tuple[Literal[True], None, int], Tuple[Literal[False], str, Union[int, None]]]':
     if k is None:
         return False, "k is None", k
     if not type(k) is int:
@@ -61,14 +63,14 @@ def is_k_valid(k, db, id_from_database=False):
         return False, f"k {k} is bigger than the (other) {nr_of_files_in_database} images in the index!", k
     return True, None, k
 
-def process_image(image):
+def process_image(image: str) -> np.ndarray:
     with Image.open(image) as img:
         image_shape = (img.width, img.height)
         converted_image = img.convert("RGB")
     resized_image = np.array(converted_image, dtype="float32").ravel()
     return resized_image, image_shape
 
-def _load_images(the_path):
+def _load_images(the_path: str) -> 'Union[Tuple[np.ndarray, np.ndarray, Literal[True], Tuple[int, int]], Tuple[None, None, Literal[False], None]]':
     filename_list = []
     image_list = []
     correct_shape = None
@@ -85,14 +87,14 @@ def _load_images(the_path):
     images = np.array(image_list, dtype="float32")
     return names, images, True, correct_shape
 
-def load_images(the_path):
+def load_images(the_path: str) -> 'Tuple[Union[np.ndarray, None], Union[np.ndarray, None], Literal[True]]':
     names, images, success, correct_shape = _load_images(the_path)
     if success and correct_shape is not None:
         environ["FULLSIZE_WIDTH"] = str(correct_shape[0])
         environ["FULLSIZE_HEIGHT"] = str(correct_shape[1])
     return names, images, True
 
-def load_images_by_id(ids, db) -> tuple((bool, np.ndarray, list, str)):
+def load_images_by_id(ids, db) -> 'Union[Tuple[Literal[True], np.ndarray, list[dict], None], Tuple[Literal[False], None, None, str]]':
     images = db.get_multiple_by_id(ids, None)
     if images is None:
         return False, None, None, "Error retrieving images from database"
@@ -113,18 +115,18 @@ def load_images_by_id(ids, db) -> tuple((bool, np.ndarray, list, str)):
     p_images = np.array(p_images, dtype="float32")
     return True, p_images, all_images, None
 
-def load_and_process_one_from_dataset(the_path):
+def load_and_process_one_from_dataset(the_path: str) -> np.ndarray:
     full_path = path.join(environ.get("DATA_PATH"), the_path)
     resized_image, _ = process_image(full_path)
     return np.array(resized_image, dtype="float32")
 
 analysed_dataset = None
 
-def get_analysed_dataset():
+def get_analysed_dataset() -> 'Union[dict, None]':
     global analysed_dataset
     return analysed_dataset
 
-def analyse_dataset(images, coordinates):
+def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -> dict:
     coord_min = np.amin(coordinates, axis=0)
     x_min = coord_min[0]
     y_min = coord_min[1]

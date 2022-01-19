@@ -2,25 +2,23 @@ import numpy as np
 from openTSNE import TSNE as openTSNE
 from sklearn.decomposition._pca import PCA
 from os import environ
+from typing import NoReturn, Union
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
 _instance = None
 
-def get_instance():
-    return _instance
-
 class TSNE(object):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         global _instance
         if _instance is None:
             _instance = self
 
-    def initialize_coordinates(self, images):
+    def initialize_coordinates(self, images: np.ndarray) -> 'Union[np.ndarray, NoReturn]':
         print("Initializing Coordinates")
         np_images = np.array(images, dtype="float32")
         if np_images.ndim == 1:
@@ -54,7 +52,7 @@ class TSNE(object):
         return images_embedded
 
     # Calculating the coordinates of the Images using opentnse t-SNE Method
-    def calculate_coordinates(self, images):
+    def calculate_coordinates(self, images: np.ndarray) -> np.ndarray:
         print("Calculation new coordinates")
         np_uploaded_images = np.array(images, dtype="float32")
         if np_uploaded_images.ndim == 1:
@@ -63,6 +61,9 @@ class TSNE(object):
         reduced_images = self.pca.transform(np_uploaded_images)
         uploaded_embedded = self.coordinates.transform(reduced_images)
         print(f"Uploaded Image Coordinates:\n{uploaded_embedded}")
-        return uploaded_embedded  
+        return uploaded_embedded
+
+def get_instance() -> TSNE:
+    return _instance
 
 _instance = TSNE()
