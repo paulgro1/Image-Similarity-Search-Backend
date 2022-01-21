@@ -1,20 +1,24 @@
+"""Module contains Resource to get multiple thumbnails"""
 from flask_restful import Resource, abort
 from flask import request, send_file
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
-from api_package.helper import abort_if_pictures_dont_exist
+
 import api_package.db as db
+from api_package.helper import abort_if_pictures_dont_exist
+
 
 class MultipleThumbnails(Resource):
-    """
-    TODO Docs
-    """
+    """Resource returns multiple thumbnails on post request"""
+    
     def post(self):
-        """
-        HTTP GET method, returns multiple thumbnails from database
+        """HTTP POST request used to return multiple thumbnails specified in json body array picture_ids
 
-        TODO return, docs
+        Returns:
+            Any: data for response
         """
+        if not "picture_ids" in request.json:
+            abort(404, message="No picture ids present in json body")
         picture_ids = request.json["picture_ids"]
         abort_if_pictures_dont_exist(picture_ids, db.get_instance())
         print(f"Getting thumbnails for ids { picture_ids } ")

@@ -1,3 +1,4 @@
+"""Package contains all Resources used in this server"""
 from api_package.resources.get_images import OneFullsize, MultipleFullsize, OneThumbnail, MultipleThumbnails, AllThumbnails
 from api_package.resources.get_metadata import AllPictureIDs, MetadataOneImage, MetadataMultipleImages, MetadataAllImages, ImagesSize, ThumbnailSize, AnalyseDataset
 from api_package.resources.get_nn import Upload, NNOfExistingImage, NNOfExistingImages

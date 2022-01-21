@@ -1,22 +1,26 @@
+"""Module contains Resource to get multiple fullsize images"""
 from flask_restful import Resource, abort
-import api_package.db as db
 from flask import request, send_file
-from api_package.helper import abort_if_pictures_dont_exist
-from zipfile import ZipFile, ZIP_DEFLATED
 from io import BytesIO
 from PIL import Image
 from os import path
+from zipfile import ZipFile, ZIP_DEFLATED
+
+import api_package.db as db
+from api_package.helper import abort_if_pictures_dont_exist
+
 
 class MultipleFullsize(Resource):
-    """
-    TODO Docs
-    """
-    def post(self):
-        """
-        HTTP GET method, returns multiple thumbnails from database
+    """Resource returns multiple fullsize images on post request"""
 
-        TODO return, docs
+    def post(self):
+        """HTTP POST request used to return multiple fullsize images specified in json body array picture_ids
+
+        Returns:
+            Any: data for response
         """
+        if not "picture_ids" in request.json:
+            abort(404, message="No picture ids present in json body")
         picture_ids = request.json["picture_ids"]
         abort_if_pictures_dont_exist(picture_ids, db.get_instance())
         print(f"Getting fullsize for ids { picture_ids } ")

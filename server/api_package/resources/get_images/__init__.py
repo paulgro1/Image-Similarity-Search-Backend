@@ -1,3 +1,4 @@
+"""Package contains all Resources related to getting images from the database/dataset"""
 from api_package.resources.get_images.fullsize_one import OneFullsize
 from api_package.resources.get_images.fullsize_multiple import MultipleFullsize
 

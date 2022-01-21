@@ -48,11 +48,11 @@ class Faiss(object):
         return index
 
     def _build_IVFFlat(self, images: np.ndarray, **kwargs: 'dict[str, Any]') -> 'Union[Any, None]':
-        """Initialize a faiss IndexFlatIVFFlat
+        """Initialize a faiss IndexIVFFlat
 
         Args:
-            iamges (np.array): flat images to train the index on
-            kwargs (dict): should contain mlist (int), the amount of centroids, nprobe (int), amount of probes per iteration,
+            images (np.array): flat images to train the index on
+            kwargs (dict): should contain nlist (int), the amount of centroids, nprobe (int), amount of probes per iteration,
             d (int), the dimension of the flat data
 
         Returns:
@@ -73,6 +73,15 @@ class Faiss(object):
         return index
 
     def _set_index(self, key: str, index: Any) -> bool:
+        """Set a faiss index, which can be used for future searches
+
+        Args:
+            key (str): key, meaning identifier, associated with the faiss index. Keys are class variables of this class
+            index (Any): the faiss index
+
+        Returns:
+            bool: True if successful, False if an error occured
+        """
         if index != None:
             self.faiss_index = index
             self.has_index = True
@@ -81,6 +90,14 @@ class Faiss(object):
         return False
 
     def change_index(self, key: str) -> bool:
+        """Change the current index to the faiss index associated with the key
+
+        Args:
+            key (str): key, meaning identifier, associated with the faiss index. Keys are class variables of this class
+
+        Returns:
+            bool: True if successful, False if an error occured
+        """
         if key is None:
             print("No key given")
             return False
@@ -94,6 +111,17 @@ class Faiss(object):
         return self._set_index(key, index)
     
     def build_index(self, key: str, training_filenames: np.ndarray, training_images: np.ndarray, **kwargs: 'dict[str, Any]') -> bool:
+        """Convenience method used to build faiss index associated with the key
+
+        Args:
+            key (str): key, meaning identifier, associated with the faiss index. Keys are class variables of this class
+            training_filenames (np.ndarray): the filenames of the training images
+            training_images (np.ndarray): the flat training images
+            kwargs (dict): should contain all keyworded arguments needed for building the faiss index
+
+        Returns:
+            bool: True if build was successful, False if key is unknown or a different error occured
+        """
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
@@ -114,6 +142,16 @@ class Faiss(object):
         return True
 
     def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndarray], None]':
+        """Returns the k nearest neighbours and distances of the flat images in the images array using the current faiss index
+
+        Args:
+            images (np.ndarray): array containing the flat images, whose neighbours shall be found
+            k (int): value indicating, how many neighbours shall be found. Should be 0 < k < Faiss.get_instance().faiss_index.ntotal
+
+        Returns:
+            np.array: Distances to the nearest neighbours
+            np.array: Indices of the nearest neighbours
+        """
         if not self.has_index: 
             print("No index present!")
             return None
@@ -125,9 +163,20 @@ class Faiss(object):
         return D, I
     
     def get_all_indices_keys(self) -> 'list[str]':
+        """Get keys for all available faiss indices
+
+        Returns:
+            list (str): list of keys
+        """
         return [ key for key in self.indices.keys() ]
 
 def get_instance() -> Faiss:
+    """Return the current and preferably only instance of Faiss. If possible use this function to access the class methods of this class.
+
+    Returns:
+        Faiss: current instance of Faiss
+    """
     return _instance
 
+# Create the current and preferably only instance of Faiss
 _instance = Faiss()

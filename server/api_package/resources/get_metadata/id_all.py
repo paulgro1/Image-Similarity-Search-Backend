@@ -1,14 +1,17 @@
+"""Module contains Resource to get ids of all images in database"""
 from flask_restful import Resource, abort
+
 import api_package.db as db
 
 
 class AllPictureIDs(Resource):
-    """
-    TODO Docs
-    """
+    """Resource returns ids of all images in database on get request"""
+
     def get(self):
-        """
-        TODO docs
+        """HTTP GET request used to return the ids of all images in the database
+
+        Returns:
+            Any: data for response
         """
         all_ids = db.get_instance().get_all_ids()
         if all_ids is None:

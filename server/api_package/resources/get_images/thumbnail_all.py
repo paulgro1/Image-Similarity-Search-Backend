@@ -1,19 +1,20 @@
+"""Module contains Resource to get all thmbnails"""
 from flask_restful import Resource, abort
 from flask import send_file
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
+
 import api_package.db as db
 
 
 class AllThumbnails(Resource):
-    """
-    TODO Docs
-    TODO change response
-    """
+    """Resource returns thumbnails on get request"""
+
     def get(self):
-        """
-        HTTP GET method, returns all images from database
-        TODO return docs
+        """HTTP GET request used to return all thumbnails as a zip directory
+
+        Returns:
+            Any: data for response
         """
         all_images = db.get_instance().get_all_thumbnails()
         if all_images is None:

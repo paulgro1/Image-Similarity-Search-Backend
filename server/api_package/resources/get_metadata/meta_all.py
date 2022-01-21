@@ -1,13 +1,17 @@
+"""Module contains Resource to get the metadata of all images within the database"""
 from flask_restful import Resource, abort
+
 import api_package.db as db
 
+
 class MetadataAllImages(Resource):
-    """
-    TODO docs
-    """
+    """Resource returns the metadata of all images within the database on get request"""
+
     def get(self):
-        """
-        TODO docs
+        """HTTP GET request used to return the metadata of all images within the database
+
+        Returns:
+            Any: data for response
         """
         data = db.get_instance().get_all_metadata()
         if data is None:

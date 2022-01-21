@@ -1,25 +1,26 @@
+"""Module contains Resource to calculate nearest neighbours, cluster centers and coordinates of uploaded images"""
 from flask_restful import Resource, abort
 from flask.globals import request, g
 from os import environ
-from api_package.helper import allowed_file, is_k_valid, process_image
+
 import api_package.db as db
-import api_package.tsne as tsne
 import api_package.faiss as iss
+from api_package.helper import allowed_file, is_k_valid, process_image
 import api_package.kmeans as kmeans
+import api_package.tsne as tsne
 from api_package.similarities import get_similarities
+
 
 # Adaptation of https://stackoverflow.com/questions/28982974/flask-restful-upload-image/42286669#42286669
 class Upload(Resource):
-    """
-    See https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
-    TODO Docs
-    """
+    """Resource calculates and returns nearest neighbours, cluster centers and coordinates of uploaded images on post request"""
+    # See https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
 
     def post(self):
-        """
-        HTTP POST method, upload image to api
+        """HTTP POST request used to calculate and return nearest neighbours, cluster centers and coordinates of uploaded images
         
-        TODO return
+        Returns:
+            Any: data for response
         """
         if not "k" in request.form:
             abort(404, message="No k found")
@@ -28,10 +29,12 @@ class Upload(Resource):
         if not success:
             abort(404, message=error)
         print("k is", k)
+        
         nr_of_files = len(request.files)
         print(f"Uploaded {nr_of_files} file(s)")
         if nr_of_files == 0:
             abort(404, message="No images send")
+        
         images = []
         filenames = []
         correct_image_shape = (int(environ.get("FULLSIZE_WIDTH")), int(environ.get("FULLSIZE_HEIGHT")))
@@ -48,15 +51,20 @@ class Upload(Resource):
         print(f"Uploaded {nr_of_allowed_files} allowed files")
         if nr_of_allowed_files == 0:
             abort(404, message="No allowed files send")
+        
         session_token = g.local_variables.get("Api-Session-Token")
         new_ids = db.get_instance().get_next_ids(session_token, nr_of_allowed_files)
         coordinates = tsne.get_instance().calculate_coordinates(images)
         labels = kmeans.get_instance().predict(coordinates)
+        
         D, I = iss.get_instance().search(images, k)
+        
         sim_percentages = get_similarities(D)
+        
         res = db.get_instance().ids_to_various(I, filename=True, cluster_center=True)
         neighbour_filenames = res["filename"]
         neighbour_cluster_centers = res["cluster_center"]
+        
         return { 
             "uploaded_filenames": filenames,
             "new_ids": new_ids,
