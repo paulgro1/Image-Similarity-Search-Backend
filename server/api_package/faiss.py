@@ -1,37 +1,45 @@
-from faiss import IndexFlatL2, IndexIVFFlat, METRIC_L2, write_index, read_index
+"""Module supplies the Faiss class, which wraps the fiass module"""
+from faiss import IndexFlatL2, IndexIVFFlat, METRIC_L2
 import numpy as np
-from os import path, environ, mkdir
-from shutil import rmtree
-import gc
-from typing import Literal, Tuple, Union, Any
+from typing import Tuple, Union, Any
 
 if __name__ == "__main__":
     exit("Start via run.py!")
 
+# The instance of Faiss created on startup
 _instance = None
 
+
 class Faiss(object):
+    """Class wrapping the faiss module"""
     FlatL2 = "IndexFlatL2"
     IVFFlat = "IndexIVFFlat"
-    # indices = {
-    #     FlatL2: False,
-    #     IVFFlat: False
-    # }
     indices = {
         FlatL2: None,
         IVFFlat: None
     }
 
     def __init__(self) -> None:
+        """Initialize blank object, set object as _instance of module"""
         super().__init__()
         
         self.has_index = False
+
+        # Singletonesque pattern
         print("Creating Faiss-Object")
         global _instance
         if _instance is None:
             _instance = self
         
     def _build_FlatL2(self, **kwargs: 'dict[str, Any]') -> 'Union[Any, None]':
+        """Initialize a faiss FlatIndexL2
+
+        Args:
+            kwargs (dict): should contain d (int), the dimension of the flat data
+
+        Returns:
+            Any: faiss index
+        """
         if not "d" in kwargs:
             return None
         d = kwargs["d"]
@@ -40,6 +48,16 @@ class Faiss(object):
         return index
 
     def _build_IVFFlat(self, images: np.ndarray, **kwargs: 'dict[str, Any]') -> 'Union[Any, None]':
+        """Initialize a faiss IndexFlatIVFFlat
+
+        Args:
+            iamges (np.array): flat images to train the index on
+            kwargs (dict): should contain mlist (int), the amount of centroids, nprobe (int), amount of probes per iteration,
+            d (int), the dimension of the flat data
+
+        Returns:
+            Any: faiss index
+        """
         if not "nlist" in kwargs or not "nprobe" in kwargs or not "d" in kwargs:
             print(f"Missing kwargs, need quantizer, nlist, nprobe, d: \n{kwargs}")
             return None
@@ -69,9 +87,6 @@ class Faiss(object):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
-        # if not self.indices[key]:
-        #     print(f"{key} is not build yet")
-        # index = database.load_index(key)
         index = self.indices[key]
         if index is None:
             print(f"Index {key} load failed")
@@ -82,9 +97,6 @@ class Faiss(object):
         if not key in self.indices.keys():
             print(f"Key {key} does not exist")
             return False
-        # if self.indices[key]:
-        #     print(f"{key} is already build")
-        #     return False
         print(f"Building index {key}")
         index = None
         if key == self.FlatL2:
@@ -93,16 +105,12 @@ class Faiss(object):
             index = self._build_IVFFlat(training_images, **kwargs)
         if index is None:
             return False
-        # self.indices[key] = True
         self.indices[key] = index
         print("Building index complete")
 
         print("Initializing index")
         index.add(training_images)
         print("Amount of vectors in index:", index.ntotal)
-        # database.save_index(key, index)
-        # del index
-        # gc.collect()
         return True
 
     def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndarray], None]':

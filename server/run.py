@@ -1,8 +1,10 @@
-# Start the server with this file!
+"""Start the backend server by executing this file!"""
 from dotenv import load_dotenv
+from typing import NoReturn, Union
 from os import path, environ, mkdir
 
-def main():
+def main() -> 'Union[None, NoReturn]':
+    """Only way to reliably start the backend server, usually called by executing the file run.py"""
     print(f"Executed {__file__}")
     the_path = path.dirname(__file__)
     dotenv_path = path.join(the_path, ".env")
@@ -28,6 +30,7 @@ def main():
     environ["DATA_PATH"] = data_path
     environ["SERVER_ROOT"] = the_path
 
+    # Starting the server via app.py
     import api_package.app as app
     app.main()
 

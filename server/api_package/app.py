@@ -1,3 +1,4 @@
+"""Main file to setup and start the backend server. Also initializes all needed modules."""
 # For basic functionality we expanded and modified the example 
 # from https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
 # to fit our needs
@@ -5,10 +6,11 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from os import environ
-from api_package.helper import load_images, analyse_dataset
-from math import floor
 import gc
+from math import floor
+from os import environ
+
+from api_package.helper import load_images, analyse_dataset
 from flask_swagger_ui import get_swaggerui_blueprint
 
 if __name__ == "__main__":
@@ -23,6 +25,7 @@ CORS(
 )
 api = Api(app)
 
+# Needed for secure client sessions
 secret_key = environ.get("FLASK_SECRET_KEY")
 if not secret_key:
     exit("No secret key present!")
@@ -42,15 +45,13 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 ### end swagger specific ###
 
-# Setup database
-#from api_package.db import Database
-#database = Database()
+# Import database, automatic setup
 import api_package.db as db
 
-# Setup t-SNE
+# import tsne, automatic setup
 import api_package.tsne as tsne
 
-# Load images
+# Load images from dataset
 flat_images_filenames, flat_images, load_success = load_images(environ.get("DATA_PATH"))
 
 if not load_success:
@@ -58,13 +59,29 @@ if not load_success:
 if flat_images.shape[0] < 1:
     exit("Need to have data in data folder!")
 
-# Calculate coordinates
+# Calculate coordinates using tsne
 coordinates = tsne.get_instance().initialize_coordinates(flat_images)
 
-# Calculate clusters
+# Checks for amount of centroids
 num_centroids = environ.get("NUM_CENTROIDS")
+centroids_vaild = True
 if num_centroids is None:
-    exit("Please update your .env file! Missing number of centroids")
+    print("Please update your .env file! Missing number of centroids, using default value")
+    centroids_vaild = False
+else:
+    try:
+        num_centroids = int(num_centroids)
+        if num_centroids > flat_images.shape[0] or num_centroids < 0:
+            print(f"Invalid value for number of centroids with {num_centroids}, using default value")
+            centroids_vaild = False
+    except ValueError as e:
+        print(e, "\nError casting number of centroids for kmeans, using default value")
+        centroids_vaild = False
+if not num_centroids:
+    num_centroids = int(max(floor(flat_images.shape[0] / 39), 1))
+print(f"Using {num_centroids} as amount of cluster centers")
+
+# Calculate clusters using kmeans
 import api_package.kmeans as kmeans
 kmeans.get_instance().initialize(coordinates)
 kmeans.get_instance().cluster(int(num_centroids))
@@ -72,7 +89,7 @@ kmeans.get_instance().cluster(int(num_centroids))
 # Initialize database
 db.get_instance().initialize(flat_images_filenames, coordinates, kmeans.get_instance().labels)
 
-# Analyse dataset
+# Analyse dataset for possible later use
 analyse_dataset(flat_images, coordinates)
 
 del coordinates
@@ -140,5 +157,6 @@ api.add_resource(ChangeNumberOfKMeansCentroids, "/kmeans/centroids")
 api.add_resource(GetSessionToken, "/authenticate")
 
 def main():
+    """Used to start the backend server"""
     print("Starting app")
     app.run(host=environ.get("BACKEND_HOST"), port=environ.get("BACKEND_PORT"), threaded=True)
