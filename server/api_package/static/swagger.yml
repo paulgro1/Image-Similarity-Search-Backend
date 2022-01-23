@@ -947,5 +947,22 @@ paths:
                 type: string
                 example: "success"  
   # 5
+  /authenticate:
+    get:
+      tags: [
+        Get other data
+      ]
+      summary: Returns an Api-Session-Token in the response header
+      responses:
+        '200':
+          description: OK
+          headers:
+            Api-Session-Token:
+              schema:
+                type: string
+                format: byte
+                example: U3dhZ2dlciByb2Nrcw==
+              description: Session token to be used in all other requests
+
 
 
