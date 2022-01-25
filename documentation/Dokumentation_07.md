@@ -151,11 +151,13 @@ Problem von letzter Woche gelöst:<br>
 
 <h3>Paul (@s82130)</h3>
 
-<b>[#23](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/23)  Bilder Stack-Ansicht (D3 Collision Detection)</b>
+<b>[#23](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/23) Bilder Stack-Ansicht</b>
 
-Soll etwa so aussehen:
-
-![](./images/map.png)<br>
+- Collision Detection verworfen, da Implementierung zu kompliziert
+- Stattdessen: Einordnung in Raster 
+- Raster erstellt und einzelne Zellen mit Koordinaten und ID in Array gespeichert
+- Bilder bekommen jetzt ein cellID Attribut, welches entscheidet, ob sie angezeigt werden oder nicht
+- Nächster Schritt: Dieses Attribut wird jedes Mal angepasst, wenn sich die Koordinaten der Bilder ändern
 
 <br>
 
