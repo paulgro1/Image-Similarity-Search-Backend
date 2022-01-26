@@ -162,6 +162,14 @@ Problem von letzter Woche gelöst: <br>
 
 <h3>Paul (@s82130)</h3>
 
+<b>[#23](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/23) Bilder Stack-Ansicht (D3 Collision Detection) </b>
+
+- Bisher wird über jede Zelle iteriert bei jeder neuen gelieferten Bildkoordinate
+- Implementierung ausdenken, bei dem selektiver iteriert wird
+- Quadtrees ausprobiert, aber dann hat man keine Kontrolle darüber, wie und wann welche Bilder angezeigt werden
+- Bisher noch keine Lösung gefunden
+- Aktueller Baustelle: Bilder nach Zellen gruppieren und berechnen, welches angezeigt wird und welches nicht
+
 <br>
 
 <h2>Fortschritte Backend</h2>
