@@ -13,7 +13,7 @@ Ids und Filenames von hochgeladenen Bildern wurden bislang nur im Frontend geset
 
 - Ids: wurden per for-loop fortgeführt
 - Filenames: hardgecoded zu “uploaded_img” -> jedes hochgeladene Bild hatte identischen filename
-D- ank eines Updates von Joris (@s81764) werden neue Ids vom Backend generiert und zurückgegeben ebenso wie die ursprünglichen Filenames der Bilder. Diese wurden nun im Frontend integriert und werden in der Infoansicht sowie im Excel-Export benutzt.
+Dank eines Updates von Joris (@s81764) werden neue Ids vom Backend generiert und zurückgegeben ebenso wie die ursprünglichen Filenames der Bilder. Diese wurden nun im Frontend integriert und werden in der Infoansicht sowie im Excel-Export benutzt.
 
 ![](./images/Issue1_vorher.png)<br>
 
