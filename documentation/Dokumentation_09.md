@@ -51,11 +51,6 @@ Umsetzung mit SCSS:<br>
 
 <h3>Luke (@s82765)</h3>
 
-<b>[#75](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/75) Fix Bugs after Merge</b> 
-
-- Aufgrund einer falschen Reihenfolge der URLs aus der MultipleThumbnail Zip, wurden die multipleThumbnail - fetches zunächst entfernt.
-- Des Weiteren musste ein uploadedImageCount hinzugefügt werden, um die Ids der hochgeladenen Bilder beim erstellen des nN Objektes anzupassen, da die Ids erhöht wurden, jedoch die anderen uploadedImages aus dem State entfernt wurden. So hatte jedes hochgeladene Bild eine zu hohe Id ab dem zweiten Hochladen von Bildern.
-
 <b>[#79](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/79) fetchmultipleThumbnails in der Infoview</b>
 
 - Das Entpacken und Einbinden wurde bereits implementiert. Es ist allerdings aufgefallen, dass die Thumbnails in einer falschen Reihenfolge ankamen und das zu falschen Darstellung führt.
@@ -69,6 +64,12 @@ var thumbnailData = {url: url, thumbnailId: thumbnailId}
 return thumbnailData
 ```
 *Die `thumbnailId` wird aus jeder `zipEntry` gelesen und mit zurückgegeben. Dadurch wird garantiert, dass das Bild mit der Id übereinstimmt.*<br>
+
+<b>#13 Flowchart - Diagramm für die Präsentation</b>
+
+- Ablaufdiagramm erstellt, zur besseren Übersicht der gesamten Anwendung und deren Prozesse
+
+![](./images/flowchart.png)
 
 <b>[#81](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/81) Frontend Meeting</b> 
 
@@ -106,59 +107,15 @@ return thumbnailData
 
 ### Joris (@s81764)
 
-#### **#65 Access Token für alle Routen**
+#### **#71 pydoc Dokumentation**
 
-+ Zuvor wurde das Token nur in der Route `/upload` verwendet
-+ Das Token wird nun über die eigene Route `/authenticate` generiert und im header `Api-Session-Token` übergeben
-+ Durch Einbindung des Tokens im Frontend durch Luke (@s82765) kann das Token nun in jeder Route übergeben werden  
++ Als zusätzliche Dokumentationsform soll [Sphinx](https://www.sphinx-doc.org/en/master/) verwendet werden.
++ Dokumentation wird aus den docstrings generiert, welche teilweise noch angepasst werden müssen
 
-```HTTP
-HTTP/1.0 200 OK
-Content-Type: text/html; charset=utf-8
-Content-Length: 7
-Api-Session-Token: Takukm9Xdx2DkS6j0bB7Rw==
-Access-Control-Allow-Origin: *
-Access-Control-Expose-Headers: Api-Session-Token, Content-Length, Content-Type
-```  
+_Noch nicht abgeschlossen_
 
-__Ausschnitt aus den Response-Header von `/authenticate`__  
+#### **#74 Server-Start mit Makefile**
 
-#### **#69 Refactor von Resourcen in app.py**
++ Für einfacheres Starten des Servers und Bearbeiten der Umgebung werden Befehle in einem Makefile gesammelt.
 
-+ Zuvor wurden alle Resourcen in `app.py` angelegt
-  + Dadurch wirkt die Datei unleserlich und ist unübersichtlich
-+ Die Resourcen wurden in das Package `resources` in `api_package` ausgelagert und werden in app.py nur noch importiert  
-
-![](./images/Issue69_1.png)<br>
-__Ausschnitt aus der neuen Dateistruktur__  
-
-#### **#70 Docstrings und typing**
-
-+ Zum besseren Verständnis und um eine mögliche Weiterarbeit mit dem Backend zu ermöglichen, sollen in der finalen Version verschiedene Dokumentationsformen benutzt werden:
-  + swagger: Dokumentation aller Routen mit Möglichkeit zum Testen
-  + typing: Parameter und Rückgabewerte kennzeichnen
-  + docstrings: Beschreibung von der Funktion aller Module, Packages, Klassen und Funktionen
-  + pydoc: Aus docstrings generierte Übersicht aller Bestandteile des Backends
-+ Die swagger-Dokumentation wurde in #47 realisiert
-+ typing und docstrings wurden in diesem Issue bearbeitet
-+ die pydoc-Dokumentation wird in #71 bearbeitet  
-
-```py
-def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndarray], None]':
-    """Returns the k nearest neighbours and distances of the flat images in the images array using the current faiss index
-
-    Args:
-        images (np.ndarray): array containing the flat images, whose neighbours shall be found
-        k (int): value indicating, how many neighbours shall be found. Should be 0 < k < Faiss.get_instance().faiss_index.ntotal
-
-    Returns:
-        np.array: Distances to the nearest neighbours
-        np.array: Indices of the nearest neighbours
-    """
-    if not self.has_index: 
-        print("No index present!")
-        return None
-    ...
-```
-
-__Ausschnitt aus `faiss.py` als Beispiel für typing und docstring__
+_Noch nicht abgeschlossen_
