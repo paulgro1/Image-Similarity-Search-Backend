@@ -106,9 +106,6 @@ return thumbnailData
 - Zunächst habe ich einen D3.js Quadtree implementiert und die Daten der Bilder eingefügt
 - Neuer Fehler:
 ![Screenshot_2022-02-02_at_13.07.08](/uploads/7af3fdf80031926f3fb8265de5f63d68/Screenshot_2022-02-02_at_13.07.08.png)
-
-01.02.2022
-
 - Fehler durch Entfernen einer alten Funktion gefixt.
 - Bilderdaten erfolgreich in Quadtree eingefügt, aber suche nach Bildern in bestimmten Rechteck gibt Fehler zurück:
 ![Screenshot_2022-02-02_at_14.04.33](/uploads/31acaa40417472e07fb0a2abc7491084/Screenshot_2022-02-02_at_14.04.33.png)
