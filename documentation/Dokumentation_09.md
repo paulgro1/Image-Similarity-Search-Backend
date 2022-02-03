@@ -101,17 +101,17 @@ return thumbnailData
 - Neuer Ansatz: Raster + Quadtree kombinieren
 - Einarbeitung in https://github.com/d3/d3-quadtree
 - Fehler bei Erstellung des Rasters:
-[Screenshot_2022-02-02_at_11.31.06]
+![](./images/kw_05_1.png)<br>
 - Fehler zunächst ignoriert und mit Quadtree Implementierung weitergemacht.
 - Zunächst habe ich einen D3.js Quadtree implementiert und die Daten der Bilder eingefügt
 - Neuer Fehler:
-[Screenshot_2022-02-02_at_13.07.08]
+![](./images/kw_05_2.png)<br>
 - Fehler durch Entfernen einer alten Funktion gefixt.
 - Bilderdaten erfolgreich in Quadtree eingefügt, aber suche nach Bildern in bestimmten Rechteck gibt Fehler zurück:
-[Screenshot_2022-02-02_at_14.04.33]
+![](./images/kw_05_3.png)<br>
 - Entsprechende Funktion fürs erste auskommentiert, um an Zeichnung des Quadtrees zu arbeiten
 - Fehler nach Implementierung von Zeichenfunktion: 
-[Screenshot_2022-02-02_at_14.15.36]
+![](./images/kw_05_4.png)<br>
 
 <br>
 
