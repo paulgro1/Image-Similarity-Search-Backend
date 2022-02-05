@@ -101,8 +101,6 @@ FLASK_SECRET_KEY=r@nD0msTR1ng
 
 Falls noch nicht vorhanden, muss der `DATA_FOLDER` (der Name ist in der `.env`-Datei spezifiziert) in dem `server`-Ordner erstellt werden.
 In den `DATA_FOLDER` kommen nun alle Bilder des gewünschten Datensatzes. Diese Bilder sollten alle die gleichen Dimensionen haben, sonst wird die Ausführung des Programms unterbrochen.  
->**Wichtig**: Da das Frontend bisher nur mit Bildern der Größe `336px x 448px` umgehen kann, wird der Datensatz empfohlen, welcher [hier](https://drive.google.com/drive/folders/1QwBckchigBSbSSRsgJNlVhfveDevpvmz?usp=sharing)
-heruntergeladen werden kann. Dafür müssen die Bilder aus dem Ordner "Faces Dataset" in den `DATA_FOLDER` eingebunden werden. Der Ordner "Thumbnails" im Drive kann ignoriert werden.
 
 ### (6) Einstellen des Interpreters und Starten des Servers
 

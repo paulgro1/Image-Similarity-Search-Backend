@@ -3,8 +3,8 @@ import sys
 import re
 import shutil
 sys.path.append("server")
-import run
-run.setup_env()
+from run import setup_env
+setup_env()
 
 import pdoc
 
@@ -26,11 +26,10 @@ def recursive_texts(mod):
 
 base_dir, _ = os.path.split(os.environ["SERVER_ROOT"])
 dir_path = os.path.join(base_dir, "docs")
-if not os.path.isdir(dir_path):
-    os.mkdir(dir_path)
-else:
+if os.path.isdir(dir_path):
     shutil.rmtree(dir_path)
-    os.mkdir(dir_path)
+    
+os.mkdir(dir_path)
 
 def put(d, l, index, val):
     item = l[index]

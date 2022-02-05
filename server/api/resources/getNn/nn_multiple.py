@@ -17,8 +17,8 @@ def verify_k(k: Any) -> 'Union[Tuple[Literal[True], int, None], Tuple[Literal[Fa
 
     Returns:
         bool: True if successful, False if an error occured
-        int_or_None: int k if successful, None if an error occured
-        None_or_str: None if successful, str containing error message if an error occured
+        Union[int, None]: int k if successful, None if an error occured
+        Union[None, str]: None if successful, str containing error message if an error occured
     """
     success, error, k = is_k_valid(k, db.get_instance(), id_from_database=True)
     if not success:
@@ -34,7 +34,7 @@ class NNOfExistingImages(Resource):
 
         Args:
             k (Any): amount of nearest neighbours
-            ids (list (int)): list of ids from images, whose nearest neighbours shall be returned
+            ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
 
         Returns:
             dict: dict containing the data concerning the nearest neighbour calculation

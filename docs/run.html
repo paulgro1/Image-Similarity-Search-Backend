@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>server.run API documentation</title>
-<meta name="description" content="Start the backend server by executing this file!" />
+<meta name="description" content="Start the backend server by executing this file or make run!" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,20 +22,21 @@
 <h1 class="title">Module <code>server.run</code></h1>
 </header>
 <section id="section-intro">
-<p>Start the backend server by executing this file!</p>
+<p>Start the backend server by executing this file or make run!</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Start the backend server by executing this file!&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Start the backend server by executing this file or make run!&#34;&#34;&#34;
 from dotenv import load_dotenv
 from typing import NoReturn, Union
 from os import path, environ, mkdir
 from sys import argv
 
-def setup_env():
+def setup_env() -&gt; None:
+    &#34;&#34;&#34;Load .env file and set up all other needed environment variables&#34;&#34;&#34;
     print(f&#34;Executed {__file__}&#34;)
-    the_path = path.dirname(__file__)
+    the_path = path.join(path.abspath(&#34;./&#34;), path.dirname(__file__))
     dotenv_path = path.join(the_path, &#34;.env&#34;)
     
     # Check if .env file exists
@@ -60,8 +61,11 @@ def setup_env():
     environ[&#34;SERVER_ROOT&#34;] = the_path
 
 def main(only_initialize: bool=False) -&gt; &#39;Union[None, NoReturn]&#39;:
-    &#34;&#34;&#34;Only way to reliably start the backend server, usually called by executing the file run.py&#34;&#34;&#34;
-    
+    &#34;&#34;&#34;Only way to reliably start the backend server, usually called by executing the file run.py or make run
+
+    Args:
+        only_initalize (bool, optional): if True, server doesnt start after initialization, if False server starts as expected. Default is False
+    &#34;&#34;&#34;
     if not only_initialize and len(argv) &gt; 1 and argv[1] == &#34;1&#34;:
         print(&#34;Only initializing the server&#34;)
         only_initialize = True
@@ -87,14 +91,22 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">main</span></span>(<span>only_initialize: bool = False) ‑> Union[NoneType, NoReturn]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Only way to reliably start the backend server, usually called by executing the file run.py</p></div>
+<div class="desc"><p>Only way to reliably start the backend server, usually called by executing the file run.py or make run</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>only_initalize</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>if True, server doesnt start after initialization, if False server starts as expected. Default is False</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def main(only_initialize: bool=False) -&gt; &#39;Union[None, NoReturn]&#39;:
-    &#34;&#34;&#34;Only way to reliably start the backend server, usually called by executing the file run.py&#34;&#34;&#34;
-    
+    &#34;&#34;&#34;Only way to reliably start the backend server, usually called by executing the file run.py or make run
+
+    Args:
+        only_initalize (bool, optional): if True, server doesnt start after initialization, if False server starts as expected. Default is False
+    &#34;&#34;&#34;
     if not only_initialize and len(argv) &gt; 1 and argv[1] == &#34;1&#34;:
         print(&#34;Only initializing the server&#34;)
         only_initialize = True
@@ -107,17 +119,18 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="server.run.setup_env"><code class="name flex">
-<span>def <span class="ident">setup_env</span></span>(<span>)</span>
+<span>def <span class="ident">setup_env</span></span>(<span>) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Load .env file and set up all other needed environment variables</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def setup_env():
+<pre><code class="python">def setup_env() -&gt; None:
+    &#34;&#34;&#34;Load .env file and set up all other needed environment variables&#34;&#34;&#34;
     print(f&#34;Executed {__file__}&#34;)
-    the_path = path.dirname(__file__)
+    the_path = path.join(path.abspath(&#34;./&#34;), path.dirname(__file__))
     dotenv_path = path.join(the_path, &#34;.env&#34;)
     
     # Check if .env file exists

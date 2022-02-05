@@ -191,10 +191,10 @@ class Database(object):
 
         Args:
             key (bytes): key for which the next ids shall be returned
-            amount (int): amount of new ids to be returned. Defaults to 1.
+            amount (int, optional): amount of new ids to be returned. Defaults to 1.
 
         Returns:
-            list (int): New ids
+            list[int]: New ids
         """
         if amount < 1:
             return None
@@ -271,7 +271,7 @@ class Database(object):
             projection (dict): dict to filter attributes of returned documents by. Defaults to { "id": True, "filename": True, "path": True, "thumbnail": True }
 
         Returns:
-            list (Any): list of found documents
+            list[Any]: list of found documents
         """
         as_list = list(self.col.find(filter=filter, projection=projection))
         for d in as_list:
@@ -294,10 +294,10 @@ class Database(object):
         """Return all documents with a given projection
 
         Args:
-            projection (dict): dict to filter attributes of returned documents by. Defaults to { "id": True, "filename": True, "path": True, "thumbnail": True }
+            projection (dict, optional): dict to filter attributes of returned documents by. Defaults to { "id": True, "filename": True, "path": True, "thumbnail": True }
 
         Returns:
-            list (Any): list of found documents
+            list[Any]: list of found documents
         """
         return self.get_multiple({}, projection)
 
@@ -305,7 +305,7 @@ class Database(object):
         """Return all ids in image collection
 
         Returns:
-            list (Any): list of documents found
+            list[Any]: list of documents found
         """
         if not self.is_db_empty():
             return self.get_all(self.id_projection)
@@ -315,7 +315,7 @@ class Database(object):
         """Return all fullsize images in image collection
 
         Returns:
-            list (Any): list of documents found
+            list[Any]: list of documents found
         """
         if not self.is_db_empty():
             return self.get_all(self.fullsize_projection)
@@ -325,11 +325,11 @@ class Database(object):
         """Return multiple documents specified by ids
 
         Args:
-            ids (list (int)): ids of images in image collection to be returned
+            ids (list[int]): ids of images in image collection to be returned
             projection (dict): dict to filter attributes of returned documents by
 
         Returns:
-            list (Any): list of documents found
+            list[Any]: list of documents found
         """
         if ids != None and len(ids) != 0 and not self.is_db_empty():
             filter = {"id": {"$in" : ids}}
@@ -340,11 +340,11 @@ class Database(object):
         """Checks if all given ids are in image collection
 
         Args:
-            ids (list (int)): ids of images in image collection to be assessed
+            ids (list[int]): ids of images in image collection to be assessed
 
         Returns:
             bool: True if all are in databse, False if one or more are not in database 
-            str_or_None: None if bool is True, error message if bool is False
+            Union[str, None]: None if bool is True, error message if bool is False
         """
         if ids is None:
             return False, "no ids given!"
@@ -365,10 +365,10 @@ class Database(object):
         """Return multiple fullsize images specified by ids
 
         Args:
-            ids (list (int)): ids of images in image collection to be returned
+            ids (list[int]): ids of images in image collection to be returned
 
         Returns:
-            list (Any): list of documents found
+            list[Any]: list of documents found
         """
         return self.get_multiple_by_id(ids, self.fullsize_projection)
 
@@ -399,7 +399,7 @@ class Database(object):
         """Return all thumbnails present in GridFS collection
 
         Returns:
-            list (Any): all thumbnails present
+            list[Any]: all thumbnails present
         """
         if not self.is_db_empty():
             result = self._gridfs.find({ "metadata" : "thumbnail" })
@@ -412,10 +412,10 @@ class Database(object):
         """Return the thumbnails from the GridFS collection specified by ids
 
         Args:
-            ids (list (int)): ids of images in GridFS collection to be returned
+            ids (list[int]): ids of images in GridFS collection to be returned
 
         Returns:
-            list (Any): list of thumbnails found
+            list[Any]: list of thumbnails found
         """
         if not self.is_db_empty():
             fs_ids = self.get_multiple_by_id(ids, { "thumbnail": True })
@@ -431,7 +431,7 @@ class Database(object):
             id (int): id of the image in image collection, whose coordinates shall be returned
 
         Returns:
-            tulple (float, float): tuple of x and y, the coordinates of the image
+            [float, float]: tuple of x and y, the coordinates of the image
         """
         result = self.get_one_by_id(id, { "x": True, "y": True})
         if not result is None:
@@ -471,10 +471,10 @@ class Database(object):
         """Return the metadata of the images specified by ids
 
         Args:
-            id (list (int)): ids for which the metadata shall be found
+            id (list[int]): ids for which the metadata shall be found
 
         Returns:
-            list (dict): list of dicts containing the metadata of the specified images
+            list[dict]: list of dicts containing the metadata of the specified images
         """
         result = self.get_multiple_by_id(ids, { "id": True, "filename": True, "x": True, "y": True, "cluster_center": True})
         if not result is None:
@@ -498,7 +498,7 @@ class Database(object):
         """Return the metadata all images in the image collection
 
         Returns:
-            list (dict): list of dicts containing the metadata of all images
+            list[dict]: list of dicts containing the metadata of all images
         """
         result = self.get_all({ "id": True, "filename": True, "x": True, "y": True, "cluster_center": True })
         if not result is None:
@@ -533,11 +533,11 @@ class Database(object):
         """Flexible method used to find images specified by id and arguments specified in kwargs
 
         Args:
-            ids (list (int)): ids of images to be found
-            kwargs (dict): should contain all columns of the image collection to be returned, specify by <col>=True
+            ids (list[int]): ids of images to be found
+            **kwargs (dict): should contain all columns of the image collection to be returned, specify by <col>=True
 
         Returns:
-            dict (str, list (Any)): dict containing the columns as keys and results as values
+            dict[str, list[Any]]: dict containing the columns as keys and results as values
         """
         if ids is None:
             return None
@@ -573,10 +573,10 @@ class Database(object):
         """Return all filenames specified by ids
 
         Args:
-            list (int): ids whose filenames shall be found
+            ids (list[int]): ids whose filenames shall be found
 
         Returns:
-            list (str): list of filenames
+            list[str]: list of filenames
         """
         if ids is None:
             return None

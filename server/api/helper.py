@@ -36,10 +36,10 @@ def allowed_file(filename: str) -> bool:
     """Checks if the file is valid. A dot (.) needs to be in the filename and the extension needs to be present in ALLOWED_EXTENSIONS
 
     Args:
-        filename (str): [description]
+        filename (str): filename to be assessed
 
     Returns:
-        bool: [description]
+        bool: True if filename is allowed, False if not
     """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -47,8 +47,8 @@ def abort_if_pictures_dont_exist(picture_ids: 'list[int]', db: Any) -> 'Union[No
     """Terminates request, if given picture_id(s) is/are not present within the database
     
     Args:
-        picture_id (list (int)): ids of picture to be assessed
-        db (api.db.Database): instance of the database
+        picture_ids (list[int]): ids of pictures to be assessed
+        db (server.api.db.Database): instance of the database
     """
     success, possible_missing_ids = db.are_all_ids_in_database(picture_ids)
     if not success:
@@ -60,13 +60,13 @@ def is_k_valid(k: Any, db: Any, id_from_database: bool=False) -> 'Union[Tuple[Li
 
     Args:
         k (Any): amount of desired nearest neighbours. Will be casted as an int, fails if an error occures
-        db (api.db.Database): instance of the database
+        db (server.api.db.Database): instance of the database
         id_from_database (bool): if True, the image to be searched for is already in the database, need to have 0 < k < db.count_documents_in_collection() - 1, 
         False if different image, need to have 0 < k < db.count_documents_in_collection()
 
     Returns:
         bool: True if successful, False if an error occured
-        None_or_str: None if successful, str containing the error message if an error occured
+        Union[None, str]: None if successful, str containing the error message if an error occured
         int: the (possibly casted) int value for k
     """
     if k is None:
@@ -93,7 +93,7 @@ def process_image(file_path: str) -> 'Tuple[np.ndarray, Tuple[int, int]]':
 
     Returns:
         np.ndarray: the flat image
-        tuple (int, int): width, height of the original image
+        [int, int]: width, height of the original image
     """
     with Image.open(file_path) as img:
         image_shape = (img.width, img.height)
@@ -111,7 +111,7 @@ def _load_images(the_path: str) -> 'Union[Tuple[np.ndarray, np.ndarray, Literal[
         np.ndarray: array of the filenames or None if an error occured
         np.ndarray: array containing the flat images or None if an error occured
         bool: True if successful, False if an error occured
-        tuple (int, int): width, height of all images or None if an error occured
+        [int, int]: width, height of all images or None if an error occured
     """
     if not path.isdir(the_path):
         return None, None, False, None
@@ -155,14 +155,14 @@ def load_images_by_id(ids: 'list[int]', db: Any) -> 'Union[Tuple[Literal[True], 
     """Reload all images indicated by ids by getting the path from db
 
     Args:
-        ids (list (int)): list containing the ids of the images within the database, prechecked
-        db (api.db.Database): instance of the database
+        ids (list[int]): list containing the ids of the images within the database, prechecked
+        db (server.api.db.Database): instance of the database
 
     Returns:
         bool: True if successful, False if an error occured
         np.ndarray: flat images or None if an error occured
-        list (dict): list containing the metadata of the loaded images
-        None_or_str: None if successful, str containing the error message if an error occured
+        list[dict]: list containing the metadata of the loaded images
+        Union[None, str]: None if successful, str containing the error message if an error occured
     """
     images = db.get_multiple_by_id(ids, None)
     if images is None:
@@ -203,7 +203,7 @@ def get_analysed_dataset() -> 'Union[dict, None]':
     """Return the values calulated for the dataset
 
     Returns:
-        dict_or_None: dict containing the values, if anaylse_dataset has been called, None otherwise
+       Union[dict, None]: dict containing the values, if anaylse_dataset has been called, None otherwise
     """
     global analysed_dataset
     return analysed_dataset

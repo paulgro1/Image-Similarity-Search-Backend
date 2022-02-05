@@ -1,3 +1,18 @@
+# See https://stackoverflow.com/a/12099167
+ifeq ($(OS),Windows_NT)
+    OPEN := start
+	PYRUN := python
+else
+    UNAME := $(shell uname -s)
+    ifeq ($(UNAME),Linux)
+        OPEN := xdg-open
+		PYRUN := python
+    endif
+	ifeq ($(UNAME),Darwin)
+        OPEN := open
+		PYRUN := python3
+    endif
+endif
 
 mk_env:
 	conda env create -f environment.yml
@@ -15,8 +30,7 @@ update_env:
 	conda env update -f environment.yml --prune
 
 run: activate_env
-	@echo starting server
-	python run.py 
+	$(PYRUN) run.py 
 
 init_server: activate_env
-	python run.py 1
+	$(PYRUN) run.py 1

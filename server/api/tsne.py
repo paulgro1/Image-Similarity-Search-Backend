@@ -25,8 +25,12 @@ class TSNE(object):
     def initialize_coordinates(self, images: np.ndarray) -> 'Union[np.ndarray, NoReturn]':
         """Method used to calcutate the coordinates using PCA to reduce the dimensions to value specified in 
         environment variable REDUCE_IMAGES_TO_DIMS
+
+        Args:
+            images (np.ndarray): array of flat images
+
         Returns:
-            [type]: [description]
+            np.ndarray: corresponding coordinates
         """
         print("Initializing Coordinates")
         np_images = np.array(images, dtype="float32")

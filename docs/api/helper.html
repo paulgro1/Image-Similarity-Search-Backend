@@ -65,10 +65,10 @@ def allowed_file(filename: str) -&gt; bool:
     &#34;&#34;&#34;Checks if the file is valid. A dot (.) needs to be in the filename and the extension needs to be present in ALLOWED_EXTENSIONS
 
     Args:
-        filename (str): [description]
+        filename (str): filename to be assessed
 
     Returns:
-        bool: [description]
+        bool: True if filename is allowed, False if not
     &#34;&#34;&#34;
     return &#39;.&#39; in filename and filename.rsplit(&#39;.&#39;, 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -76,8 +76,8 @@ def abort_if_pictures_dont_exist(picture_ids: &#39;list[int]&#39;, db: Any) -&gt
     &#34;&#34;&#34;Terminates request, if given picture_id(s) is/are not present within the database
     
     Args:
-        picture_id (list (int)): ids of picture to be assessed
-        db (api.db.Database): instance of the database
+        picture_ids (list[int]): ids of pictures to be assessed
+        db (server.api.db.Database): instance of the database
     &#34;&#34;&#34;
     success, possible_missing_ids = db.are_all_ids_in_database(picture_ids)
     if not success:
@@ -95,7 +95,7 @@ def is_k_valid(k: Any, db: Any, id_from_database: bool=False) -&gt; &#39;Union[T
 
     Returns:
         bool: True if successful, False if an error occured
-        None_or_str: None if successful, str containing the error message if an error occured
+        Union[None, str]: None if successful, str containing the error message if an error occured
         int: the (possibly casted) int value for k
     &#34;&#34;&#34;
     if k is None:
@@ -122,7 +122,7 @@ def process_image(file_path: str) -&gt; &#39;Tuple[np.ndarray, Tuple[int, int]]&
 
     Returns:
         np.ndarray: the flat image
-        tuple (int, int): width, height of the original image
+        [int, int]: width, height of the original image
     &#34;&#34;&#34;
     with Image.open(file_path) as img:
         image_shape = (img.width, img.height)
@@ -140,7 +140,7 @@ def _load_images(the_path: str) -&gt; &#39;Union[Tuple[np.ndarray, np.ndarray, L
         np.ndarray: array of the filenames or None if an error occured
         np.ndarray: array containing the flat images or None if an error occured
         bool: True if successful, False if an error occured
-        tuple (int, int): width, height of all images or None if an error occured
+        [int, int]: width, height of all images or None if an error occured
     &#34;&#34;&#34;
     if not path.isdir(the_path):
         return None, None, False, None
@@ -184,14 +184,14 @@ def load_images_by_id(ids: &#39;list[int]&#39;, db: Any) -&gt; &#39;Union[Tuple[
     &#34;&#34;&#34;Reload all images indicated by ids by getting the path from db
 
     Args:
-        ids (list (int)): list containing the ids of the images within the database, prechecked
+        ids (list[int]): list containing the ids of the images within the database, prechecked
         db (api.db.Database): instance of the database
 
     Returns:
         bool: True if successful, False if an error occured
         np.ndarray: flat images or None if an error occured
-        list (dict): list containing the metadata of the loaded images
-        None_or_str: None if successful, str containing the error message if an error occured
+        list[dict]: list containing the metadata of the loaded images
+        Union[None, str]: None if successful, str containing the error message if an error occured
     &#34;&#34;&#34;
     images = db.get_multiple_by_id(ids, None)
     if images is None:
@@ -232,7 +232,7 @@ def get_analysed_dataset() -&gt; &#39;Union[dict, None]&#39;:
     &#34;&#34;&#34;Return the values calulated for the dataset
 
     Returns:
-        dict_or_None: dict containing the values, if anaylse_dataset has been called, None otherwise
+       Union[dict, None]: dict containing the values, if anaylse_dataset has been called, None otherwise
     &#34;&#34;&#34;
     global analysed_dataset
     return analysed_dataset
@@ -294,8 +294,9 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <div class="desc"><p>Terminates request, if given picture_id(s) is/are not present within the database</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt>picture_id (list (int)): ids of picture to be assessed</dt>
-<dt><strong><code>db</code></strong> :&ensp;<code>api.db.Database</code></dt>
+<dt><strong><code>picture_ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of pictures to be assessed</dd>
+<dt><strong><code>db</code></strong> :&ensp;<code><a title="server.api.db.Database" href="db.html#server.api.db.Database">Database</a></code></dt>
 <dd>instance of the database</dd>
 </dl></div>
 <details class="source">
@@ -306,8 +307,8 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
     &#34;&#34;&#34;Terminates request, if given picture_id(s) is/are not present within the database
     
     Args:
-        picture_id (list (int)): ids of picture to be assessed
-        db (api.db.Database): instance of the database
+        picture_ids (list[int]): ids of pictures to be assessed
+        db (server.api.db.Database): instance of the database
     &#34;&#34;&#34;
     success, possible_missing_ids = db.are_all_ids_in_database(picture_ids)
     if not success:
@@ -323,12 +324,12 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
-<dd>[description]</dd>
+<dd>filename to be assessed</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>bool</code></dt>
-<dd>[description]</dd>
+<dd>True if filename is allowed, False if not</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -338,10 +339,10 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
     &#34;&#34;&#34;Checks if the file is valid. A dot (.) needs to be in the filename and the extension needs to be present in ALLOWED_EXTENSIONS
 
     Args:
-        filename (str): [description]
+        filename (str): filename to be assessed
 
     Returns:
-        bool: [description]
+        bool: True if filename is allowed, False if not
     &#34;&#34;&#34;
     return &#39;.&#39; in filename and filename.rsplit(&#39;.&#39;, 1)[1].lower() in ALLOWED_EXTENSIONS</code></pre>
 </details>
@@ -416,7 +417,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <div class="desc"><p>Return the values calulated for the dataset</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>dict_or_None</code></dt>
+<dt><code>Union[dict, None]</code></dt>
 <dd>dict containing the values, if anaylse_dataset has been called, None otherwise</dd>
 </dl></div>
 <details class="source">
@@ -427,7 +428,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
     &#34;&#34;&#34;Return the values calulated for the dataset
 
     Returns:
-        dict_or_None: dict containing the values, if anaylse_dataset has been called, None otherwise
+       Union[dict, None]: dict containing the values, if anaylse_dataset has been called, None otherwise
     &#34;&#34;&#34;
     global analysed_dataset
     return analysed_dataset</code></pre>
@@ -452,7 +453,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if successful, False if an error occured</dd>
-<dt><code>None_or_str</code></dt>
+<dt><code>Union[None, str]</code></dt>
 <dd>None if successful, str containing the error message if an error occured</dd>
 <dt><code>int</code></dt>
 <dd>the (possibly casted) int value for k</dd>
@@ -472,7 +473,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 
     Returns:
         bool: True if successful, False if an error occured
-        None_or_str: None if successful, str containing the error message if an error occured
+        Union[None, str]: None if successful, str containing the error message if an error occured
         int: the (possibly casted) int value for k
     &#34;&#34;&#34;
     if k is None:
@@ -575,7 +576,8 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <div class="desc"><p>Reload all images indicated by ids by getting the path from db</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt>ids (list (int)): list containing the ids of the images within the database, prechecked</dt>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>list containing the ids of the images within the database, prechecked</dd>
 <dt><strong><code>db</code></strong> :&ensp;<code>api.db.Database</code></dt>
 <dd>instance of the database</dd>
 </dl>
@@ -585,8 +587,9 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <dd>True if successful, False if an error occured</dd>
 <dt><code>np.ndarray</code></dt>
 <dd>flat images or None if an error occured</dd>
-<dt>list (dict): list containing the metadata of the loaded images</dt>
-<dt><code>None_or_str</code></dt>
+<dt><code>list[dict]</code></dt>
+<dd>list containing the metadata of the loaded images</dd>
+<dt><code>Union[None, str]</code></dt>
 <dd>None if successful, str containing the error message if an error occured</dd>
 </dl></div>
 <details class="source">
@@ -597,14 +600,14 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
     &#34;&#34;&#34;Reload all images indicated by ids by getting the path from db
 
     Args:
-        ids (list (int)): list containing the ids of the images within the database, prechecked
+        ids (list[int]): list containing the ids of the images within the database, prechecked
         db (api.db.Database): instance of the database
 
     Returns:
         bool: True if successful, False if an error occured
         np.ndarray: flat images or None if an error occured
-        list (dict): list containing the metadata of the loaded images
-        None_or_str: None if successful, str containing the error message if an error occured
+        list[dict]: list containing the metadata of the loaded images
+        Union[None, str]: None if successful, str containing the error message if an error occured
     &#34;&#34;&#34;
     images = db.get_multiple_by_id(ids, None)
     if images is None:
@@ -641,8 +644,9 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <dl>
 <dt><code>np.ndarray</code></dt>
 <dd>the flat image</dd>
-</dl>
-<p>tuple (int, int): width, height of the original image</p></div>
+<dt><code>[int, int]</code></dt>
+<dd>width, height of the original image</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -655,7 +659,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 
     Returns:
         np.ndarray: the flat image
-        tuple (int, int): width, height of the original image
+        [int, int]: width, height of the original image
     &#34;&#34;&#34;
     with Image.open(file_path) as img:
         image_shape = (img.width, img.height)

@@ -4,9 +4,10 @@ from typing import NoReturn, Union
 from os import path, environ, mkdir
 from sys import argv
 
-def setup_env():
+def setup_env() -> None:
+    """Load .env file and set up all other needed environment variables"""
     print(f"Executed {__file__}")
-    the_path = path.abspath("./")
+    the_path = path.join(path.abspath("./"), path.dirname(__file__))
     dotenv_path = path.join(the_path, ".env")
     
     # Check if .env file exists
@@ -31,8 +32,11 @@ def setup_env():
     environ["SERVER_ROOT"] = the_path
 
 def main(only_initialize: bool=False) -> 'Union[None, NoReturn]':
-    """Only way to reliably start the backend server, usually called by executing the file run.py or make run"""
-    
+    """Only way to reliably start the backend server, usually called by executing the file run.py or make run
+
+    Args:
+        only_initalize (bool, optional): if True, server doesnt start after initialization, if False server starts as expected. Default is False
+    """
     if not only_initialize and len(argv) > 1 and argv[1] == "1":
         print("Only initializing the server")
         only_initialize = True

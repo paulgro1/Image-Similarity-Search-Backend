@@ -166,7 +166,7 @@ class Faiss(object):
         """Get keys for all available faiss indices
 
         Returns:
-            list (str): list of keys
+            list[str]: list of keys
         """
         return [ key for key in self.indices.keys() ]
 
