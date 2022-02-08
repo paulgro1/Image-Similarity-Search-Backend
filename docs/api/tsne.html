@@ -54,8 +54,12 @@ class TSNE(object):
     def initialize_coordinates(self, images: np.ndarray) -&gt; &#39;Union[np.ndarray, NoReturn]&#39;:
         &#34;&#34;&#34;Method used to calcutate the coordinates using PCA to reduce the dimensions to value specified in 
         environment variable REDUCE_IMAGES_TO_DIMS
+
+        Args:
+            images (np.ndarray): array of flat images
+
         Returns:
-            [type]: [description]
+            np.ndarray: corresponding coordinates
         &#34;&#34;&#34;
         print(&#34;Initializing Coordinates&#34;)
         np_images = np.array(images, dtype=&#34;float32&#34;)
@@ -185,8 +189,12 @@ _instance = TSNE()</code></pre>
     def initialize_coordinates(self, images: np.ndarray) -&gt; &#39;Union[np.ndarray, NoReturn]&#39;:
         &#34;&#34;&#34;Method used to calcutate the coordinates using PCA to reduce the dimensions to value specified in 
         environment variable REDUCE_IMAGES_TO_DIMS
+
+        Args:
+            images (np.ndarray): array of flat images
+
         Returns:
-            [type]: [description]
+            np.ndarray: corresponding coordinates
         &#34;&#34;&#34;
         print(&#34;Initializing Coordinates&#34;)
         np_images = np.array(images, dtype=&#34;float32&#34;)
@@ -292,10 +300,15 @@ _instance = TSNE()</code></pre>
 <dd>
 <div class="desc"><p>Method used to calcutate the coordinates using PCA to reduce the dimensions to value specified in
 environment variable REDUCE_IMAGES_TO_DIMS</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of flat images</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
+<dt><code>np.ndarray</code></dt>
+<dd>corresponding coordinates</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -304,8 +317,12 @@ environment variable REDUCE_IMAGES_TO_DIMS</p>
 <pre><code class="python">def initialize_coordinates(self, images: np.ndarray) -&gt; &#39;Union[np.ndarray, NoReturn]&#39;:
     &#34;&#34;&#34;Method used to calcutate the coordinates using PCA to reduce the dimensions to value specified in 
     environment variable REDUCE_IMAGES_TO_DIMS
+
+    Args:
+        images (np.ndarray): array of flat images
+
     Returns:
-        [type]: [description]
+        np.ndarray: corresponding coordinates
     &#34;&#34;&#34;
     print(&#34;Initializing Coordinates&#34;)
     np_images = np.array(images, dtype=&#34;float32&#34;)

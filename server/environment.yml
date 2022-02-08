@@ -12,12 +12,12 @@ dependencies:
   - pymongo
   - python-dotenv
   - pillow
-  - opentsne >=0.4
+  - opentsne>=0.4
   - m2crypto
   - pandas
+  - make
   - pdoc3
   - pip
   - pip:
     - flask-swagger-ui
-    - py-make
   

@@ -44,7 +44,7 @@ $ conda install -c conda-forge flask-restful
 $ conda install -c anaconda pymongo
 $ conda install -c conda-forge python-dotenv
 $ conda install -c conda-forge pillow
-$ conda install -c conda-forge opentsne
+$ conda install -c conda-forge opentsne>=0.4
 $ conda install -c conda-forge m2crypto
 $ conda install -c anaconda pandas
 $ conda install -c anaconda make
@@ -58,7 +58,7 @@ Wurde die Umgebung schon erstellt und soll nur nach Änderungen in environment.y
 $ conda env update -f environment.yml --prune
 ```  
 
-oder  
+oder (in Windows):  
 
 ``` shell
 $ make update_env
@@ -134,7 +134,7 @@ Nun kann die Datei `run.py` ausgeführt werden. Dafür gibt es verschiedene Wege
 
 - In VSCode: `Run > Run Without Debugging` in `run.py`  
 
-- Mit dem Makefile in dem Ordner `server`:
+- Mit dem Makefile in dem Ordner `server` (in Windows):
 
     ``` shell
     $ make run
@@ -165,7 +165,7 @@ $ conda env create -f environment.yml
 $ conda activate iss-backend
 ```  
 
-oder  
+oder (in Windows):  
 
 ``` shell
 $ make update_env

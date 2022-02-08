@@ -46,8 +46,8 @@ def verify_k(k: Any) -&gt; &#39;Union[Tuple[Literal[True], int, None], Tuple[Lit
 
     Returns:
         bool: True if successful, False if an error occured
-        int_or_None: int k if successful, None if an error occured
-        None_or_str: None if successful, str containing error message if an error occured
+        Union[int, None]: int k if successful, None if an error occured
+        Union[None, str]: None if successful, str containing error message if an error occured
     &#34;&#34;&#34;
     success, error, k = is_k_valid(k, db.get_instance(), id_from_database=True)
     if not success:
@@ -63,7 +63,7 @@ class NNOfExistingImages(Resource):
 
         Args:
             k (Any): amount of nearest neighbours
-            ids (list (int)): list of ids from images, whose nearest neighbours shall be returned
+            ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
 
         Returns:
             dict: dict containing the data concerning the nearest neighbour calculation
@@ -159,9 +159,9 @@ class NNOfExistingImages(Resource):
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if successful, False if an error occured</dd>
-<dt><code>int_or_None</code></dt>
+<dt><code>Union[int, None]</code></dt>
 <dd>int k if successful, None if an error occured</dd>
-<dt><code>None_or_str</code></dt>
+<dt><code>Union[None, str]</code></dt>
 <dd>None if successful, str containing error message if an error occured</dd>
 </dl></div>
 <details class="source">
@@ -176,8 +176,8 @@ class NNOfExistingImages(Resource):
 
     Returns:
         bool: True if successful, False if an error occured
-        int_or_None: int k if successful, None if an error occured
-        None_or_str: None if successful, str containing error message if an error occured
+        Union[int, None]: int k if successful, None if an error occured
+        Union[None, str]: None if successful, str containing error message if an error occured
     &#34;&#34;&#34;
     success, error, k = is_k_valid(k, db.get_instance(), id_from_database=True)
     if not success:
@@ -208,7 +208,7 @@ class NNOfExistingImages(Resource):
 
         Args:
             k (Any): amount of nearest neighbours
-            ids (list (int)): list of ids from images, whose nearest neighbours shall be returned
+            ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
 
         Returns:
             dict: dict containing the data concerning the nearest neighbour calculation
@@ -341,8 +341,9 @@ class NNOfExistingImages(Resource):
 <dl>
 <dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
 <dd>amount of nearest neighbours</dd>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>list of ids from images, whose nearest neighbours shall be returned</dd>
 </dl>
-<p>ids (list (int)): list of ids from images, whose nearest neighbours shall be returned</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
@@ -357,7 +358,7 @@ class NNOfExistingImages(Resource):
 
     Args:
         k (Any): amount of nearest neighbours
-        ids (list (int)): list of ids from images, whose nearest neighbours shall be returned
+        ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
 
     Returns:
         dict: dict containing the data concerning the nearest neighbour calculation

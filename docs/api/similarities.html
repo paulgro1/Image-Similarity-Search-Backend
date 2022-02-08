@@ -37,10 +37,10 @@ def get_similarities_as_array(D: ndarray) -&gt; ndarray:
     &#34;&#34;&#34;Returns the percentages calculated from the distances between images as an array
 
     Args:
-        D (ndarray): array of distances
+        D (np.ndarray): array of distances
 
     Returns:
-        ndarray: array of percentages
+        np.ndarray: array of percentages
     &#34;&#34;&#34;
     similarities = 1 / (1 + D / 1e+9)
     return similarities
@@ -49,10 +49,10 @@ def get_similarities(D: ndarray) -&gt; &#39;list[float]&#39;:
     &#34;&#34;&#34;Returns the percentages calculated from the distances between images as a list
 
     Args:
-        D (ndarray): array of distances
+        D (np.ndarray): array of distances
 
     Returns:
-        list (float): list of percentages
+        list[float]: list of percentages
     &#34;&#34;&#34;
     return get_similarities_as_array(D).tolist()</code></pre>
 </details>
@@ -71,11 +71,14 @@ def get_similarities(D: ndarray) -&gt; &#39;list[float]&#39;:
 <div class="desc"><p>Returns the percentages calculated from the distances between images as a list</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>D</code></strong> :&ensp;<code>ndarray</code></dt>
+<dt><strong><code>D</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>array of distances</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>list (float): list of percentages</p></div>
+<dl>
+<dt><code>list[float]</code></dt>
+<dd>list of percentages</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -84,10 +87,10 @@ def get_similarities(D: ndarray) -&gt; &#39;list[float]&#39;:
     &#34;&#34;&#34;Returns the percentages calculated from the distances between images as a list
 
     Args:
-        D (ndarray): array of distances
+        D (np.ndarray): array of distances
 
     Returns:
-        list (float): list of percentages
+        list[float]: list of percentages
     &#34;&#34;&#34;
     return get_similarities_as_array(D).tolist()</code></pre>
 </details>
@@ -99,12 +102,12 @@ def get_similarities(D: ndarray) -&gt; &#39;list[float]&#39;:
 <div class="desc"><p>Returns the percentages calculated from the distances between images as an array</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>D</code></strong> :&ensp;<code>ndarray</code></dt>
+<dt><strong><code>D</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>array of distances</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>ndarray</code></dt>
+<dt><code>np.ndarray</code></dt>
 <dd>array of percentages</dd>
 </dl></div>
 <details class="source">
@@ -115,10 +118,10 @@ def get_similarities(D: ndarray) -&gt; &#39;list[float]&#39;:
     &#34;&#34;&#34;Returns the percentages calculated from the distances between images as an array
 
     Args:
-        D (ndarray): array of distances
+        D (np.ndarray): array of distances
 
     Returns:
-        ndarray: array of percentages
+        np.ndarray: array of percentages
     &#34;&#34;&#34;
     similarities = 1 / (1 + D / 1e+9)
     return similarities</code></pre>

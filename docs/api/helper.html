@@ -89,7 +89,7 @@ def is_k_valid(k: Any, db: Any, id_from_database: bool=False) -&gt; &#39;Union[T
 
     Args:
         k (Any): amount of desired nearest neighbours. Will be casted as an int, fails if an error occures
-        db (api.db.Database): instance of the database
+        db (server.api.db.Database): instance of the database
         id_from_database (bool): if True, the image to be searched for is already in the database, need to have 0 &lt; k &lt; db.count_documents_in_collection() - 1, 
         False if different image, need to have 0 &lt; k &lt; db.count_documents_in_collection()
 
@@ -185,7 +185,7 @@ def load_images_by_id(ids: &#39;list[int]&#39;, db: Any) -&gt; &#39;Union[Tuple[
 
     Args:
         ids (list[int]): list containing the ids of the images within the database, prechecked
-        db (api.db.Database): instance of the database
+        db (server.api.db.Database): instance of the database
 
     Returns:
         bool: True if successful, False if an error occured
@@ -443,7 +443,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <dl>
 <dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
 <dd>amount of desired nearest neighbours. Will be casted as an int, fails if an error occures</dd>
-<dt><strong><code>db</code></strong> :&ensp;<code>api.db.Database</code></dt>
+<dt><strong><code>db</code></strong> :&ensp;<code><a title="server.api.db.Database" href="db.html#server.api.db.Database">Database</a></code></dt>
 <dd>instance of the database</dd>
 <dt><strong><code>id_from_database</code></strong> :&ensp;<code>bool</code></dt>
 <dd>if True, the image to be searched for is already in the database, need to have 0 &lt; k &lt; db.count_documents_in_collection() - 1, </dd>
@@ -467,7 +467,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 
     Args:
         k (Any): amount of desired nearest neighbours. Will be casted as an int, fails if an error occures
-        db (api.db.Database): instance of the database
+        db (server.api.db.Database): instance of the database
         id_from_database (bool): if True, the image to be searched for is already in the database, need to have 0 &lt; k &lt; db.count_documents_in_collection() - 1, 
         False if different image, need to have 0 &lt; k &lt; db.count_documents_in_collection()
 
@@ -578,7 +578,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 <dl>
 <dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
 <dd>list containing the ids of the images within the database, prechecked</dd>
-<dt><strong><code>db</code></strong> :&ensp;<code>api.db.Database</code></dt>
+<dt><strong><code>db</code></strong> :&ensp;<code><a title="server.api.db.Database" href="db.html#server.api.db.Database">Database</a></code></dt>
 <dd>instance of the database</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -601,7 +601,7 @@ def analyse_dataset(images: np.ndarray, coordinates: np.ndarray) -&gt; dict:
 
     Args:
         ids (list[int]): list containing the ids of the images within the database, prechecked
-        db (api.db.Database): instance of the database
+        db (server.api.db.Database): instance of the database
 
     Returns:
         bool: True if successful, False if an error occured

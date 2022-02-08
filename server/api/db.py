@@ -61,7 +61,7 @@ class Database(object):
             col_name (str): String specifiying which collection to drip
         """
         col = self._db[col_name]
-        if col:
+        if col is not None:
             col.drop()
             col.drop_indexes()
 
