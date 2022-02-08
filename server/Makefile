@@ -1,6 +1,6 @@
 # See https://stackoverflow.com/a/12099167
 ifeq ($(OS),Windows_NT)
-    OPEN := start
+    OPEN := CMD /C start
 	PYRUN := python
 else
     UNAME := $(shell uname -s)
@@ -14,23 +14,29 @@ else
     endif
 endif
 
+ROOT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+all:
+	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py
+
 mk_env:
-	conda env create -f environment.yml
+	@conda init bash && conda env create -f $(ROOT_DIR)environment.yml
 
 activate_env:
-	conda activate iss-backend
+	qconda init bash && conda activate iss-backend
 
 deactivate_env:
-	conda deactivate
+	@conda init bash && conda deactivate
 
 rmv_env: deactivate_env
-	conda env remove -n iss-backend
+	@conda init bash && conda env remove -n iss-backend
 
 update_env:
-	conda env update -f environment.yml --prune
+	@conda init bash && conda env update -f $(ROOT_DIR)environment.yml --prune
 
-run: activate_env
-	$(PYRUN) run.py 
+run:
+	@echo $(ROOT_DIR)run.py
+	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py
 
 init_server: activate_env
-	$(PYRUN) run.py 1
+	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py 1
