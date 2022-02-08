@@ -17,26 +17,20 @@ endif
 ROOT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 all:
-	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py
+	$(PYRUN) $(ROOT_DIR)run.py
 
 mk_env:
-	@conda init bash && conda env create -f $(ROOT_DIR)environment.yml
+	conda env create -f $(ROOT_DIR)environment.yml
 
-activate_env:
-	qconda init bash && conda activate iss-backend
-
-deactivate_env:
-	@conda init bash && conda deactivate
-
-rmv_env: deactivate_env
-	@conda init bash && conda env remove -n iss-backend
+rmv_env:
+	conda env remove -n iss-backend
 
 update_env:
-	@conda init bash && conda env update -f $(ROOT_DIR)environment.yml --prune
+	conda env update -f $(ROOT_DIR)environment.yml --prune
 
 run:
 	@echo $(ROOT_DIR)run.py
-	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py
+	$(PYRUN) $(ROOT_DIR)run.py
 
-init_server: activate_env
-	@conda init bash && conda activate iss-backend && $(PYRUN) $(ROOT_DIR)run.py 1
+init_server:
+	$(PYRUN) $(ROOT_DIR)run.py 1
