@@ -5,7 +5,7 @@
 <h3>Inhaltsverzeichnis</h3>
 
 - [Einleitung](#einleitung)<br>
-- [Dokumentation 01](#documentation01)<br>
+- [Dokumentation 01](#dokumentation-01-kalenderwochen-4344)<br>
 - [Dokumentation 02](#documentation02)<br>
 - [Dokumentation 03](#documentation03)<br>
 - [Dokumentation 04](#documentation04)<br>
@@ -21,7 +21,7 @@
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
-<h1 id="documentation01">Dokumentation 01 - Kalenderwochen 43/44</h1>
+<h1 id="dokumentation-01-kalenderwochen-4344">Dokumentation 01 - Kalenderwochen 43/44</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
