@@ -6,15 +6,15 @@
 
 - [Einleitung](#einleitung)<br>
 - [Dokumentation 01](#dokumentation-01-kalenderwochen-4344)<br>
-- [Dokumentation 02](#documentation02)<br>
-- [Dokumentation 03](#documentation03)<br>
-- [Dokumentation 04](#documentation04)<br>
-- [Dokumentation 05](#documentation05)<br>
-- [Dokumentation 06](#documentation06)<br>
-- [Dokumentation 07](#documentation07)<br>
-- [Dokumentation 08](#documentation08)<br>
-- [Dokumentation 09](#documentation09)<br>
-- [Dokumentation 10](#documentation10)<br>
+- [Dokumentation 02](#dokumentation-02-kalenderwochen-4546)<br>
+- [Dokumentation 03](#dokumentation-03-kalenderwoche-47)<br>
+- [Dokumentation 04](#dokumentation-04-kalenderwoche-48)<br>
+- [Dokumentation 05](#dokumentation-05-kalenderwoche-49)<br>
+- [Dokumentation 06](#dokumentation-06-kalenderwoche-2)<br>
+- [Dokumentation 07](#dokumentation-07-kalenderwoche-3)<br>
+- [Dokumentation 08](#dokumentation-08-kalenderwoche-4)<br>
+- [Dokumentation 09](#dokumentation-09-kalenderwoche-5)<br>
+- [Dokumentation 10](#dokumentation-10-kalenderwoche-6)<br>
 - [Fazit](#fazit)<br>
 
 <h1 id="einleitung">Einleitung</h1>
@@ -114,7 +114,7 @@ Wir haben uns für ein Gesichter Dataset entschieden, welches wir für die Entwi
 <br>
 <br>
 
-<h1 id="documentation02">Dokumentation 02 - Kalenderwochen 45/46</h1>
+<h1 id="dokumentation-02-kalenderwochen-4546">Dokumentation 02 - Kalenderwochen 45/46</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -234,7 +234,7 @@ Bilder angepasst werden und detaillierte Informationen zu diesen aufgerufen werd
 kann der Nutzer Bilder wieder aus der Auswahl entfernen.
 <br>
 
-<h1 id="documentation03">Dokumentation 03 - Kalenderwoche 47</h1>
+<h1 id="dokumentation-03-kalenderwoche-47">Dokumentation 03 - Kalenderwoche 47</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -458,7 +458,7 @@ Abwägung, ob SIFT, SURF oder ORB am Besten - hier muss geschaut werden was am e
 <br>
 
 
-<h1 id="documentation04">Dokumentation 04 - Kalenderwoche 48</h1>
+<h1 id="dokumentation-04-kalenderwoche-48">Dokumentation 04 - Kalenderwoche 48</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -650,7 +650,7 @@ Deshalb wird diese Funktion zunächst weggelassen.
 
 - Weiterer Lösungsansatz: Es wurden ebenfalls die Deskriptoren der Bilder gespeichert und sollten dann nicht mit dem BFMatcher und der knnMatch- Methode verglichen, sondern die euklidische Distanz zwischen den Deskriptoren, berechnet werden.
 
-<h1 id="documentation05">Dokumentation 05 - Kalenderwoche 49</h1>
+<h1 id="dokumentation-05-kalenderwoche-49">Dokumentation 05 - Kalenderwoche 49</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -819,7 +819,7 @@ Möglichkeit, wie es aussehen könnte:
 - Da der Arbeitsspeicher begrenzt ist, können so nur wenige Indizes gleichzeitig geladen sein.
 
 
-<h1 id="documentation06">Dokumentation 06 - Kalenderwoche 2 2022</h1>
+<h1 id="dokumentation-06-kalenderwoche-2">Dokumentation 06 - Kalenderwoche 2</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -960,7 +960,7 @@ Soll etwa so aussehen:
 ![](./images/59_2.png)<br>
 *Rückgabe von /upload mit Clusterzentren-IDs*<br>
 
-<h1 id="documentation07">Dokumentation 07 - Kalenderwoche 3 2022</h1>
+<h1 id="dokumentation-07-kalenderwoche-3">Dokumentation 07 - Kalenderwoche 3</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1275,7 +1275,7 @@ result = database.ids_to_various(ids, filename=True, cluster_center=True)
 _Möglicher Aufruf der Funktion mit den zu suchenden Spalten als kwargs_ 
 
 
-<h1 id="documentation08">Dokumentation 08 - Kalenderwoche 4 2022</h1>
+<h1 id="dokumentation-08-kalenderwoche-4">Dokumentation 08 - Kalenderwoche 4</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1512,7 +1512,7 @@ def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndar
 __Ausschnitt aus `faiss.py` als Beispiel für typing und docstring__
 
 
-<h1 id="documentation09">Dokumentation 09 - Kalenderwoche 5 2022</h1>
+<h1 id="dokumentation-09-kalenderwoche-5">Dokumentation 09 - Kalenderwoche 5</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1647,7 +1647,7 @@ _Noch nicht abgeschlossen_
 
 _Noch nicht abgeschlossen_
 
-<h1 id="documentation10">Dokumentation 10 - Kalenderwoche 6 2022</h1>
+<h1 id="dokumentation-10-kalenderwoche-6">Dokumentation 10 - Kalenderwoche 6 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
