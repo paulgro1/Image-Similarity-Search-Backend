@@ -1,4 +1,3 @@
-
 <h1 id="documentation"><img src="./images/logo_2.png"  width="25"> Image Similarity Search Project Dokumentation</h1>
 
 <h2>Gruppenmitglieder<br>(Joris Müller, Anne Schlangstedt, Julia Scherschinski, Paul Gronemeyer, Fabian Löffler, Luke Mikat)</h2>
@@ -6,23 +5,23 @@
 <h3>Inhaltsverzeichnis</h3>
 
 - [Einleitung](#einleitung)<br>
-- [Dokumentation 01](#documentation_01)<br>
-- [Dokumentation 02](#documentation_02)<br>
-- [Dokumentation 03](#documentation_03)<br>
-- [Dokumentation 04](#documentation_04)<br>
-- [Dokumentation 05](#documentation_05)<br>
-- [Dokumentation 06](#documentation_06)<br>
-- [Dokumentation 07](#documentation_07)<br>
-- [Dokumentation 08](#documentation_08)<br>
-- [Dokumentation 09](#documentation_09)<br>
-- [Dokumentation 10](#documentation_10)<br>
+- [Dokumentation 01](#documentation01)<br>
+- [Dokumentation 02](#documentation02)<br>
+- [Dokumentation 03](#documentation03)<br>
+- [Dokumentation 04](#documentation04)<br>
+- [Dokumentation 05](#documentation05)<br>
+- [Dokumentation 06](#documentation06)<br>
+- [Dokumentation 07](#documentation07)<br>
+- [Dokumentation 08](#documentation08)<br>
+- [Dokumentation 09](#documentation09)<br>
+- [Dokumentation 10](#documentation10)<br>
 - [Fazit](#fazit)<br>
 
 <h1 id="einleitung">Einleitung</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
-<h1 id="documentation_01">Dokumentation 01 - Kalenderwochen 43/44</h1>
+<h1 id="documentation01">Dokumentation 01 - Kalenderwochen 43/44</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -115,7 +114,7 @@ Wir haben uns für ein Gesichter Dataset entschieden, welches wir für die Entwi
 <br>
 <br>
 
-<h1 id="documentation_02">Dokumentation 02 - Kalenderwochen 45/46</h1>
+<h1 id="documentation02">Dokumentation 02 - Kalenderwochen 45/46</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -235,7 +234,7 @@ Bilder angepasst werden und detaillierte Informationen zu diesen aufgerufen werd
 kann der Nutzer Bilder wieder aus der Auswahl entfernen.
 <br>
 
-<h1 id="documentation_03">Dokumentation 03 - Kalenderwoche 47</h1>
+<h1 id="documentation03">Dokumentation 03 - Kalenderwoche 47</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -459,7 +458,7 @@ Abwägung, ob SIFT, SURF oder ORB am Besten - hier muss geschaut werden was am e
 <br>
 
 
-<h1 id="documentation_04">Dokumentation 04 - Kalenderwoche 48</h1>
+<h1 id="documentation04">Dokumentation 04 - Kalenderwoche 48</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -651,7 +650,7 @@ Deshalb wird diese Funktion zunächst weggelassen.
 
 - Weiterer Lösungsansatz: Es wurden ebenfalls die Deskriptoren der Bilder gespeichert und sollten dann nicht mit dem BFMatcher und der knnMatch- Methode verglichen, sondern die euklidische Distanz zwischen den Deskriptoren, berechnet werden.
 
-<h1 id="documentation_05">Dokumentation 05 - Kalenderwoche 49</h1>
+<h1 id="documentation05">Dokumentation 05 - Kalenderwoche 49</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -820,7 +819,7 @@ Möglichkeit, wie es aussehen könnte:
 - Da der Arbeitsspeicher begrenzt ist, können so nur wenige Indizes gleichzeitig geladen sein.
 
 
-<h1 id="documentation_06">Dokumentation 06 - Kalenderwoche 2 2022</h1>
+<h1 id="documentation06">Dokumentation 06 - Kalenderwoche 2 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -961,7 +960,7 @@ Soll etwa so aussehen:
 ![](./images/59_2.png)<br>
 *Rückgabe von /upload mit Clusterzentren-IDs*<br>
 
-<h1 id="documentation_07">Dokumentation 07 - Kalenderwoche 3 2022</h1>
+<h1 id="documentation07">Dokumentation 07 - Kalenderwoche 3 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1276,7 +1275,7 @@ result = database.ids_to_various(ids, filename=True, cluster_center=True)
 _Möglicher Aufruf der Funktion mit den zu suchenden Spalten als kwargs_ 
 
 
-<h1 id="documentation_08">Dokumentation 08 - Kalenderwoche 4 2022</h1>
+<h1 id="documentation08">Dokumentation 08 - Kalenderwoche 4 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1513,7 +1512,7 @@ def search(self, images: np.ndarray, k: int) -> 'Union[Tuple[np.ndarray, np.ndar
 __Ausschnitt aus `faiss.py` als Beispiel für typing und docstring__
 
 
-<h1 id="documentation_09">Dokumentation 09 - Kalenderwoche 5 2022</h1>
+<h1 id="documentation09">Dokumentation 09 - Kalenderwoche 5 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
@@ -1648,7 +1647,7 @@ _Noch nicht abgeschlossen_
 
 _Noch nicht abgeschlossen_
 
-<h1 id="documentation_10">Dokumentation 10 - Kalenderwoche 6 2022</h1>
+<h1 id="documentation10">Dokumentation 10 - Kalenderwoche 6 2022</h1>
 
 [Zurück zum Inhaltsverzeichnis](#documentation)<br>
 
