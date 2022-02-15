@@ -1849,5 +1849,25 @@ _Ausschnitt aus dem Makefile_
 
 <h2>Individuelle Erfahrungen :</h2>
 
+<h3>Anne (@s82881)</h3>
+
+<h3>Fabian (@s78278)</h3>
+
+<h3>Paul (@s82130)</h3>
+
+<h3>Luke (@s82765)</h3>
+
+Für mich war es das erste Mal ein Projekt dieser Größenordnung zu bearbeiten. Vor allem war es am Anfang schwierig, die Organisation und Aufgabenteilung strukturiert umzusetzen. Zu Beginn hatte ich den Arbeitsaufwand pro Woche und Allgemein stark unterschätzt, was dazu führte, dass ich/wir einen vergleichsweise eher holprigen Start in dieses Projekt hatten. Nachdem wir aber in einem Gespräch nocheinmal von unseren Betreuern motiviert wurden, lief es dann auch viel besser. Die Absprache in der Gruppe verlief immer harmonisch und wenn sich Gruppenmitglieder mal nicht einig waren, wurde in der gesamten Gruppe abgestimmt. Jeder hat dann diese Entscheidungen respektiert. Alle Mitglieder haben versucht sich für einander Zeit zu nehmen und gegenseitig zu helfen, sollte jemand mal Probleme bei der Bearbeitung der eigenen Aufgaben gehabt haben.<br>
+
+Während diesem Projekt konnte ich meine Kenntnisse vor allem in React und D3.js verbessern. Die Implementierung des Zooms war mein größter Aufgabenbereich und auch der, der mir am meisten Spaß gemacht hat. Für den Zoom hatten wir weitere Ideen, wie eine erweiterte Steuerung mit Pfeiltasten und 'Zoom-Rechteck', die es leider aufgrund von Komplexität nicht in das finale Produkt geschafft haben.<br>
+Des Weiteren konnte ich viele Erfahrungen mit Git sammeln. Vor allem fällt es mir nun viel einfacher Merges und Merge-Konflikte zu bearbeiten.<br>
+Da ich mich ein wenig um die Organisation und Dokumentation gekümmert habe, denke ich, dass ich ebenfalls einen guten Einblick in die Prozesse der Projektplanung bekommen habe.<br>
+
+Ich bin sehr zufrieden mit dem Produkt, welches wir zusammen erstellt haben und würde gerne in Zukunft wieder mit der Gruppe zusammenarbeiten.<br>
+
+<h3>Julia (@s75934)</h3>  
+
+<h3> Joris (@s81764)</h3>
+
 <h2>Gruppenfazit :</h2>
 
