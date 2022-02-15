@@ -67,7 +67,7 @@ $ make update_env
 ### (4) .env Datei
 
 Nun kann der Ordner `server` im Code-Editor geöffnet werden.
-In diesem Ordner muss die Datei `.env` erstellt werden. In ihr werden die Umgebungsvariablen gesetzt.  
+In diesem Ordner muss die Datei `.env` erstellt werden (falls nicht schon vorhanden, sonst weiter bei [Schritt 5](#5-einbinden-eines-datasets)). In ihr werden die Umgebungsvariablen gesetzt.  
 Alle Variablen, die gesetzt werden müssen, mit Beispielwerten:
 
 ``` txt
@@ -100,7 +100,7 @@ FLASK_SECRET_KEY=r@nD0msTR1ng
 ### (5) Einbinden eines Datasets
 
 Falls noch nicht vorhanden, muss der `DATA_FOLDER` (der Name ist in der `.env`-Datei spezifiziert) in dem `server`-Ordner erstellt werden.
-In den `DATA_FOLDER` kommen nun alle Bilder des gewünschten Datensatzes. Diese Bilder sollten alle die gleichen Dimensionen haben, sonst wird die Ausführung des Programms unterbrochen.  
+In den `DATA_FOLDER` kommen nun alle Bilder des gewünschten Datensatzes. Diese Bilder müssen alle die gleichen Dimensionen haben, sonst wird die Ausführung des Programms unterbrochen.  
 
 ### (6) Einstellen des Interpreters und Starten des Servers
 
@@ -145,6 +145,8 @@ Nun kann die Datei `run.py` ausgeführt werden. Dafür gibt es verschiedene Wege
 Mit der Route `{BACKEND_HOST}:{BACKEND_PORT}/swagger` (für die richtigen Werte bitte [diesen Absatz](#4-env-datei) referenzieren) kann auf die Dokumentation von allen 
 verfügbaren Routen zugeriffen werden. Dies ist möglich durch das Modul [Swagger](https://pypi.org/project/flask-swagger-ui/). Auf dieser Dokumentationsroute können ebenfalls
 alle Routen getestet werden.  
+Außerdem gibt es eine Dokumentation für alle Packages, Module, Klassen und Funktionen durch [pdoc3](https://pdoc3.github.io/pdoc/). Die Startseite ist `./docs/index.html`.  
+Neu erstellt werden kann die Dokumentation durch das Ausführen der Datei `doc.py` (für alle Unterordner von `server`).  
 
 ### (8) Troubleshooting
 
@@ -163,6 +165,12 @@ $ conda env create -f environment.yml
 
 # Umgebung wieder aktivieren
 $ conda activate iss-backend
+```  
+
+oder:  
+
+``` shell
+$ conda env update -f environment.yml --prune
 ```  
 
 oder (in Windows):  

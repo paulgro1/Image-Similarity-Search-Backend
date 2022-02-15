@@ -2,20 +2,18 @@
 
 ### Gruppenstruktur
 
-- Frontend: Paul, Anne, Fabian
+- Frontend: Paul, Anne, Fabian (, Julia, Luke)
 - Backend: Joris, Julia, Luke
 
 ### Tools
 
-- React Frontend (eventuell D3.js Bibliothek)
-- Python Server Backend (Django oder Flask) 
-- Nutzung der FAISS Library und NumPy
+- [React](https://reactjs.org/) Frontend mit [D3.js Bibliothek](https://d3js.org/)  
+- [Flask](https://flask.palletsprojects.com/en/2.0.x/) Backend mit [faiss](https://github.com/facebookresearch/faiss), [t-SNE](https://opentsne.readthedocs.io/en/latest/) und [k-means](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)  
 
 ### Anforderungen
 
 - Single Page Anwendung 
 - Dataset (Gesichter/Tiere)
-
 
 ### Dataset
 
