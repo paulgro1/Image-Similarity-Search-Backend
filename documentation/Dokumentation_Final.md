@@ -1,4 +1,4 @@
-<h1 id="documentation"><img src="./images/logo_2.png"  width="25"> Image Similarity Search Project Dokumentation</h1>
+<h1 id="image-similarity-search-project-documentation"><img src="./images/logo_2.png"  width="25">Image Similarity Search Project Documentation</h1>
 
 <h2>Gruppenmitglieder<br>(Joris Müller, Anne Schlangstedt, Julia Scherschinski, Paul Gronemeyer, Fabian Löffler, Luke Mikat)</h2>
 
@@ -19,11 +19,11 @@
 
 <h1 id="einleitung">Einleitung</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h1 id="dokumentation-01-kalenderwochen-4344">Dokumentation 01 - Kalenderwochen 43/44</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Anforderungen</h2>
 
@@ -116,7 +116,7 @@ Wir haben uns für ein Gesichter Dataset entschieden, welches wir für die Entwi
 
 <h1 id="dokumentation-02-kalenderwochen-4546">Dokumentation 02 - Kalenderwochen 45/46</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Überarbeiteter Prototyp</h2>
 
@@ -236,7 +236,7 @@ kann der Nutzer Bilder wieder aus der Auswahl entfernen.
 
 <h1 id="dokumentation-03-kalenderwoche-47">Dokumentation 03 - Kalenderwoche 47</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -460,7 +460,7 @@ Abwägung, ob SIFT, SURF oder ORB am Besten - hier muss geschaut werden was am e
 
 <h1 id="dokumentation-04-kalenderwoche-48">Dokumentation 04 - Kalenderwoche 48</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -821,7 +821,7 @@ Möglichkeit, wie es aussehen könnte:
 
 <h1 id="dokumentation-06-kalenderwoche-2">Dokumentation 06 - Kalenderwoche 2</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -962,7 +962,7 @@ Soll etwa so aussehen:
 
 <h1 id="dokumentation-07-kalenderwoche-3">Dokumentation 07 - Kalenderwoche 3</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -1277,7 +1277,7 @@ _Möglicher Aufruf der Funktion mit den zu suchenden Spalten als kwargs_
 
 <h1 id="dokumentation-08-kalenderwoche-4">Dokumentation 08 - Kalenderwoche 4</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -1514,7 +1514,7 @@ __Ausschnitt aus `faiss.py` als Beispiel für typing und docstring__
 
 <h1 id="dokumentation-09-kalenderwoche-5">Dokumentation 09 - Kalenderwoche 5</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -1647,9 +1647,9 @@ _Noch nicht abgeschlossen_
 
 _Noch nicht abgeschlossen_
 
-<h1 id="dokumentation-10-kalenderwoche-6">Dokumentation 10 - Kalenderwoche 6 2022</h1>
+<h1 id="dokumentation-10-kalenderwoche-6">Dokumentation 10 - Kalenderwoche 6</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Fortschritte Frontend</h2>
 
@@ -1845,7 +1845,7 @@ _Ausschnitt aus dem Makefile_
 
 <h1 id="fazit">Fazit</h1>
 
-[Zurück zum Inhaltsverzeichnis](#documentation)<br>
+[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
 
 <h2>Individuelle Erfahrungen :</h2>
 
