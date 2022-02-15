@@ -145,7 +145,7 @@ Nun kann die Datei `run.py` ausgeführt werden. Dafür gibt es verschiedene Wege
 Mit der Route `{BACKEND_HOST}:{BACKEND_PORT}/swagger` (für die richtigen Werte bitte [diesen Absatz](#4-env-datei) referenzieren) kann auf die Dokumentation von allen 
 verfügbaren Routen zugeriffen werden. Dies ist möglich durch das Modul [Swagger](https://pypi.org/project/flask-swagger-ui/). Auf dieser Dokumentationsroute können ebenfalls
 alle Routen getestet werden.  
-Außerdem gibt es eine Dokumentation für alle Packages, Module, Klassen und Funktionen durch [pdoc3](https://pdoc3.github.io/pdoc/). Die Startseite ist `./docs/index.html`.  
+Außerdem gibt es eine Dokumentation für alle Packages, Module, Klassen und Funktionen durch [pdoc3](https://pdoc3.github.io/pdoc/). Die Startseite ist [hier](./docs/index.html).  
 Neu erstellt werden kann die Dokumentation durch das Ausführen der Datei `doc.py` (für alle Unterordner von `server`).  
 
 ### (8) Troubleshooting
