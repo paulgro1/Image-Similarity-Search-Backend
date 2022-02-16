@@ -1851,6 +1851,13 @@ _Ausschnitt aus dem Makefile_
 
 <h3>Anne (@s82881)</h3>
 
+Das Projekt hatte, meinem Eindruck nach, zunächst mal einen etwas holprigen Start, da wir als Team erstmal lernen mussten, wie man ein so umfangreiches Projekt planen und organisieren kann. Mir fiel es am Anfang vor allem schwer das Git-Ticketsystem zu verwenden und meine Aufgaben dort gut zu dokumentieren. Auch beim Zeitaufwand einiger Aufgaben habe ich mich anfangs öfters verschätzt. Nach einigen Wochen kam aber der Breakpoint, ab dem die Arbeit am Projekt dann Fahrt aufnahm und anfing richtig Spaß zu machen. Ich fand unsere Gruppendynamik sehr angenehm weil jeder jeden so gut es ging unterstützt hat und wir Probleme oft zusammen lösen konnten. Dabei hatte jedes Gruppenmitglied unterschiedliche Vorkenntnisse und Stärken, die dann in das Projekt eingebracht werden konnten.<br>
+
+Ich habe mich durch meine Arbeit im Frontend-Team vor allem meine Kenntnisse in React und D3.js weiterentwickelt. Mit D3 hatte ich nie zuvor gearbeitet und es hat mir sehr viel Spaß gemacht, den D3 canvas zu implementieren und zu sehen, wie die ersten Bilder dort angezeigt werden. Die meiste Arbeit habe ich allerdings in React gesteckt und mich um die Informationsansicht mit dem Excel Export gekümmert, wodurch ich dort auch nochmal neue Kenntnisse mit dem xlsx-Modul erwerben konnte. <br>
+
+Alles in allem bin ich sehr zufrieden mit unserem Projektergebnis und es hat mir einen sehr guten Einblick in die realitätsnahe Projektarbeit gegeben.<br>
+
+
 <h3>Fabian (@s78278)</h3>
 
 <h3>Paul (@s82130)</h3>
