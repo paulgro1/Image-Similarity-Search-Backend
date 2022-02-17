@@ -19,7 +19,14 @@
 
 <h1 id="einleitung">Einleitung</h1>
 
-[Zurück zum Inhaltsverzeichnis](#image-similarity-search-project-documentation)<br>
+Heutzutage gewinnt die Ähnlichkeitssuche auch in unserem Alltag mehr Bedeutung und ist somit fast nicht mehr wegzudenken.
+Sie taucht in vielen verschiedenen Themenbereichen auf. Allein wenn wir im Internet etwas herumsurfen stoßen wir auf Werbung, die beispielsweise auf Grund von bestimmten Suchanfragen oder Käufen, für uns zusammengestellt wurde. Sie zeigt uns Dinge, die ähnlich aussehen wie, die die wir schon besitzen oder die uns potentiell gefallen könnten.
+Auch dieses Projekt beschäftigt sich mit der Thematik der Ähnlichkeitssuche.
+In dem Rahmen eines Semesters haben sich sechs Studenten zusammengefunden um gemeinsam an einer Singlepage-Applikation zu arbeiten.
+Mit Hilfe von Back- und Frontend ließ sich eine Schnittstelle entwickeln, die es möglich gemacht hat mathematische Berechnungen benutzerfreundlich visuell darzustellen.
+Man kann beliebige Bild-Datensätze in einem angepassten Koordinatensystem erkunden und sich einen genaueren Überblick über die bestimmten Daten geben lassen.
+Es gibt die Möglichkeit sich die ähnlichsten Bilder eines bestimmten Bildes, ob hochgeladen oder ausgewählt, ausgeben zu lassen. Hier bekommt man detaillierte Informationen wie den Namen des Bildes, deren prozentuale Ähnlichkeit und die genaue Distanz. 
+Wie genau Back- sowie Frontend zusammengearbeitet haben und wie sich die bestimmten Features ergänzen, zeigt sich in den folgenden Abschnitten, in denen der gesamte Entstehungsprozess der Anwendung in wöchentlichen Abständen, von jedem Gruppenmitglied einzeln dokumentiert wurde.
 
 <h1 id="dokumentation-01-kalenderwochen-4344">Dokumentation 01 - Kalenderwochen 43/44</h1>
 
@@ -1884,7 +1891,39 @@ Ich bin sehr zufrieden mit dem Produkt, welches wir zusammen erstellt haben und 
 
 <h3>Julia (@s75934)</h3>  
 
+Wie auch schon andere Gruppenmitglieder berichtet haben, war der Anfang, glaube ich, für uns alle etwas schwieriger. Auch ich hatte zuvor noch nie in so einer großen gearbeitet und somit war es anfangs schwieriger seinen Platz in der Gruppe und einen guten Workflow zu finden.
+Doch dann wurde es zunehmend flüssiger und die Arbeiten ließen sich gut in der Gruppe aufteilen, da jeder andere Stärken aufwies.
+Das Projekt hat mich zwar herausgefordert, aber mir auch viel Spaß bereitet, da wir uns intern in der Gruppe auch immer gut absprechen und helfen konnten.
+Da ich in beiden Bereichen, wie Back- und Frontend ausgeholfen habe, habe ich einen guten Überblick bekommen und hatte auch viel Abwechslung. Ich fand es super spannend beim mathematischen Teil mithelfen zu können, meine Python Kenntnisse noch weiter auszubauen und auch visuelle Merkmale zu implementieren. Ich konnte somit für mich Javascript noch ein bisschen mehr vertiefen und React für mich neu entdecken.
+
 <h3> Joris (@s81764)</h3>
 
-<h2>Gruppenfazit :</h2>
+<h2>Ausblick :</h2>
+
+Abschließend können wir behaupten, dass wir sehr zufrieden mit der Bearbeitung dieses Projektes sind. Wir konnten alle unsere zuvor definierten Muss-Anforderungen erfüllen und sogar zusätzliche Features umsetzen. Da allerdings die Zeit dieses Projektes sehr begrenzt war, blieben einige vielversprechende Ideen auf der Strecke. Diese Feature-Ideen würden wir gerne hier noch einmal aufgreifen.
+
+
+<h3>CSS-Dropshadow und Transformation</h3>
+Generell ist das Thema Interaktion mit dem Datensatz noch ausbaufähig. Da es uns erstmal wichtiger war, das die Anwendung möglichst Performant ist.
+Eine andere Art die Cluster in der Stackansicht zu markieren wäre beispielsweise übersichtlicher gewesen. Als alternative wurde hier der CSS-Dropshadow getestet, jedoch werden hierfür weitere Berechnungen benötigt, die sich aber negativ auf die Performance der Anwendung auswirken. Als weiteres Beispiel wäre beim markieren von Bildern eine Verschiebung an der Z-Achse gewesen. Dies scheiterte vorerst auch aus Performancegründen und Browserkompatibilität.    
+
+<h3>Einfachere Navigation in der Informationsansicht</h3>
+Durch Verlinkungen der Bilder in der Informationsansicht hätten wir die Navigierbarkeit und somit die User-Experience unserer Anwendung noch weiter verbessern können. Ist man in der Informationsansicht eines Bildes, ist es in dem aktuellen Stand der Anwendung nicht möglich, direkt die eines nächsten Nachbarn aufzurufen. Man muss erst die aktuelle Informationsansicht schließen und dann die des nächsten Nachbarn separat aufrufen. Einfacher wäre es, wenn man in der Informationsansicht auf das Bild des nächsten Nachbarn klicken könnte und sich dann direkt dessen detaillierte Ansicht öffnen würde.
+
+
+<h3>Stack-Ansicht</h3>
+Da unsere Overview bei einer größeren Anzahl an dargestellten Bildern, etwas unübersichtlich und schwer navigierbar wird, wollten wir ein Feature implementieren, welches die Übersichtlichkeit verbessert. Es sollen Häufungen von Bildern, die unter anderem auch nicht mehr durch Klicks erreichbar sind, durch eine Stack-Ansicht übersichtlich navigierbar gemacht werden. Dafür wird bei einer gewissen Anzahl von Überschneidungen pro Bild, einige dieser Bilder ausgeblendet und erst wieder angezeigt, sobald ein zuvor definierter Platz zur Verfügung steht.
+Wir hatten zwei Implementierungsansätze für dieses Feature. Entweder eine D3-Collision-Detection um zu erkennen wann sich welche Bilder überschneiden, oder die Umsetzung durch ein Raster, welches den Canvas unterteilt und so sicherstellt, dass nur eine bestimmte Anzahl an Bildern pro Zelle angezeigt werden.
+Bei beiden Methoden wäre es von Vorteil für die Performance der Anwendung, wenn zum Start der Anwendung, nur die Metadaten und die “sichtbaren” Bilder aus dem Backend angefragt werden und auf diesen gezoomed wird.
+
+
+<h3>Verbesserung des semantischen Zooms</h3>
+Bei einer höheren Anzahl an Bildern leidet die Performance des Zooms, da die Berechnungen der Koordinaten und Größen der Bilder, momentan für jedes Bild einzeln durchgeführt werden.
+Ein Ansatz für eine Verbesserung, wäre es die einzelnen Bilder in einer Gruppierung zusammenzufassen und die Transformation, basierend auf dem momentanen Zoom, nur einmal auf der gesamten Gruppierung durchzuführen.
+
+
+<h3>Automatisches Zuschneiden im Backend anhand von dem ORB Algorithmus</h3>
+Mit Hilfe dieses Algorithmus könnte man den automatischen Zuschnitt eines Datensatzes gewährleisten. Durch die Keypoints würden die primären Merkmale in den Mittelpunkt gerückt und alle anderen unwichtigen Dinge weggeschnitten werden. Dies würde noch einmal zusätzlich die Handhabung erleichtern und die Benutzerfreundlichkeit erhöhen.
+
+
 
