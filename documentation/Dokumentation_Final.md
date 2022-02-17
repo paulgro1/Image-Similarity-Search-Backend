@@ -1859,7 +1859,7 @@ Alles in allem bin ich sehr zufrieden mit unserem Projektergebnis und es hat mir
 
 
 <h3>Fabian (@s78278)</h3>
-Das Projekt stellte für mich anfangs eine große Herausforderung da. Bis zu diesem Semester hatte ich noch keine Erfahrungen mit React, Redux als auch D3. Außerdem war es mein erstes Projekt in dieser Größenordnung und mehreren Entwickler*innen. Durch meine geringeren Vorkenntnisse fiel es mir zu Beginn schwerer, meine Rolle im Team zu finden.<br>
+Das Projekt stellte für mich anfangs eine große Herausforderung da. Bis zu diesem Semester hatte ich noch keine Erfahrungen mit React, Redux als auch D3. Außerdem war es mein erstes Projekt in dieser Größenordnung und mehreren Entwickler*innen. Durch meine geringeren Vorkenntnisse fiel es mir zu Beginn schwerer, meine Rolle im Team zu finden.
 Nachdem ich mich mit dem gewählten Techstack auseinandergesetzt und wir im Frontend regelmäßige Meetings mit coding-sessions abgehalten hatten, habe ich mich in der Gruppe sicherer gefühlt und konnte meine ersten Erfolge verzeichnen. Im laufe des Projekts viel es mir immer leichter mich in die Gruppe einzubringen und Aufgaben selbstständig zu übernehmen.<br>
 <br>
 Meiner Meinung nach war es anfangs eine größere Hürde einen gemeinsamen Plan für den Ablauf des Projekts zu erstellen.
