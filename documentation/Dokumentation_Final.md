@@ -1,4 +1,4 @@
-<h1 id="image-similarity-search-project-documentation"><img src="./images/logo_2.png"  width="25">Image Similarity Search Project Documentation</h1>
+<h1 id="image-similarity-search-project-documentation">Image Similarity Search Project Documentation</h1>
 
 <h2>Gruppenmitglieder<br>(Joris Müller, Anne Schlangstedt, Julia Scherschinski, Paul Gronemeyer, Fabian Löffler, Luke Mikat)</h2>
 
