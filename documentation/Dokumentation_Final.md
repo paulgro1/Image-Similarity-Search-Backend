@@ -1911,7 +1911,7 @@ Abschließend können wir behaupten, dass wir sehr zufrieden mit der Bearbeitung
 
 
 <h3>CSS-Dropshadow und Transformation</h3>
-Generell ist das Thema Interaktion mit dem Datensatz noch ausbaufähig, da es uns erstmal wichtiger war, eine möglichst performante Anwendung zu kreieren.
+Generell ist das Thema Darstellung und Interaktion mit dem Datensatz noch ausbaufähig, da es uns erstmal wichtiger war, eine möglichst performante Anwendung zu kreieren.
 Eine andere Art die Cluster in der Stackansicht zu markieren wäre beispielsweise übersichtlicher und ansprechender gewesen. Als alternative wurde hier der CSS-Dropshadow getestet, jedoch werden hierfür weitere Berechnungen benötigt, die sich negativ auf die Performance der Anwendung auswirken. Als weiteres Beispiel wäre beim markieren von Bildern eine Verschiebung an der Z-Achse gewesen. Dies scheiterte vorerst auch aus Performancegründen und Browserkompatibilität.
 
 <h3>Einfachere Navigation in der Informationsansicht</h3>
