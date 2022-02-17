@@ -1018,7 +1018,7 @@ Soll etwa so aussehen:
 
 <h3>Fabian (@s78278)</h3>
 
-<b>[#63](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/63) Instructions/Settings</b>
+<b>[#63](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/63) Anzeigen von Cluster</b>
 
 - Anzeigen von Cluster
 
