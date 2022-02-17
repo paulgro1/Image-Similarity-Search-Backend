@@ -1859,6 +1859,16 @@ Alles in allem bin ich sehr zufrieden mit unserem Projektergebnis und es hat mir
 
 
 <h3>Fabian (@s78278)</h3>
+Das Projekt stellte für mich anfangs eine große Herausforderung da. Bis zu diesem Semester hatte ich noch keine Erfahrungen mit React, Redux als auch D3. Außerdem war es mein erstes Projekt in dieser Größenordnung und mehreren Entwickler*innen. Durch meine geringeren Vorkenntnisse fiel es mir zu Beginn schwerer, meine Rolle im Team zu finden.<br>
+Nachdem ich mich mit dem gewählten Techstack auseinandergesetzt und wir im Frontend regelmäßige Meetings mit coding-sessions abgehalten hatten, habe ich mich in der Gruppe sicherer gefühlt und konnte meine ersten Erfolge verzeichnen. Im laufe des Projekts viel es mir immer leichter mich in die Gruppe einzubringen und Aufgaben selbstständig zu übernehmen.<br>
+<br>
+Meiner Meinung nach war es anfangs eine größere Hürde einen gemeinsamen Plan für den Ablauf des Projekts zu erstellen.
+Diese konnten wir mit der Verwendung des Git eigenen Ticketsystems meistern. Hierbei haben wir alles in kleinere Issues aufgeteilt, an denen wir eigenständig arbeiten konnten. Dies half mir eine bessere Übersicht über erledigte und noch ausstehende Aufgaben zu bekommen.
+Der weitere Verlauf hatte seine Höhen und Tiefen. Manches funktionierte nach meiner Vorstellung, auch wenn ich deutlich mehr Zeit investieren musste als geplant. Durch meine erlangten Fähigkeiten viel es mir immer leichter Zeit und Mühen in das Projekt zu stecken und durch jede Aufgabe stieg meine Begeisterung. 
+Abgesehen vom erweitern meiner Java-Script-Kenntnisse, lernte ich nicht nicht nur wie React, Redux und D3 funktionieren und wie ich diese anwende, sondern auch wie man ein Projekt als Team mit einem entsprechenden Git-Workflow organisiert.<br>
+<br>
+Abschließend möchte ich noch betonen, das ich mehr als zufrieden mit unserer Gruppenarbeit und dem Ergebnis bin. Wir hatten weder Schwierigkeiten gemeinsame Termine zu finden, noch gab es Probleme bei der Kommunikation. Alles verlief sehr harmonisch und respektvoll. Abgesehen davon konnten wir uns bei Problemen immer aufeinander verlassen.
+
 
 <h3>Paul (@s82130)</h3>
 
