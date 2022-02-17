@@ -1900,6 +1900,11 @@ Da ich in beiden Bereichen, wie Back- und Frontend ausgeholfen habe, habe ich ei
 
 <h3> Joris (@s81764)</h3>
 
+Zwar habe ich in früheren Semstern schon an Gruppenprojekten mitgearbeitet, aber dieses Projekt war in vielen Punkten anders. Allein der Umfang, welchen ich anfangs nicht so groß geschätzt hatte, machte die Organisation und Zeiteinteilung in den ersten Wochen kompliziert. Der Git-Workflow war mir persönlich wenig geläufig, weshalb ich mir den Prozess des Erstellens und Abarbeitens von Tickets erst aneignen musste.  
+Ich habe fast ausschließlich an dem Backend gearbeitet, wo benutzte Bibliotheken wie Flask und faiss mir unbekannt waren. Doch durch Recherche und Austausch mit den anderen Gruppenmitgliedern konnten viele Probleme gelöst werden.  
+Auch allgemein hat die Kommunikation und Zusammenarbeit in der Gruppe sehr gut funktioniert. Mehrere Treffen in der Woche wurden genutzt, um sich über den aktuellen Stand auszutauschen und Probleme zu besprechen bzw. zu lösen.  
+Ich habe während des Projekts viel gelernt und bin sehr zufrieden mit dem finalen Produkt.  
+
 <h2>Ausblick :</h2>
 
 Abschließend können wir behaupten, dass wir sehr zufrieden mit der Bearbeitung dieses Projektes sind. Wir konnten alle unsere zuvor definierten Muss-Anforderungen erfüllen und sogar zusätzliche Features umsetzen. Da allerdings die Zeit dieses Projektes sehr begrenzt war, blieben einige vielversprechende Ideen auf der Strecke. Diese Feature-Ideen würden wir gerne hier noch einmal aufgreifen.
