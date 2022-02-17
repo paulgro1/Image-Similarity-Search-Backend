@@ -860,6 +860,8 @@ Das ausgewählte Bild und deren Nachbarn werden an der Z-Achse verschoben und da
 - benötigte Attribute: transition und transform
 - zusätzlich wurde noch ein Transition-Delay hinzugefügt
 
+Dieses Feature wurde im weiteren Verlauf wieder entfernt, da es zu Perfomanceeinbußen kam und es auch Probleme mit Browserkompatibilitäten gab.
+
 <b>[#61](https://gitlab.bht-berlin.de/image-similarity-search/image-similarity-search-frontend/-/issues/61) Hochgeladene Bilder markieren</b>
 
 - hochgeladene Bilder werden zur Übersichtlichkeit farblich markiert.
