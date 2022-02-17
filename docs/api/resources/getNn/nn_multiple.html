@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>server.api.resources.getNn.nn_multiple API documentation</title>
+<meta name="description" content="Module contains Resource to get multiple/all nearest neighbours of images within the database" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>server.api.resources.getNn.nn_multiple</code></h1>
+</header>
+<section id="section-intro">
+<p>Module contains Resource to get multiple/all nearest neighbours of images within the database</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Module contains Resource to get multiple/all nearest neighbours of images within the database&#34;&#34;&#34;
+from flask import request
+from flask_restful import Resource, abort
+import numpy as np
+from typing import Any, Tuple, Literal, Union, NoReturn
+
+import api.db as db
+import api.faiss as iss
+from api.helper import is_k_valid, load_images_by_id, abort_if_pictures_dont_exist
+from api.similarities import get_similarities_as_array
+
+def verify_k(k: Any) -&gt; &#39;Union[Tuple[Literal[True], int, None], Tuple[Literal[False], None, str]]&#39;:
+    &#34;&#34;&#34;Function is used to check the validity of a given k, k being the amount of nearest neighbours to be calculated
+
+    Args:
+        k (Any): desired amount of nearest neighbours. Will be casted as an int
+
+    Returns:
+        bool: True if successful, False if an error occured
+        Union[int, None]: int k if successful, None if an error occured
+        Union[None, str]: None if successful, str containing error message if an error occured
+    &#34;&#34;&#34;
+    success, error, k = is_k_valid(k, db.get_instance(), id_from_database=True)
+    if not success:
+        return False, None, error
+    k += 1  # Image(s) exist(s) in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
+    return True, k, None
+
+class NNOfExistingImages(Resource):
+    &#34;&#34;&#34;Resource returns the neighbours of multiple (POST) or all (GET) images in the database&#34;&#34;&#34;
+
+    def multiple(self, k: Any, ids: &#39;list[int]&#39;) -&gt; &#39;Union[dict, NoReturn]&#39;:
+        &#34;&#34;&#34;Method used by both get and post, finding the nearest neighbours for all ids within &#34;ids&#34;
+
+        Args:
+            k (Any): amount of nearest neighbours
+            ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
+
+        Returns:
+            dict: dict containing the data concerning the nearest neighbour calculation
+        &#34;&#34;&#34;        
+        k_success, k, error = verify_k(k)
+        if not k_success:
+            abort(404, message=error)
+        load_success, images, description, error = load_images_by_id(ids, db.get_instance())
+        if not load_success:
+            abort(500, message=f&#34;{error}\nAn error occured while loading the images&#34;)
+        print(f&#34;Searching with shape {images.shape}&#34;)
+        D, I = iss.get_instance().search(images, k)
+        sim_percentages = get_similarities_as_array(D)
+        for idx, id in enumerate(ids):
+            desc = description[idx]
+            assert desc[&#34;id&#34;] == id
+
+            nn = np.array(I[idx,:])
+            dist = np.array(D[idx,:])
+            sims = np.array(sim_percentages[idx,:])
+            
+            spot = np.argwhere(nn == id)
+            if spot.shape[0] == 0:
+                spot = nn.shape[1] - 1
+            else:
+                spot = spot[0]
+            
+            nn = np.delete(nn, obj=spot)
+            dist = np.delete(dist, obj=spot)
+            sims = np.delete(sims, obj=spot)
+            
+            desc[&#34;neighbour_ids&#34;] = nn.tolist()
+            desc[&#34;distances&#34;] = dist.tolist()
+            desc[&#34;similarities&#34;]  = sims.tolist()
+            
+            res = db.get_instance().ids_to_various(nn, filename=True, cluster_center=True)
+            desc[&#34;neighbour_filenames&#34;] = res[&#34;filename&#34;][0]
+            desc[&#34;neighbour_cluster_centers&#34;] = res[&#34;cluster_center&#34;][0]
+        return description
+
+    def get(self, k):
+        &#34;&#34;&#34;
+        Method used for returning the nearest neighbours of all images in database
+        
+        Args:
+            k (Any): amount of nearest neighbours
+        
+        Returns:
+            Any: data for response
+        &#34;&#34;&#34;
+        if db.get_instance().is_db_empty():
+            abort(404, message=&#34;No images in database&#34;)
+        ids = [ item[&#34;id&#34;] for item in db.get_instance().get_all_ids() ]
+        return self.multiple(k, ids)
+
+    def post(self, k):
+        &#34;&#34;&#34;
+        Method used for returning the nearest neighbours of all images specified in body in picture_ids
+        
+        Args:
+            k (Any): amount of nearest neighbours
+        
+        Returns:
+            Any: data for response
+        &#34;&#34;&#34;
+        if db.get_instance().is_db_empty():
+            abort(404, message=&#34;No images in database&#34;)
+        if not &#34;picture_ids&#34; in request.json:
+            abort(404, message=&#34;No picture_ids present in json body!&#34;)
+        ids = [ int(the_id) for the_id in request.json[&#34;picture_ids&#34;] ]
+        abort_if_pictures_dont_exist(ids, db.get_instance())
+        return self.multiple(k, ids)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="server.api.resources.getNn.nn_multiple.verify_k"><code class="name flex">
+<span>def <span class="ident">verify_k</span></span>(<span>k: Any) ‑> Union[Tuple[Literal[True], int, NoneType], Tuple[Literal[False], NoneType, str]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Function is used to check the validity of a given k, k being the amount of nearest neighbours to be calculated</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
+<dd>desired amount of nearest neighbours. Will be casted as an int</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if successful, False if an error occured</dd>
+<dt><code>Union[int, None]</code></dt>
+<dd>int k if successful, None if an error occured</dd>
+<dt><code>Union[None, str]</code></dt>
+<dd>None if successful, str containing error message if an error occured</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_k(k: Any) -&gt; &#39;Union[Tuple[Literal[True], int, None], Tuple[Literal[False], None, str]]&#39;:
+    &#34;&#34;&#34;Function is used to check the validity of a given k, k being the amount of nearest neighbours to be calculated
+
+    Args:
+        k (Any): desired amount of nearest neighbours. Will be casted as an int
+
+    Returns:
+        bool: True if successful, False if an error occured
+        Union[int, None]: int k if successful, None if an error occured
+        Union[None, str]: None if successful, str containing error message if an error occured
+    &#34;&#34;&#34;
+    success, error, k = is_k_valid(k, db.get_instance(), id_from_database=True)
+    if not success:
+        return False, None, error
+    k += 1  # Image(s) exist(s) in database and is found in nearest neighbour search, need to find one more to delete the image itself from neighbours
+    return True, k, None</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="server.api.resources.getNn.nn_multiple.NNOfExistingImages"><code class="flex name class">
+<span>class <span class="ident">NNOfExistingImages</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resource returns the neighbours of multiple (POST) or all (GET) images in the database</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NNOfExistingImages(Resource):
+    &#34;&#34;&#34;Resource returns the neighbours of multiple (POST) or all (GET) images in the database&#34;&#34;&#34;
+
+    def multiple(self, k: Any, ids: &#39;list[int]&#39;) -&gt; &#39;Union[dict, NoReturn]&#39;:
+        &#34;&#34;&#34;Method used by both get and post, finding the nearest neighbours for all ids within &#34;ids&#34;
+
+        Args:
+            k (Any): amount of nearest neighbours
+            ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
+
+        Returns:
+            dict: dict containing the data concerning the nearest neighbour calculation
+        &#34;&#34;&#34;        
+        k_success, k, error = verify_k(k)
+        if not k_success:
+            abort(404, message=error)
+        load_success, images, description, error = load_images_by_id(ids, db.get_instance())
+        if not load_success:
+            abort(500, message=f&#34;{error}\nAn error occured while loading the images&#34;)
+        print(f&#34;Searching with shape {images.shape}&#34;)
+        D, I = iss.get_instance().search(images, k)
+        sim_percentages = get_similarities_as_array(D)
+        for idx, id in enumerate(ids):
+            desc = description[idx]
+            assert desc[&#34;id&#34;] == id
+
+            nn = np.array(I[idx,:])
+            dist = np.array(D[idx,:])
+            sims = np.array(sim_percentages[idx,:])
+            
+            spot = np.argwhere(nn == id)
+            if spot.shape[0] == 0:
+                spot = nn.shape[1] - 1
+            else:
+                spot = spot[0]
+            
+            nn = np.delete(nn, obj=spot)
+            dist = np.delete(dist, obj=spot)
+            sims = np.delete(sims, obj=spot)
+            
+            desc[&#34;neighbour_ids&#34;] = nn.tolist()
+            desc[&#34;distances&#34;] = dist.tolist()
+            desc[&#34;similarities&#34;]  = sims.tolist()
+            
+            res = db.get_instance().ids_to_various(nn, filename=True, cluster_center=True)
+            desc[&#34;neighbour_filenames&#34;] = res[&#34;filename&#34;][0]
+            desc[&#34;neighbour_cluster_centers&#34;] = res[&#34;cluster_center&#34;][0]
+        return description
+
+    def get(self, k):
+        &#34;&#34;&#34;
+        Method used for returning the nearest neighbours of all images in database
+        
+        Args:
+            k (Any): amount of nearest neighbours
+        
+        Returns:
+            Any: data for response
+        &#34;&#34;&#34;
+        if db.get_instance().is_db_empty():
+            abort(404, message=&#34;No images in database&#34;)
+        ids = [ item[&#34;id&#34;] for item in db.get_instance().get_all_ids() ]
+        return self.multiple(k, ids)
+
+    def post(self, k):
+        &#34;&#34;&#34;
+        Method used for returning the nearest neighbours of all images specified in body in picture_ids
+        
+        Args:
+            k (Any): amount of nearest neighbours
+        
+        Returns:
+            Any: data for response
+        &#34;&#34;&#34;
+        if db.get_instance().is_db_empty():
+            abort(404, message=&#34;No images in database&#34;)
+        if not &#34;picture_ids&#34; in request.json:
+            abort(404, message=&#34;No picture_ids present in json body!&#34;)
+        ids = [ int(the_id) for the_id in request.json[&#34;picture_ids&#34;] ]
+        abort_if_pictures_dont_exist(ids, db.get_instance())
+        return self.multiple(k, ids)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>flask_restful.Resource</li>
+<li>flask.views.MethodView</li>
+<li>flask.views.View</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="server.api.resources.getNn.nn_multiple.NNOfExistingImages.methods"><code class="name">var <span class="ident">methods</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="server.api.resources.getNn.nn_multiple.NNOfExistingImages.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, k)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method used for returning the nearest neighbours of all images in database</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
+<dd>amount of nearest neighbours</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>data for response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, k):
+    &#34;&#34;&#34;
+    Method used for returning the nearest neighbours of all images in database
+    
+    Args:
+        k (Any): amount of nearest neighbours
+    
+    Returns:
+        Any: data for response
+    &#34;&#34;&#34;
+    if db.get_instance().is_db_empty():
+        abort(404, message=&#34;No images in database&#34;)
+    ids = [ item[&#34;id&#34;] for item in db.get_instance().get_all_ids() ]
+    return self.multiple(k, ids)</code></pre>
+</details>
+</dd>
+<dt id="server.api.resources.getNn.nn_multiple.NNOfExistingImages.multiple"><code class="name flex">
+<span>def <span class="ident">multiple</span></span>(<span>self, k: Any, ids: list[int]) ‑> Union[dict, NoReturn]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method used by both get and post, finding the nearest neighbours for all ids within "ids"</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
+<dd>amount of nearest neighbours</dd>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>list of ids from images, whose nearest neighbours shall be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>dict containing the data concerning the nearest neighbour calculation</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multiple(self, k: Any, ids: &#39;list[int]&#39;) -&gt; &#39;Union[dict, NoReturn]&#39;:
+    &#34;&#34;&#34;Method used by both get and post, finding the nearest neighbours for all ids within &#34;ids&#34;
+
+    Args:
+        k (Any): amount of nearest neighbours
+        ids (list[int]): list of ids from images, whose nearest neighbours shall be returned
+
+    Returns:
+        dict: dict containing the data concerning the nearest neighbour calculation
+    &#34;&#34;&#34;        
+    k_success, k, error = verify_k(k)
+    if not k_success:
+        abort(404, message=error)
+    load_success, images, description, error = load_images_by_id(ids, db.get_instance())
+    if not load_success:
+        abort(500, message=f&#34;{error}\nAn error occured while loading the images&#34;)
+    print(f&#34;Searching with shape {images.shape}&#34;)
+    D, I = iss.get_instance().search(images, k)
+    sim_percentages = get_similarities_as_array(D)
+    for idx, id in enumerate(ids):
+        desc = description[idx]
+        assert desc[&#34;id&#34;] == id
+
+        nn = np.array(I[idx,:])
+        dist = np.array(D[idx,:])
+        sims = np.array(sim_percentages[idx,:])
+        
+        spot = np.argwhere(nn == id)
+        if spot.shape[0] == 0:
+            spot = nn.shape[1] - 1
+        else:
+            spot = spot[0]
+        
+        nn = np.delete(nn, obj=spot)
+        dist = np.delete(dist, obj=spot)
+        sims = np.delete(sims, obj=spot)
+        
+        desc[&#34;neighbour_ids&#34;] = nn.tolist()
+        desc[&#34;distances&#34;] = dist.tolist()
+        desc[&#34;similarities&#34;]  = sims.tolist()
+        
+        res = db.get_instance().ids_to_various(nn, filename=True, cluster_center=True)
+        desc[&#34;neighbour_filenames&#34;] = res[&#34;filename&#34;][0]
+        desc[&#34;neighbour_cluster_centers&#34;] = res[&#34;cluster_center&#34;][0]
+    return description</code></pre>
+</details>
+</dd>
+<dt id="server.api.resources.getNn.nn_multiple.NNOfExistingImages.post"><code class="name flex">
+<span>def <span class="ident">post</span></span>(<span>self, k)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method used for returning the nearest neighbours of all images specified in body in picture_ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>k</code></strong> :&ensp;<code>Any</code></dt>
+<dd>amount of nearest neighbours</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>data for response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post(self, k):
+    &#34;&#34;&#34;
+    Method used for returning the nearest neighbours of all images specified in body in picture_ids
+    
+    Args:
+        k (Any): amount of nearest neighbours
+    
+    Returns:
+        Any: data for response
+    &#34;&#34;&#34;
+    if db.get_instance().is_db_empty():
+        abort(404, message=&#34;No images in database&#34;)
+    if not &#34;picture_ids&#34; in request.json:
+        abort(404, message=&#34;No picture_ids present in json body!&#34;)
+    ids = [ int(the_id) for the_id in request.json[&#34;picture_ids&#34;] ]
+    abort_if_pictures_dont_exist(ids, db.get_instance())
+    return self.multiple(k, ids)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="server.api.resources.getNn" href="index.html">server.api.resources.getNn</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="server.api.resources.getNn.nn_multiple.verify_k" href="#server.api.resources.getNn.nn_multiple.verify_k">verify_k</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="server.api.resources.getNn.nn_multiple.NNOfExistingImages" href="#server.api.resources.getNn.nn_multiple.NNOfExistingImages">NNOfExistingImages</a></code></h4>
+<ul class="">
+<li><code><a title="server.api.resources.getNn.nn_multiple.NNOfExistingImages.get" href="#server.api.resources.getNn.nn_multiple.NNOfExistingImages.get">get</a></code></li>
+<li><code><a title="server.api.resources.getNn.nn_multiple.NNOfExistingImages.methods" href="#server.api.resources.getNn.nn_multiple.NNOfExistingImages.methods">methods</a></code></li>
+<li><code><a title="server.api.resources.getNn.nn_multiple.NNOfExistingImages.multiple" href="#server.api.resources.getNn.nn_multiple.NNOfExistingImages.multiple">multiple</a></code></li>
+<li><code><a title="server.api.resources.getNn.nn_multiple.NNOfExistingImages.post" href="#server.api.resources.getNn.nn_multiple.NNOfExistingImages.post">post</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

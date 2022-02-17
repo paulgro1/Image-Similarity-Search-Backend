@@ -4,7 +4,7 @@
 
 - [MongoDB](https://www.mongodb.com/try/download/community)
 - [Anaconda](https://www.anaconda.com/)
-- Code Editor wie [VSCode](https://code.visualstudio.com/)
+- Code Editor wie [VSCode](https://code.visualstudio.com/) ist empfohlen, Anaconda Prompt reicht jedoch aus
 
 ### (2) Klonen des Backend-Repo
 
@@ -44,14 +44,30 @@ $ conda install -c conda-forge flask-restful
 $ conda install -c anaconda pymongo
 $ conda install -c conda-forge python-dotenv
 $ conda install -c conda-forge pillow
-$ conda install -c conda-forge opentsne
+$ conda install -c conda-forge opentsne>=0.4
+$ conda install -c conda-forge m2crypto
+$ conda install -c anaconda pandas
+$ conda install -c anaconda make
+$ conda install -c conda-forge pdoc3
 $ pip install flask-swagger-ui
 ```
+
+Wurde die Umgebung schon erstellt und soll nur nach Änderungen in environment.yml aktualisiert werden, geht dies (im Ordner `server`) mit:
+
+``` shell
+$ conda env update -f environment.yml --prune
+```  
+
+oder (in Windows):  
+
+``` shell
+$ make update_env
+```  
 
 ### (4) .env Datei
 
 Nun kann der Ordner `server` im Code-Editor geöffnet werden.
-In diesem Ordner muss die Datei `.env` erstellt werden. In ihr werden die Umgebungsvariablen gesetzt.  
+In diesem Ordner muss die Datei `.env` erstellt werden (falls nicht schon vorhanden, sonst weiter bei [Schritt 5](#5-einbinden-eines-datasets)). In ihr werden die Umgebungsvariablen gesetzt.  
 Alle Variablen, die gesetzt werden müssen, mit Beispielwerten:
 
 ``` txt
@@ -73,18 +89,22 @@ THUMBNAIL_HEIGHT=128
 # Setting for PCA, which reduces the original dimensions to this value for coordinate calculation with openTSNE 
 # Needs to be less than or equal to the number of samples in DATA_FOLDER!
 REDUCE_IMAGE_TO_DIMS=50
+
+# Default amount of centroids for k-means clustering
+NUM_CENTROIDS=10
+
+# Secret key for flask app, just use a random string (replace example)
+FLASK_SECRET_KEY=r@nD0msTR1ng
 ```
 
 ### (5) Einbinden eines Datasets
 
 Falls noch nicht vorhanden, muss der `DATA_FOLDER` (der Name ist in der `.env`-Datei spezifiziert) in dem `server`-Ordner erstellt werden.
-In den `DATA_FOLDER` kommen nun alle Bilder des gewünschten Datensatzes. Diese Bilder sollten alle die gleichen Dimensionen haben, sonst wird die Ausführung des Programms unterbrochen.  
->**Wichtig**: Da das Frontend bisher nur mit Bildern der Größe `336px x 448px` umgehen kann, wird der Datensatz empfohlen, welcher [hier](https://drive.google.com/drive/folders/1QwBckchigBSbSSRsgJNlVhfveDevpvmz?usp=sharing)
-heruntergeladen werden kann. Dafür müssen die Bilder aus dem Ordner "Faces Dataset" in den `DATA_FOLDER` eingebunden werden. Der Ordner "Thumbnails" im Drive kann ignoriert werden.
+In den `DATA_FOLDER` kommen nun alle Bilder des gewünschten Datensatzes. Diese Bilder müssen alle die gleichen Dimensionen haben, sonst wird die Ausführung des Programms unterbrochen.  
 
 ### (6) Einstellen des Interpreters und Starten des Servers
 
-Im `server`-Ordner befindet sich die Datei `run.py`, die nun geöffnet werden muss. Nur mit dieser Datei sollte der Server gestartet werden.  
+Im `server`-Ordner befindet sich die Datei `run.py`, die nun geöffnet werden muss. Nur mit dieser Datei kann der Server gestartet werden.  
 Falls dies noch nicht automatisch geschehen ist, muss das vorhin erstellte anaconda environment als Interpreter für die Datei ausgewählt werden.  
 In VSCode geht dies über `View > Command Palette > Python: Select Interpreter`. Danach aus den angezeigten Interpretern auswählen:  
 
@@ -106,21 +126,27 @@ Nun kann die Datei `run.py` ausgeführt werden. Dafür gibt es verschiedene Wege
 
     ``` shell
     # Windows
-    python run.py
+    $ python run.py
 
     # Mac
-    python3 run.py
+    $ python3 run.py
     ```
 
-- In VSCode: `Run > Run Without Debugging` in `run.py`
+- In VSCode: `Run > Run Without Debugging` in `run.py`  
+
+- Mit dem Makefile in dem Ordner `server` (in Windows):
+
+    ``` shell
+    $ make run
+    ```  
 
 ### (7) Funktionen testen
 
 Mit der Route `{BACKEND_HOST}:{BACKEND_PORT}/swagger` (für die richtigen Werte bitte [diesen Absatz](#4-env-datei) referenzieren) kann auf die Dokumentation von allen 
 verfügbaren Routen zugeriffen werden. Dies ist möglich durch das Modul [Swagger](https://pypi.org/project/flask-swagger-ui/). Auf dieser Dokumentationsroute können ebenfalls
 alle Routen getestet werden.  
-Außerdem können mit der Datei `test.http` und der Extension [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) für VSCode
-die Funktionen des Backends auch getestet werden.
+Außerdem gibt es eine Dokumentation für alle Packages, Module, Klassen und Funktionen durch [pdoc3](https://pdoc3.github.io/pdoc/). Die Startseite ist [hier](./docs/index.html).  
+Neu erstellt werden kann die Dokumentation durch das Ausführen der Datei `doc.py` (für alle Unterordner von `server`).  
 
 ### (8) Troubleshooting
 
@@ -139,6 +165,18 @@ $ conda env create -f environment.yml
 
 # Umgebung wieder aktivieren
 $ conda activate iss-backend
+```  
+
+oder:  
+
+``` shell
+$ conda env update -f environment.yml --prune
+```  
+
+oder (in Windows):  
+
+``` shell
+$ make update_env
 ```  
 
 Außerdem kann es zu Änderungen in der `.env` Datei kommen. In diesem Fall würde das Beispiel in [diesem Absatz](#4-env-datei) aktualisiert werden.

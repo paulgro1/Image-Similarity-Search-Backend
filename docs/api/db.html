@@ -1,0 +1,2540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>server.api.db API documentation</title>
+<meta name="description" content="Module containing Database class, a wrapper for a pymongo instance" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>server.api.db</code></h1>
+</header>
+<section id="section-intro">
+<p>Module containing Database class, a wrapper for a pymongo instance</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Module containing Database class, a wrapper for a pymongo instance&#34;&#34;&#34;
+from gridfs import GridFS
+from io import BytesIO
+import numpy as np
+from os import path, environ
+from pandas import DataFrame
+from PIL import Image
+from pymongo import MongoClient, UpdateOne, ASCENDING
+from typing import Any, Union, Tuple, Literal
+
+from api.helper import allowed_file
+
+if __name__ == &#34;__main__&#34;:
+    exit(&#34;Start via run.py!&#34;)
+
+# The instance of Database created on startup
+_instance = None
+
+
+class Database(object):
+    &#34;&#34;&#34;Class wrapping the pymongo MongoDB connection, supplying convenience methods for easier access&#34;&#34;&#34;
+    
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Initailize blank object, establish connection to MongoDB database and setup GridFS. Set object as _instance of module&#34;&#34;&#34;
+        super().__init__()
+        print(&#34;Creating Database&#34;)
+        # Client
+        self._client = MongoClient(environ.get(&#34;DATABASE_CLIENT&#34;))
+        # Database
+        self._db = self._client[environ.get(&#34;DATABASE_NAME&#34;)]
+        
+        # GridFS for image storage
+        self._gridfs = GridFS(self._db)
+
+        # Projections
+        self.id_projection = { &#34;id&#34;: True }
+        self.fullsize_projection = { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True }
+        self.thumbnail_projection = { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;thumbnail&#34;: True }
+        self.possible_search_parameters = [&#34;_id&#34;, &#34;id&#34;, &#34;filename&#34;, &#34;path&#34;, &#34;thumnbnail&#34;, &#34;x&#34;, &#34;y&#34;, &#34;cluster_center&#34;]
+
+        # Casting for each column
+        self.type_reg = {
+            &#34;id&#34;: int,
+            &#34;filename&#34;: str,
+            &#34;path&#34;: str,
+            &#34;x&#34;: float,
+            &#34;y&#34;: float,
+            &#34;thumbnail&#34;: lambda identity: identity,
+            &#34;cluster_center&#34;: int
+        }
+
+        # Singletonesque pattern
+        global _instance
+        if _instance is None:
+            _instance = self
+
+    def reset_col(self, col_name: str) -&gt; None:
+        &#34;&#34;&#34;Reset, aka drop a MongoDB collection
+
+        Args:
+            col_name (str): String specifiying which collection to drip
+        &#34;&#34;&#34;
+        col = self._db[col_name]
+        if col:
+            col.drop()
+            col.drop_indexes()
+
+    def count_documents_in_collection(self, filter: dict={}) -&gt; int:
+        &#34;&#34;&#34;Count the documents in the MongoDB images collection
+
+        Args:
+            filter (dict, optional): args to filter the counted elements. Defaults to {}.
+
+        Returns:
+            int: amount of documents in the image collection
+        &#34;&#34;&#34;
+        if self.col:
+            return self.col.count_documents(filter)
+        else:
+            return -1
+
+    def is_db_empty(self) -&gt; bool:
+        &#34;&#34;&#34;Checks if the MongoDB image collection is empty
+
+        Returns:
+            bool: True if empty, False if at least one document is in collection
+        &#34;&#34;&#34;
+        return self.count_documents_in_collection() &lt;= 0
+
+    def initialize(self, flat_filenames: np.ndarray, coordinates: np.ndarray, labels: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;Call this method to initialize the blank object created on load via get_instance().
+        Fills MongoDB image collection and generates a thumbnail for each image.
+
+        Args:
+            flat_filenames (np.ndarray): the filenames of the images in the dataset
+            coordinates (np.ndarray): calculated 2D coordinates of the images in the dataset
+            labels (np.ndarray): generated labels aka corresponding cluster centers of the images in the dataset
+        &#34;&#34;&#34;        
+        # Concatenate parameters for accessibility
+        data = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
+        
+        print(&#34;Initializing Database&#34;)
+        # Reset all collections
+        self.reset_col(&#34;images&#34;)
+        self.reset_col(&#34;fs.files&#34;)
+        self.reset_col(&#34;fs.chunks&#34;)
+        self.reset_col(&#34;sessions&#34;)
+        
+        # Get maximum size of thumbnails
+        thumbnail_width = environ.get(&#34;THUMBNAIL_WIDTH&#34;)
+        thumbnail_height = environ.get(&#34;THUMBNAIL_HEIGHT&#34;)
+        if thumbnail_width is None or thumbnail_height is None:
+            exit(&#34;Please update your .env file! Missing thumbnail sizes&#34;)
+        thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
+        
+        # Iterate over all rows of data, inserting values for valid images into database
+        actual_thumbnail_size = None
+        images = []
+        base_path = environ.get(&#34;DATA_PATH&#34;)
+        for idx, item in enumerate(data):
+            f = path.join(base_path, item[0])
+            t_id = None
+            filename = path.split(f)[-1]
+            if allowed_file(filename):
+                # Generate thumbnail
+                with Image.open(f) as img:
+                    img.thumbnail(thumbnail_size)
+                    if actual_thumbnail_size is None:
+                        actual_thumbnail_size = img.size
+                    with BytesIO() as output:
+                        img.save(output, format=img.format)
+                        content = output.getvalue()
+                    only_filename, extension = path.splitext(filename)
+                    t_id = self._gridfs.put(
+                        content, 
+                        content_type=Image.MIME[img.format], 
+                        filename=f&#34;{only_filename}_thumbnail{extension}&#34;, 
+                        metadata=&#34;thumbnail&#34;, 
+                        id=idx
+                        )
+
+                # Setup document to insert
+                x = item[1]
+                y = item[2]
+                cluster_center = item[3]
+                image = {
+                    &#34;id&#34;: idx,
+                    &#34;filename&#34;: filename,
+                    &#34;path&#34;: f,
+                    &#34;thumbnail&#34;: t_id,
+                    &#34;x&#34;: x,
+                    &#34;y&#34;: y,
+                    &#34;cluster_center&#34;: cluster_center
+                }
+                images.append(image)
+
+        # Insert into images collection
+        self.col = self._db[&#34;images&#34;]
+        self.col.insert_many(images)
+        self.col.create_index([(&#34;id&#34;, ASCENDING)])
+
+        self.next_id = images[-1][&#34;id&#34;] + 1
+        environ[&#34;ACTUAL_THUMBNAIL_WIDTH&#34;] = str(actual_thumbnail_size[0])
+        environ[&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;] = str(actual_thumbnail_size[1])
+        print(&#34;Database initialized&#34;)
+
+    def is_session_key_in_db(self, key: bytes) -&gt; bool:
+        &#34;&#34;&#34;Check if api session key is already present in database
+
+        Args:
+            key (bytes): key to assess
+
+        Returns:
+            bool: True if already present, False if not in database
+        &#34;&#34;&#34;
+        if key is None:
+            return False
+        result = self._db[&#34;sessions&#34;].find_one({&#34;key&#34;: key})
+        return result is not None
+
+    def insert_session_key(self, key: bytes) -&gt; None:
+        &#34;&#34;&#34;Insert a new api session key into the database, setting next id (value) to the next valid id (self.next_id)
+
+        Args:
+            key (bytes): key to insert
+        &#34;&#34;&#34;
+        self._db[&#34;sessions&#34;].insert_one({ &#34;key&#34;: key, &#34;value&#34;: self.next_id })
+
+    def get_next_ids(self, key: bytes, amount: int=1) -&gt; &#39;Union[list[int], None]&#39;:
+        &#34;&#34;&#34;Get the next consecutive ids after the last valid id for the given key
+
+        Args:
+            key (bytes): key for which the next ids shall be returned
+            amount (int, optional): amount of new ids to be returned. Defaults to 1.
+
+        Returns:
+            list[int]: New ids
+        &#34;&#34;&#34;
+        if amount &lt; 1:
+            return None
+        if key is not None:
+            current_next_value = self._db[&#34;sessions&#34;].find_one_and_update(
+                { &#34;key&#34;: key }, { &#34;$inc&#34;: { &#34;value&#34;: amount } }
+            )
+            if current_next_value is not None and &#34;value&#34; in current_next_value:
+                current_next_value = int(current_next_value[&#34;value&#34;])
+            else:
+                current_next_value = self.next_id
+        else:
+            current_next_value = self.next_id
+        if amount == 1:
+            return [current_next_value]
+        else:
+            return list(range(current_next_value, current_next_value + amount))
+    
+    def get_one(self, filter: dict, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one document from the image collection
+
+        Args:
+            filter (dict): dict to filter documents by
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            Any: document
+        &#34;&#34;&#34;        
+        if filter == None:
+            return None
+        return self.col.find_one(filter, projection=projection)
+
+    def get_one_by_id(self, id: int, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one document from the image collection specified by the id
+
+        Args:
+            id (int): id of the image
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            Any: document
+        &#34;&#34;&#34;
+        if id != None and not self.is_db_empty():
+            return self.get_one({&#34;id&#34;: id}, projection)
+        return None
+
+    def is_id_in_database(self, id: int) -&gt; bool:
+        &#34;&#34;&#34;Checks if id is present in image collection
+
+        Args:
+            id (int): id of image to assess
+
+        Returns:
+            bool: True if present, False if not in database
+        &#34;&#34;&#34;
+        return not self.get_one_by_id(id, self.id_projection) is None
+        
+    def get_one_fullsize_by_id(self, id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one fulllsize image specified by given id
+
+        Args:
+            id (int): id of image to be found
+
+        Returns:
+            Any: the found document
+        &#34;&#34;&#34;
+        return self.get_one_by_id(id, self.fullsize_projection)
+
+    def get_multiple(self, filter: dict={}, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+        &#34;&#34;&#34;Returns multiple documents specified by parameters
+
+        Args:
+            filter (dict): dict to filter documents by
+            projection (dict): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+        Returns:
+            list[Any]: list of found documents
+        &#34;&#34;&#34;
+        as_list = list(self.col.find(filter=filter, projection=projection))
+        for d in as_list:
+            del d[&#34;_id&#34;]
+        return as_list
+
+    def get_all_coordinates_as_array(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Returns all coordinates in image collection
+
+        Returns:
+            np.ndarray: All coordinates as array
+        &#34;&#34;&#34;
+        coords = self.col.find({}, { &#34;x&#34;: True, &#34;y&#34;: True })
+        lines = []
+        for line in coords:
+            lines.append([line[&#34;x&#34;], line[&#34;y&#34;]])
+        return np.array(lines, dtype=&#34;float64&#34;)
+
+    def get_all(self, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+        &#34;&#34;&#34;Return all documents with a given projection
+
+        Args:
+            projection (dict, optional): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+        Returns:
+            list[Any]: list of found documents
+        &#34;&#34;&#34;
+        return self.get_multiple({}, projection)
+
+    def get_all_ids(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all ids in image collection
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            return self.get_all(self.id_projection)
+        return None
+
+    def get_all_fullsize(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all fullsize images in image collection
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            return self.get_all(self.fullsize_projection)
+        return None
+    
+    def get_multiple_by_id(self, ids: &#39;list[int]&#39;, projection: dict) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return multiple documents specified by ids
+
+        Args:
+            ids (list[int]): ids of images in image collection to be returned
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if ids != None and len(ids) != 0 and not self.is_db_empty():
+            filter = {&#34;id&#34;: {&#34;$in&#34; : ids}}
+            return self.get_multiple(filter, projection)
+        return None
+
+    def are_all_ids_in_database(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[Tuple[Literal[False], str], Tuple[Literal[True], None]]&#39;:
+        &#34;&#34;&#34;Checks if all given ids are in image collection
+
+        Args:
+            ids (list[int]): ids of images in image collection to be assessed
+
+        Returns:
+            bool: True if all are in databse, False if one or more are not in database 
+            Union[str, None]: None if bool is True, error message if bool is False
+        &#34;&#34;&#34;
+        if ids is None:
+            return False, &#34;no ids given!&#34;
+        if not isinstance(ids, list):
+            ids = [ids]
+        result = self.get_multiple_by_id(ids, { &#34;id&#34;: True })
+        result_list = list(result)
+        success = len(result_list) == len(ids)
+        if success:
+            return True, None
+        else:
+            result_list = [ int(x[&#34;id&#34;]) for x in result_list ]
+            # See https://stackoverflow.com/questions/3462143/get-difference-between-two-lists
+            not_present = list(set(ids) - set(result_list))
+            return False, not_present
+
+    def get_multiple_fullsize_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return multiple fullsize images specified by ids
+
+        Args:
+            ids (list[int]): ids of images in image collection to be returned
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        return self.get_multiple_by_id(ids, self.fullsize_projection)
+
+    def get_thumbnail_fs_id(self, picture_id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Returns the GridFS id for a given picture id, indicating which thumbnail to search for
+
+        Args:
+            picture_id (int): Id of document to be found in image collection, whose thumbnail shall be returned
+
+        Returns:
+            Any: GridFS id of thumbnail
+        &#34;&#34;&#34;
+        return self.get_one_by_id(picture_id, { &#34;thumbnail&#34;: True })[&#34;thumbnail&#34;]
+
+    def get_one_thumbnail_by_id(self, entry_id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one thumbnail specified by entry_id
+
+        Args:
+            entry_id (int): id of image whose thumbnail shall be returned
+
+        Returns:
+            Any: thumbnail returned by GridFS
+        &#34;&#34;&#34;
+        id = self.get_thumbnail_fs_id(entry_id)
+        return self._gridfs.get(id)
+        
+    def get_all_thumbnails(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all thumbnails present in GridFS collection
+
+        Returns:
+            list[Any]: all thumbnails present
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            result = self._gridfs.find({ &#34;metadata&#34; : &#34;thumbnail&#34; })
+            if not result is None:
+                return [ x for x in result ]    
+            return None 
+        return None
+
+    def get_multiple_thumbnails_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return the thumbnails from the GridFS collection specified by ids
+
+        Args:
+            ids (list[int]): ids of images in GridFS collection to be returned
+
+        Returns:
+            list[Any]: list of thumbnails found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            fs_ids = self.get_multiple_by_id(ids, { &#34;thumbnail&#34;: True })
+            fs_ids = [ x[&#34;thumbnail&#34;] for x in fs_ids ]
+            result = self._gridfs.find({ &#34;_id&#34;: {&#34;$in&#34; : fs_ids}, &#34;metadata&#34;: &#34;thumbnail&#34; })
+            if not result is None:
+                return [ x for x in result ]
+
+    def get_coordinates(self, id: int) -&gt; &#39;Union[Tuple[float, float], None]&#39;:
+        &#34;&#34;&#34;Return the coordinates of the images specified by id
+
+        Args:
+            id (int): id of the image in image collection, whose coordinates shall be returned
+
+        Returns:
+            [float, float]: tuple of x and y, the coordinates of the image
+        &#34;&#34;&#34;
+        result = self.get_one_by_id(id, { &#34;x&#34;: True, &#34;y&#34;: True})
+        if not result is None:
+            x = result[&#34;x&#34;]
+            y = result[&#34;y&#34;]
+            return (x, y)
+        return None
+
+    def get_metadata(self, id: int) -&gt; dict:
+        &#34;&#34;&#34;Return the metadata of an image in the images collection
+
+        Args:
+            id (int): id of the image
+
+        Returns:
+            dict: metadata of the image specified by id
+        &#34;&#34;&#34;
+        result = self.get_one_by_id(id, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+        if not result is None:
+            return {
+                &#34;id&#34;: result[&#34;id&#34;],
+                &#34;filename&#34;: result[&#34;filename&#34;],
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },    
+                &#34;position&#34;: (result[&#34;x&#34;], result[&#34;y&#34;]),
+                &#34;cluster_center&#34;: result[&#34;cluster_center&#34;]
+            }
+        return None
+    
+    def get_multiple_metadata(self, ids: &#39;list[int]&#39;) -&gt; &#39;list[dict]&#39;:
+        &#34;&#34;&#34;Return the metadata of the images specified by ids
+
+        Args:
+            id (list[int]): ids for which the metadata shall be found
+
+        Returns:
+            list[dict]: list of dicts containing the metadata of the specified images
+        &#34;&#34;&#34;
+        result = self.get_multiple_by_id(ids, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+        if not result is None:
+            return [ { 
+                &#34;id&#34;: x[&#34;id&#34;], 
+                &#34;filename&#34;: x[&#34;filename&#34;], 
+                &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },
+                &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+            } for x in result ]
+        return None
+
+    def get_all_metadata(self) -&gt; &#39;list[dict]&#39;:
+        &#34;&#34;&#34;Return the metadata all images in the image collection
+
+        Returns:
+            list[dict]: list of dicts containing the metadata of all images
+        &#34;&#34;&#34;
+        result = self.get_all({ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True })
+        if not result is None:
+            return [ { 
+                &#34;id&#34;: x[&#34;id&#34;], 
+                &#34;filename&#34;: x[&#34;filename&#34;], 
+                &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },
+                &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+            } for x in result ]
+        return None
+
+    def get_one_filename(self, id: int) -&gt; str:
+        &#34;&#34;&#34;Return the filename of one image specified by id
+
+        Args:
+            id (int): id of image to be found
+
+        Returns:
+            str: filename of the image
+        &#34;&#34;&#34;
+        return self.get_one_by_id(id, { &#34;filename&#34;: True })[&#34;filename&#34;]
+
+    def ids_to_various(self, ids: &#39;list[int]&#39;, **kwargs: &#39;dict[str, bool]&#39;) -&gt; &#39;Union[dict[str, list[Any]], None]&#39;:
+        &#34;&#34;&#34;Flexible method used to find images specified by id and arguments specified in kwargs
+
+        Args:
+            ids (list[int]): ids of images to be found
+            **kwargs (dict): should contain all columns of the image collection to be returned, specify by &lt;col&gt;=True
+
+        Returns:
+            dict[str, list[Any]]: dict containing the columns as keys and results as values
+        &#34;&#34;&#34;
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        values_correct = all(key in self.possible_search_parameters for key in kwargs.keys())
+        if not values_correct:
+            return None
+        query = { key: True for key in kwargs.keys() }
+        query[&#34;id&#34;] = True
+        results = { key: [] for key in query.keys() }
+        for row in ids:
+            row = row.tolist()
+            df = DataFrame(list(self.get_multiple_by_id(row, query)))
+            lists = { key: [] for key in query.keys() }
+            for idx in row:
+                item = df.loc[df[&#34;id&#34;] == idx].to_dict()
+                for key, val in item.items():
+                    lists[key].append(
+                        self.type_reg[key](
+                            list(
+                                val.values()
+                            )[0]
+                        )
+                    )
+            for key in query.keys():
+                results[key].append(lists[key])
+        return results
+
+    def ids_to_filenames(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[str], None]&#39;:
+        &#34;&#34;&#34;Return all filenames specified by ids
+
+        Args:
+            ids (list[int]): ids whose filenames shall be found
+
+        Returns:
+            list[str]: list of filenames
+        &#34;&#34;&#34;
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        filenames = []
+        for row in ids:
+            c_filenames = []
+            for item in row:
+                c_filenames.append(self.get_one_filename(int(item)))
+            filenames.append(c_filenames)
+        return filenames
+
+    def update_labels(self, labels: &#39;list[int]&#39;) -&gt; None:
+        &#34;&#34;&#34;Reassign values to cluster_centers 
+
+        Args:
+            labels (list[int]): cluster_centers
+        &#34;&#34;&#34;
+        updateOps = [
+            UpdateOne({ &#34;id&#34;: idx }, { &#34;$set&#34;: { &#34;cluster_center&#34;: int(item) }}) for idx, item in enumerate(labels)
+        ]
+        self.col.bulk_write(updateOps)
+
+    def get_one_label(self, id: int) -&gt; Any:
+        &#34;&#34;&#34;Return the label of image specified by id
+
+        Args:
+            id (int): id of the image
+
+        Returns:
+            Any: cluster center
+        &#34;&#34;&#34;
+        return self.get_metadata(id)[&#34;cluster_center&#34;]
+
+def get_instance() -&gt; Database:
+    &#34;&#34;&#34;Return the current and preferably only instance of Database. If possible use this function to access the class methods of this class.
+
+    Returns:
+        Database: current instance of Database
+    &#34;&#34;&#34;
+    return _instance
+
+# Create the current and preferably only instance of Database
+_instance = Database()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="server.api.db.get_instance"><code class="name flex">
+<span>def <span class="ident">get_instance</span></span>(<span>) ‑> <a title="server.api.db.Database" href="#server.api.db.Database">Database</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the current and preferably only instance of Database. If possible use this function to access the class methods of this class.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="server.api.db.Database" href="#server.api.db.Database">Database</a></code></dt>
+<dd>current instance of Database</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_instance() -&gt; Database:
+    &#34;&#34;&#34;Return the current and preferably only instance of Database. If possible use this function to access the class methods of this class.
+
+    Returns:
+        Database: current instance of Database
+    &#34;&#34;&#34;
+    return _instance</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="server.api.db.Database"><code class="flex name class">
+<span>class <span class="ident">Database</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class wrapping the pymongo MongoDB connection, supplying convenience methods for easier access</p>
+<p>Initailize blank object, establish connection to MongoDB database and setup GridFS. Set object as _instance of module</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Database(object):
+    &#34;&#34;&#34;Class wrapping the pymongo MongoDB connection, supplying convenience methods for easier access&#34;&#34;&#34;
+    
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Initailize blank object, establish connection to MongoDB database and setup GridFS. Set object as _instance of module&#34;&#34;&#34;
+        super().__init__()
+        print(&#34;Creating Database&#34;)
+        # Client
+        self._client = MongoClient(environ.get(&#34;DATABASE_CLIENT&#34;))
+        # Database
+        self._db = self._client[environ.get(&#34;DATABASE_NAME&#34;)]
+        
+        # GridFS for image storage
+        self._gridfs = GridFS(self._db)
+
+        # Projections
+        self.id_projection = { &#34;id&#34;: True }
+        self.fullsize_projection = { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True }
+        self.thumbnail_projection = { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;thumbnail&#34;: True }
+        self.possible_search_parameters = [&#34;_id&#34;, &#34;id&#34;, &#34;filename&#34;, &#34;path&#34;, &#34;thumnbnail&#34;, &#34;x&#34;, &#34;y&#34;, &#34;cluster_center&#34;]
+
+        # Casting for each column
+        self.type_reg = {
+            &#34;id&#34;: int,
+            &#34;filename&#34;: str,
+            &#34;path&#34;: str,
+            &#34;x&#34;: float,
+            &#34;y&#34;: float,
+            &#34;thumbnail&#34;: lambda identity: identity,
+            &#34;cluster_center&#34;: int
+        }
+
+        # Singletonesque pattern
+        global _instance
+        if _instance is None:
+            _instance = self
+
+    def reset_col(self, col_name: str) -&gt; None:
+        &#34;&#34;&#34;Reset, aka drop a MongoDB collection
+
+        Args:
+            col_name (str): String specifiying which collection to drip
+        &#34;&#34;&#34;
+        col = self._db[col_name]
+        if col:
+            col.drop()
+            col.drop_indexes()
+
+    def count_documents_in_collection(self, filter: dict={}) -&gt; int:
+        &#34;&#34;&#34;Count the documents in the MongoDB images collection
+
+        Args:
+            filter (dict, optional): args to filter the counted elements. Defaults to {}.
+
+        Returns:
+            int: amount of documents in the image collection
+        &#34;&#34;&#34;
+        if self.col:
+            return self.col.count_documents(filter)
+        else:
+            return -1
+
+    def is_db_empty(self) -&gt; bool:
+        &#34;&#34;&#34;Checks if the MongoDB image collection is empty
+
+        Returns:
+            bool: True if empty, False if at least one document is in collection
+        &#34;&#34;&#34;
+        return self.count_documents_in_collection() &lt;= 0
+
+    def initialize(self, flat_filenames: np.ndarray, coordinates: np.ndarray, labels: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;Call this method to initialize the blank object created on load via get_instance().
+        Fills MongoDB image collection and generates a thumbnail for each image.
+
+        Args:
+            flat_filenames (np.ndarray): the filenames of the images in the dataset
+            coordinates (np.ndarray): calculated 2D coordinates of the images in the dataset
+            labels (np.ndarray): generated labels aka corresponding cluster centers of the images in the dataset
+        &#34;&#34;&#34;        
+        # Concatenate parameters for accessibility
+        data = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
+        
+        print(&#34;Initializing Database&#34;)
+        # Reset all collections
+        self.reset_col(&#34;images&#34;)
+        self.reset_col(&#34;fs.files&#34;)
+        self.reset_col(&#34;fs.chunks&#34;)
+        self.reset_col(&#34;sessions&#34;)
+        
+        # Get maximum size of thumbnails
+        thumbnail_width = environ.get(&#34;THUMBNAIL_WIDTH&#34;)
+        thumbnail_height = environ.get(&#34;THUMBNAIL_HEIGHT&#34;)
+        if thumbnail_width is None or thumbnail_height is None:
+            exit(&#34;Please update your .env file! Missing thumbnail sizes&#34;)
+        thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
+        
+        # Iterate over all rows of data, inserting values for valid images into database
+        actual_thumbnail_size = None
+        images = []
+        base_path = environ.get(&#34;DATA_PATH&#34;)
+        for idx, item in enumerate(data):
+            f = path.join(base_path, item[0])
+            t_id = None
+            filename = path.split(f)[-1]
+            if allowed_file(filename):
+                # Generate thumbnail
+                with Image.open(f) as img:
+                    img.thumbnail(thumbnail_size)
+                    if actual_thumbnail_size is None:
+                        actual_thumbnail_size = img.size
+                    with BytesIO() as output:
+                        img.save(output, format=img.format)
+                        content = output.getvalue()
+                    only_filename, extension = path.splitext(filename)
+                    t_id = self._gridfs.put(
+                        content, 
+                        content_type=Image.MIME[img.format], 
+                        filename=f&#34;{only_filename}_thumbnail{extension}&#34;, 
+                        metadata=&#34;thumbnail&#34;, 
+                        id=idx
+                        )
+
+                # Setup document to insert
+                x = item[1]
+                y = item[2]
+                cluster_center = item[3]
+                image = {
+                    &#34;id&#34;: idx,
+                    &#34;filename&#34;: filename,
+                    &#34;path&#34;: f,
+                    &#34;thumbnail&#34;: t_id,
+                    &#34;x&#34;: x,
+                    &#34;y&#34;: y,
+                    &#34;cluster_center&#34;: cluster_center
+                }
+                images.append(image)
+
+        # Insert into images collection
+        self.col = self._db[&#34;images&#34;]
+        self.col.insert_many(images)
+        self.col.create_index([(&#34;id&#34;, ASCENDING)])
+
+        self.next_id = images[-1][&#34;id&#34;] + 1
+        environ[&#34;ACTUAL_THUMBNAIL_WIDTH&#34;] = str(actual_thumbnail_size[0])
+        environ[&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;] = str(actual_thumbnail_size[1])
+        print(&#34;Database initialized&#34;)
+
+    def is_session_key_in_db(self, key: bytes) -&gt; bool:
+        &#34;&#34;&#34;Check if api session key is already present in database
+
+        Args:
+            key (bytes): key to assess
+
+        Returns:
+            bool: True if already present, False if not in database
+        &#34;&#34;&#34;
+        if key is None:
+            return False
+        result = self._db[&#34;sessions&#34;].find_one({&#34;key&#34;: key})
+        return result is not None
+
+    def insert_session_key(self, key: bytes) -&gt; None:
+        &#34;&#34;&#34;Insert a new api session key into the database, setting next id (value) to the next valid id (self.next_id)
+
+        Args:
+            key (bytes): key to insert
+        &#34;&#34;&#34;
+        self._db[&#34;sessions&#34;].insert_one({ &#34;key&#34;: key, &#34;value&#34;: self.next_id })
+
+    def get_next_ids(self, key: bytes, amount: int=1) -&gt; &#39;Union[list[int], None]&#39;:
+        &#34;&#34;&#34;Get the next consecutive ids after the last valid id for the given key
+
+        Args:
+            key (bytes): key for which the next ids shall be returned
+            amount (int, optional): amount of new ids to be returned. Defaults to 1.
+
+        Returns:
+            list[int]: New ids
+        &#34;&#34;&#34;
+        if amount &lt; 1:
+            return None
+        if key is not None:
+            current_next_value = self._db[&#34;sessions&#34;].find_one_and_update(
+                { &#34;key&#34;: key }, { &#34;$inc&#34;: { &#34;value&#34;: amount } }
+            )
+            if current_next_value is not None and &#34;value&#34; in current_next_value:
+                current_next_value = int(current_next_value[&#34;value&#34;])
+            else:
+                current_next_value = self.next_id
+        else:
+            current_next_value = self.next_id
+        if amount == 1:
+            return [current_next_value]
+        else:
+            return list(range(current_next_value, current_next_value + amount))
+    
+    def get_one(self, filter: dict, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one document from the image collection
+
+        Args:
+            filter (dict): dict to filter documents by
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            Any: document
+        &#34;&#34;&#34;        
+        if filter == None:
+            return None
+        return self.col.find_one(filter, projection=projection)
+
+    def get_one_by_id(self, id: int, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one document from the image collection specified by the id
+
+        Args:
+            id (int): id of the image
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            Any: document
+        &#34;&#34;&#34;
+        if id != None and not self.is_db_empty():
+            return self.get_one({&#34;id&#34;: id}, projection)
+        return None
+
+    def is_id_in_database(self, id: int) -&gt; bool:
+        &#34;&#34;&#34;Checks if id is present in image collection
+
+        Args:
+            id (int): id of image to assess
+
+        Returns:
+            bool: True if present, False if not in database
+        &#34;&#34;&#34;
+        return not self.get_one_by_id(id, self.id_projection) is None
+        
+    def get_one_fullsize_by_id(self, id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one fulllsize image specified by given id
+
+        Args:
+            id (int): id of image to be found
+
+        Returns:
+            Any: the found document
+        &#34;&#34;&#34;
+        return self.get_one_by_id(id, self.fullsize_projection)
+
+    def get_multiple(self, filter: dict={}, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+        &#34;&#34;&#34;Returns multiple documents specified by parameters
+
+        Args:
+            filter (dict): dict to filter documents by
+            projection (dict): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+        Returns:
+            list[Any]: list of found documents
+        &#34;&#34;&#34;
+        as_list = list(self.col.find(filter=filter, projection=projection))
+        for d in as_list:
+            del d[&#34;_id&#34;]
+        return as_list
+
+    def get_all_coordinates_as_array(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Returns all coordinates in image collection
+
+        Returns:
+            np.ndarray: All coordinates as array
+        &#34;&#34;&#34;
+        coords = self.col.find({}, { &#34;x&#34;: True, &#34;y&#34;: True })
+        lines = []
+        for line in coords:
+            lines.append([line[&#34;x&#34;], line[&#34;y&#34;]])
+        return np.array(lines, dtype=&#34;float64&#34;)
+
+    def get_all(self, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+        &#34;&#34;&#34;Return all documents with a given projection
+
+        Args:
+            projection (dict, optional): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+        Returns:
+            list[Any]: list of found documents
+        &#34;&#34;&#34;
+        return self.get_multiple({}, projection)
+
+    def get_all_ids(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all ids in image collection
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            return self.get_all(self.id_projection)
+        return None
+
+    def get_all_fullsize(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all fullsize images in image collection
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            return self.get_all(self.fullsize_projection)
+        return None
+    
+    def get_multiple_by_id(self, ids: &#39;list[int]&#39;, projection: dict) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return multiple documents specified by ids
+
+        Args:
+            ids (list[int]): ids of images in image collection to be returned
+            projection (dict): dict to filter attributes of returned documents by
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        if ids != None and len(ids) != 0 and not self.is_db_empty():
+            filter = {&#34;id&#34;: {&#34;$in&#34; : ids}}
+            return self.get_multiple(filter, projection)
+        return None
+
+    def are_all_ids_in_database(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[Tuple[Literal[False], str], Tuple[Literal[True], None]]&#39;:
+        &#34;&#34;&#34;Checks if all given ids are in image collection
+
+        Args:
+            ids (list[int]): ids of images in image collection to be assessed
+
+        Returns:
+            bool: True if all are in databse, False if one or more are not in database 
+            Union[str, None]: None if bool is True, error message if bool is False
+        &#34;&#34;&#34;
+        if ids is None:
+            return False, &#34;no ids given!&#34;
+        if not isinstance(ids, list):
+            ids = [ids]
+        result = self.get_multiple_by_id(ids, { &#34;id&#34;: True })
+        result_list = list(result)
+        success = len(result_list) == len(ids)
+        if success:
+            return True, None
+        else:
+            result_list = [ int(x[&#34;id&#34;]) for x in result_list ]
+            # See https://stackoverflow.com/questions/3462143/get-difference-between-two-lists
+            not_present = list(set(ids) - set(result_list))
+            return False, not_present
+
+    def get_multiple_fullsize_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return multiple fullsize images specified by ids
+
+        Args:
+            ids (list[int]): ids of images in image collection to be returned
+
+        Returns:
+            list[Any]: list of documents found
+        &#34;&#34;&#34;
+        return self.get_multiple_by_id(ids, self.fullsize_projection)
+
+    def get_thumbnail_fs_id(self, picture_id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Returns the GridFS id for a given picture id, indicating which thumbnail to search for
+
+        Args:
+            picture_id (int): Id of document to be found in image collection, whose thumbnail shall be returned
+
+        Returns:
+            Any: GridFS id of thumbnail
+        &#34;&#34;&#34;
+        return self.get_one_by_id(picture_id, { &#34;thumbnail&#34;: True })[&#34;thumbnail&#34;]
+
+    def get_one_thumbnail_by_id(self, entry_id: int) -&gt; &#39;Union[Any, None]&#39;:
+        &#34;&#34;&#34;Return one thumbnail specified by entry_id
+
+        Args:
+            entry_id (int): id of image whose thumbnail shall be returned
+
+        Returns:
+            Any: thumbnail returned by GridFS
+        &#34;&#34;&#34;
+        id = self.get_thumbnail_fs_id(entry_id)
+        return self._gridfs.get(id)
+        
+    def get_all_thumbnails(self) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return all thumbnails present in GridFS collection
+
+        Returns:
+            list[Any]: all thumbnails present
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            result = self._gridfs.find({ &#34;metadata&#34; : &#34;thumbnail&#34; })
+            if not result is None:
+                return [ x for x in result ]    
+            return None 
+        return None
+
+    def get_multiple_thumbnails_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+        &#34;&#34;&#34;Return the thumbnails from the GridFS collection specified by ids
+
+        Args:
+            ids (list[int]): ids of images in GridFS collection to be returned
+
+        Returns:
+            list[Any]: list of thumbnails found
+        &#34;&#34;&#34;
+        if not self.is_db_empty():
+            fs_ids = self.get_multiple_by_id(ids, { &#34;thumbnail&#34;: True })
+            fs_ids = [ x[&#34;thumbnail&#34;] for x in fs_ids ]
+            result = self._gridfs.find({ &#34;_id&#34;: {&#34;$in&#34; : fs_ids}, &#34;metadata&#34;: &#34;thumbnail&#34; })
+            if not result is None:
+                return [ x for x in result ]
+
+    def get_coordinates(self, id: int) -&gt; &#39;Union[Tuple[float, float], None]&#39;:
+        &#34;&#34;&#34;Return the coordinates of the images specified by id
+
+        Args:
+            id (int): id of the image in image collection, whose coordinates shall be returned
+
+        Returns:
+            [float, float]: tuple of x and y, the coordinates of the image
+        &#34;&#34;&#34;
+        result = self.get_one_by_id(id, { &#34;x&#34;: True, &#34;y&#34;: True})
+        if not result is None:
+            x = result[&#34;x&#34;]
+            y = result[&#34;y&#34;]
+            return (x, y)
+        return None
+
+    def get_metadata(self, id: int) -&gt; dict:
+        &#34;&#34;&#34;Return the metadata of an image in the images collection
+
+        Args:
+            id (int): id of the image
+
+        Returns:
+            dict: metadata of the image specified by id
+        &#34;&#34;&#34;
+        result = self.get_one_by_id(id, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+        if not result is None:
+            return {
+                &#34;id&#34;: result[&#34;id&#34;],
+                &#34;filename&#34;: result[&#34;filename&#34;],
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },    
+                &#34;position&#34;: (result[&#34;x&#34;], result[&#34;y&#34;]),
+                &#34;cluster_center&#34;: result[&#34;cluster_center&#34;]
+            }
+        return None
+    
+    def get_multiple_metadata(self, ids: &#39;list[int]&#39;) -&gt; &#39;list[dict]&#39;:
+        &#34;&#34;&#34;Return the metadata of the images specified by ids
+
+        Args:
+            id (list[int]): ids for which the metadata shall be found
+
+        Returns:
+            list[dict]: list of dicts containing the metadata of the specified images
+        &#34;&#34;&#34;
+        result = self.get_multiple_by_id(ids, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+        if not result is None:
+            return [ { 
+                &#34;id&#34;: x[&#34;id&#34;], 
+                &#34;filename&#34;: x[&#34;filename&#34;], 
+                &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },
+                &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+            } for x in result ]
+        return None
+
+    def get_all_metadata(self) -&gt; &#39;list[dict]&#39;:
+        &#34;&#34;&#34;Return the metadata all images in the image collection
+
+        Returns:
+            list[dict]: list of dicts containing the metadata of all images
+        &#34;&#34;&#34;
+        result = self.get_all({ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True })
+        if not result is None:
+            return [ { 
+                &#34;id&#34;: x[&#34;id&#34;], 
+                &#34;filename&#34;: x[&#34;filename&#34;], 
+                &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+                &#34;image_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+                },
+                &#34;thumbnail_size&#34;: {
+                    &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                    &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+                },
+                &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+            } for x in result ]
+        return None
+
+    def get_one_filename(self, id: int) -&gt; str:
+        &#34;&#34;&#34;Return the filename of one image specified by id
+
+        Args:
+            id (int): id of image to be found
+
+        Returns:
+            str: filename of the image
+        &#34;&#34;&#34;
+        return self.get_one_by_id(id, { &#34;filename&#34;: True })[&#34;filename&#34;]
+
+    def ids_to_various(self, ids: &#39;list[int]&#39;, **kwargs: &#39;dict[str, bool]&#39;) -&gt; &#39;Union[dict[str, list[Any]], None]&#39;:
+        &#34;&#34;&#34;Flexible method used to find images specified by id and arguments specified in kwargs
+
+        Args:
+            ids (list[int]): ids of images to be found
+            **kwargs (dict): should contain all columns of the image collection to be returned, specify by &lt;col&gt;=True
+
+        Returns:
+            dict[str, list[Any]]: dict containing the columns as keys and results as values
+        &#34;&#34;&#34;
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        values_correct = all(key in self.possible_search_parameters for key in kwargs.keys())
+        if not values_correct:
+            return None
+        query = { key: True for key in kwargs.keys() }
+        query[&#34;id&#34;] = True
+        results = { key: [] for key in query.keys() }
+        for row in ids:
+            row = row.tolist()
+            df = DataFrame(list(self.get_multiple_by_id(row, query)))
+            lists = { key: [] for key in query.keys() }
+            for idx in row:
+                item = df.loc[df[&#34;id&#34;] == idx].to_dict()
+                for key, val in item.items():
+                    lists[key].append(
+                        self.type_reg[key](
+                            list(
+                                val.values()
+                            )[0]
+                        )
+                    )
+            for key in query.keys():
+                results[key].append(lists[key])
+        return results
+
+    def ids_to_filenames(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[str], None]&#39;:
+        &#34;&#34;&#34;Return all filenames specified by ids
+
+        Args:
+            ids (list[int]): ids whose filenames shall be found
+
+        Returns:
+            list[str]: list of filenames
+        &#34;&#34;&#34;
+        if ids is None:
+            return None
+        if not isinstance(ids, np.ndarray):
+            return None
+        if ids.ndim == 1:
+            ids = ids.reshape(1, -1)
+        filenames = []
+        for row in ids:
+            c_filenames = []
+            for item in row:
+                c_filenames.append(self.get_one_filename(int(item)))
+            filenames.append(c_filenames)
+        return filenames
+
+    def update_labels(self, labels: &#39;list[int]&#39;) -&gt; None:
+        &#34;&#34;&#34;Reassign values to cluster_centers 
+
+        Args:
+            labels (list[int]): cluster_centers
+        &#34;&#34;&#34;
+        updateOps = [
+            UpdateOne({ &#34;id&#34;: idx }, { &#34;$set&#34;: { &#34;cluster_center&#34;: int(item) }}) for idx, item in enumerate(labels)
+        ]
+        self.col.bulk_write(updateOps)
+
+    def get_one_label(self, id: int) -&gt; Any:
+        &#34;&#34;&#34;Return the label of image specified by id
+
+        Args:
+            id (int): id of the image
+
+        Returns:
+            Any: cluster center
+        &#34;&#34;&#34;
+        return self.get_metadata(id)[&#34;cluster_center&#34;]</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="server.api.db.Database.are_all_ids_in_database"><code class="name flex">
+<span>def <span class="ident">are_all_ids_in_database</span></span>(<span>self, ids: list[int]) ‑> Union[Tuple[Literal[False], str], Tuple[Literal[True], None]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if all given ids are in image collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of images in image collection to be assessed</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if all are in databse, False if one or more are not in database </dd>
+<dt><code>Union[str, None]</code></dt>
+<dd>None if bool is True, error message if bool is False</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def are_all_ids_in_database(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[Tuple[Literal[False], str], Tuple[Literal[True], None]]&#39;:
+    &#34;&#34;&#34;Checks if all given ids are in image collection
+
+    Args:
+        ids (list[int]): ids of images in image collection to be assessed
+
+    Returns:
+        bool: True if all are in databse, False if one or more are not in database 
+        Union[str, None]: None if bool is True, error message if bool is False
+    &#34;&#34;&#34;
+    if ids is None:
+        return False, &#34;no ids given!&#34;
+    if not isinstance(ids, list):
+        ids = [ids]
+    result = self.get_multiple_by_id(ids, { &#34;id&#34;: True })
+    result_list = list(result)
+    success = len(result_list) == len(ids)
+    if success:
+        return True, None
+    else:
+        result_list = [ int(x[&#34;id&#34;]) for x in result_list ]
+        # See https://stackoverflow.com/questions/3462143/get-difference-between-two-lists
+        not_present = list(set(ids) - set(result_list))
+        return False, not_present</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.count_documents_in_collection"><code class="name flex">
+<span>def <span class="ident">count_documents_in_collection</span></span>(<span>self, filter: dict = {}) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Count the documents in the MongoDB images collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filter</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>args to filter the counted elements. Defaults to {}.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>amount of documents in the image collection</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_documents_in_collection(self, filter: dict={}) -&gt; int:
+    &#34;&#34;&#34;Count the documents in the MongoDB images collection
+
+    Args:
+        filter (dict, optional): args to filter the counted elements. Defaults to {}.
+
+    Returns:
+        int: amount of documents in the image collection
+    &#34;&#34;&#34;
+    if self.col:
+        return self.col.count_documents(filter)
+    else:
+        return -1</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all"><code class="name flex">
+<span>def <span class="ident">get_all</span></span>(<span>self, projection: dict = {'id': True, 'filename': True, 'path': True, 'thumbnail': True}) ‑> list[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all documents with a given projection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>projection</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>dict to filter attributes of returned documents by. Defaults to { "id": True, "filename": True, "path": True, "thumbnail": True }</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of found documents</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all(self, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+    &#34;&#34;&#34;Return all documents with a given projection
+
+    Args:
+        projection (dict, optional): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+    Returns:
+        list[Any]: list of found documents
+    &#34;&#34;&#34;
+    return self.get_multiple({}, projection)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all_coordinates_as_array"><code class="name flex">
+<span>def <span class="ident">get_all_coordinates_as_array</span></span>(<span>self) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns all coordinates in image collection</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>All coordinates as array</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_coordinates_as_array(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Returns all coordinates in image collection
+
+    Returns:
+        np.ndarray: All coordinates as array
+    &#34;&#34;&#34;
+    coords = self.col.find({}, { &#34;x&#34;: True, &#34;y&#34;: True })
+    lines = []
+    for line in coords:
+        lines.append([line[&#34;x&#34;], line[&#34;y&#34;]])
+    return np.array(lines, dtype=&#34;float64&#34;)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all_fullsize"><code class="name flex">
+<span>def <span class="ident">get_all_fullsize</span></span>(<span>self) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all fullsize images in image collection</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of documents found</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_fullsize(self) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return all fullsize images in image collection
+
+    Returns:
+        list[Any]: list of documents found
+    &#34;&#34;&#34;
+    if not self.is_db_empty():
+        return self.get_all(self.fullsize_projection)
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all_ids"><code class="name flex">
+<span>def <span class="ident">get_all_ids</span></span>(<span>self) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all ids in image collection</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of documents found</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_ids(self) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return all ids in image collection
+
+    Returns:
+        list[Any]: list of documents found
+    &#34;&#34;&#34;
+    if not self.is_db_empty():
+        return self.get_all(self.id_projection)
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all_metadata"><code class="name flex">
+<span>def <span class="ident">get_all_metadata</span></span>(<span>self) ‑> list[dict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the metadata all images in the image collection</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[dict]</code></dt>
+<dd>list of dicts containing the metadata of all images</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_metadata(self) -&gt; &#39;list[dict]&#39;:
+    &#34;&#34;&#34;Return the metadata all images in the image collection
+
+    Returns:
+        list[dict]: list of dicts containing the metadata of all images
+    &#34;&#34;&#34;
+    result = self.get_all({ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True })
+    if not result is None:
+        return [ { 
+            &#34;id&#34;: x[&#34;id&#34;], 
+            &#34;filename&#34;: x[&#34;filename&#34;], 
+            &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+            &#34;image_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+            },
+            &#34;thumbnail_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+            },
+            &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+        } for x in result ]
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_all_thumbnails"><code class="name flex">
+<span>def <span class="ident">get_all_thumbnails</span></span>(<span>self) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all thumbnails present in GridFS collection</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>all thumbnails present</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_thumbnails(self) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return all thumbnails present in GridFS collection
+
+    Returns:
+        list[Any]: all thumbnails present
+    &#34;&#34;&#34;
+    if not self.is_db_empty():
+        result = self._gridfs.find({ &#34;metadata&#34; : &#34;thumbnail&#34; })
+        if not result is None:
+            return [ x for x in result ]    
+        return None 
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_coordinates"><code class="name flex">
+<span>def <span class="ident">get_coordinates</span></span>(<span>self, id: int) ‑> Union[Tuple[float, float], NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the coordinates of the images specified by id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of the image in image collection, whose coordinates shall be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[float, float]</code></dt>
+<dd>tuple of x and y, the coordinates of the image</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_coordinates(self, id: int) -&gt; &#39;Union[Tuple[float, float], None]&#39;:
+    &#34;&#34;&#34;Return the coordinates of the images specified by id
+
+    Args:
+        id (int): id of the image in image collection, whose coordinates shall be returned
+
+    Returns:
+        [float, float]: tuple of x and y, the coordinates of the image
+    &#34;&#34;&#34;
+    result = self.get_one_by_id(id, { &#34;x&#34;: True, &#34;y&#34;: True})
+    if not result is None:
+        x = result[&#34;x&#34;]
+        y = result[&#34;y&#34;]
+        return (x, y)
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_metadata"><code class="name flex">
+<span>def <span class="ident">get_metadata</span></span>(<span>self, id: int) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the metadata of an image in the images collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of the image</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>metadata of the image specified by id</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_metadata(self, id: int) -&gt; dict:
+    &#34;&#34;&#34;Return the metadata of an image in the images collection
+
+    Args:
+        id (int): id of the image
+
+    Returns:
+        dict: metadata of the image specified by id
+    &#34;&#34;&#34;
+    result = self.get_one_by_id(id, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+    if not result is None:
+        return {
+            &#34;id&#34;: result[&#34;id&#34;],
+            &#34;filename&#34;: result[&#34;filename&#34;],
+            &#34;image_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+            },
+            &#34;thumbnail_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+            },    
+            &#34;position&#34;: (result[&#34;x&#34;], result[&#34;y&#34;]),
+            &#34;cluster_center&#34;: result[&#34;cluster_center&#34;]
+        }
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_multiple"><code class="name flex">
+<span>def <span class="ident">get_multiple</span></span>(<span>self, filter: dict = {}, projection: dict = {'id': True, 'filename': True, 'path': True, 'thumbnail': True}) ‑> list[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns multiple documents specified by parameters</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filter</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter documents by</dd>
+<dt><strong><code>projection</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter attributes of returned documents by. Defaults to { "id": True, "filename": True, "path": True, "thumbnail": True }</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of found documents</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_multiple(self, filter: dict={}, projection: dict={ &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }) -&gt; &#39;list[Any]&#39;:
+    &#34;&#34;&#34;Returns multiple documents specified by parameters
+
+    Args:
+        filter (dict): dict to filter documents by
+        projection (dict): dict to filter attributes of returned documents by. Defaults to { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;path&#34;: True, &#34;thumbnail&#34;: True }
+
+    Returns:
+        list[Any]: list of found documents
+    &#34;&#34;&#34;
+    as_list = list(self.col.find(filter=filter, projection=projection))
+    for d in as_list:
+        del d[&#34;_id&#34;]
+    return as_list</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_multiple_by_id"><code class="name flex">
+<span>def <span class="ident">get_multiple_by_id</span></span>(<span>self, ids: list[int], projection: dict) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return multiple documents specified by ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of images in image collection to be returned</dd>
+<dt><strong><code>projection</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter attributes of returned documents by</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of documents found</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_multiple_by_id(self, ids: &#39;list[int]&#39;, projection: dict) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return multiple documents specified by ids
+
+    Args:
+        ids (list[int]): ids of images in image collection to be returned
+        projection (dict): dict to filter attributes of returned documents by
+
+    Returns:
+        list[Any]: list of documents found
+    &#34;&#34;&#34;
+    if ids != None and len(ids) != 0 and not self.is_db_empty():
+        filter = {&#34;id&#34;: {&#34;$in&#34; : ids}}
+        return self.get_multiple(filter, projection)
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_multiple_fullsize_by_id"><code class="name flex">
+<span>def <span class="ident">get_multiple_fullsize_by_id</span></span>(<span>self, ids: list[int]) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return multiple fullsize images specified by ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of images in image collection to be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of documents found</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_multiple_fullsize_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return multiple fullsize images specified by ids
+
+    Args:
+        ids (list[int]): ids of images in image collection to be returned
+
+    Returns:
+        list[Any]: list of documents found
+    &#34;&#34;&#34;
+    return self.get_multiple_by_id(ids, self.fullsize_projection)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_multiple_metadata"><code class="name flex">
+<span>def <span class="ident">get_multiple_metadata</span></span>(<span>self, ids: list[int]) ‑> list[dict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the metadata of the images specified by ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids for which the metadata shall be found</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[dict]</code></dt>
+<dd>list of dicts containing the metadata of the specified images</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_multiple_metadata(self, ids: &#39;list[int]&#39;) -&gt; &#39;list[dict]&#39;:
+    &#34;&#34;&#34;Return the metadata of the images specified by ids
+
+    Args:
+        id (list[int]): ids for which the metadata shall be found
+
+    Returns:
+        list[dict]: list of dicts containing the metadata of the specified images
+    &#34;&#34;&#34;
+    result = self.get_multiple_by_id(ids, { &#34;id&#34;: True, &#34;filename&#34;: True, &#34;x&#34;: True, &#34;y&#34;: True, &#34;cluster_center&#34;: True})
+    if not result is None:
+        return [ { 
+            &#34;id&#34;: x[&#34;id&#34;], 
+            &#34;filename&#34;: x[&#34;filename&#34;], 
+            &#34;position&#34;: (x[&#34;x&#34;], x[&#34;y&#34;]),
+            &#34;image_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;FULLSIZE_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;FULLSIZE_HEIGHT&#34;)
+            },
+            &#34;thumbnail_size&#34;: {
+                &#34;width&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_WIDTH&#34;),
+                &#34;height&#34;: environ.get(&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;)
+            },
+            &#34;cluster_center&#34;: x[&#34;cluster_center&#34;] 
+        } for x in result ]
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_multiple_thumbnails_by_id"><code class="name flex">
+<span>def <span class="ident">get_multiple_thumbnails_by_id</span></span>(<span>self, ids: list[int]) ‑> Union[list[Any], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the thumbnails from the GridFS collection specified by ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of images in GridFS collection to be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[Any]</code></dt>
+<dd>list of thumbnails found</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_multiple_thumbnails_by_id(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[Any], None]&#39;:
+    &#34;&#34;&#34;Return the thumbnails from the GridFS collection specified by ids
+
+    Args:
+        ids (list[int]): ids of images in GridFS collection to be returned
+
+    Returns:
+        list[Any]: list of thumbnails found
+    &#34;&#34;&#34;
+    if not self.is_db_empty():
+        fs_ids = self.get_multiple_by_id(ids, { &#34;thumbnail&#34;: True })
+        fs_ids = [ x[&#34;thumbnail&#34;] for x in fs_ids ]
+        result = self._gridfs.find({ &#34;_id&#34;: {&#34;$in&#34; : fs_ids}, &#34;metadata&#34;: &#34;thumbnail&#34; })
+        if not result is None:
+            return [ x for x in result ]</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_next_ids"><code class="name flex">
+<span>def <span class="ident">get_next_ids</span></span>(<span>self, key: bytes, amount: int = 1) ‑> Union[list[int], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the next consecutive ids after the last valid id for the given key</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong> :&ensp;<code>bytes</code></dt>
+<dd>key for which the next ids shall be returned</dd>
+<dt><strong><code>amount</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>amount of new ids to be returned. Defaults to 1.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[int]</code></dt>
+<dd>New ids</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_ids(self, key: bytes, amount: int=1) -&gt; &#39;Union[list[int], None]&#39;:
+    &#34;&#34;&#34;Get the next consecutive ids after the last valid id for the given key
+
+    Args:
+        key (bytes): key for which the next ids shall be returned
+        amount (int, optional): amount of new ids to be returned. Defaults to 1.
+
+    Returns:
+        list[int]: New ids
+    &#34;&#34;&#34;
+    if amount &lt; 1:
+        return None
+    if key is not None:
+        current_next_value = self._db[&#34;sessions&#34;].find_one_and_update(
+            { &#34;key&#34;: key }, { &#34;$inc&#34;: { &#34;value&#34;: amount } }
+        )
+        if current_next_value is not None and &#34;value&#34; in current_next_value:
+            current_next_value = int(current_next_value[&#34;value&#34;])
+        else:
+            current_next_value = self.next_id
+    else:
+        current_next_value = self.next_id
+    if amount == 1:
+        return [current_next_value]
+    else:
+        return list(range(current_next_value, current_next_value + amount))</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one"><code class="name flex">
+<span>def <span class="ident">get_one</span></span>(<span>self, filter: dict, projection: dict) ‑> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return one document from the image collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filter</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter documents by</dd>
+<dt><strong><code>projection</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter attributes of returned documents by</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>document</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one(self, filter: dict, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+    &#34;&#34;&#34;Return one document from the image collection
+
+    Args:
+        filter (dict): dict to filter documents by
+        projection (dict): dict to filter attributes of returned documents by
+
+    Returns:
+        Any: document
+    &#34;&#34;&#34;        
+    if filter == None:
+        return None
+    return self.col.find_one(filter, projection=projection)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one_by_id"><code class="name flex">
+<span>def <span class="ident">get_one_by_id</span></span>(<span>self, id: int, projection: dict) ‑> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return one document from the image collection specified by the id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of the image</dd>
+<dt><strong><code>projection</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dict to filter attributes of returned documents by</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>document</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one_by_id(self, id: int, projection: dict) -&gt; &#39;Union[Any, None]&#39;:
+    &#34;&#34;&#34;Return one document from the image collection specified by the id
+
+    Args:
+        id (int): id of the image
+        projection (dict): dict to filter attributes of returned documents by
+
+    Returns:
+        Any: document
+    &#34;&#34;&#34;
+    if id != None and not self.is_db_empty():
+        return self.get_one({&#34;id&#34;: id}, projection)
+    return None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one_filename"><code class="name flex">
+<span>def <span class="ident">get_one_filename</span></span>(<span>self, id: int) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the filename of one image specified by id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of image to be found</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>filename of the image</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one_filename(self, id: int) -&gt; str:
+    &#34;&#34;&#34;Return the filename of one image specified by id
+
+    Args:
+        id (int): id of image to be found
+
+    Returns:
+        str: filename of the image
+    &#34;&#34;&#34;
+    return self.get_one_by_id(id, { &#34;filename&#34;: True })[&#34;filename&#34;]</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one_fullsize_by_id"><code class="name flex">
+<span>def <span class="ident">get_one_fullsize_by_id</span></span>(<span>self, id: int) ‑> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return one fulllsize image specified by given id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of image to be found</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>the found document</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one_fullsize_by_id(self, id: int) -&gt; &#39;Union[Any, None]&#39;:
+    &#34;&#34;&#34;Return one fulllsize image specified by given id
+
+    Args:
+        id (int): id of image to be found
+
+    Returns:
+        Any: the found document
+    &#34;&#34;&#34;
+    return self.get_one_by_id(id, self.fullsize_projection)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one_label"><code class="name flex">
+<span>def <span class="ident">get_one_label</span></span>(<span>self, id: int) ‑> Any</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the label of image specified by id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of the image</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>cluster center</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one_label(self, id: int) -&gt; Any:
+    &#34;&#34;&#34;Return the label of image specified by id
+
+    Args:
+        id (int): id of the image
+
+    Returns:
+        Any: cluster center
+    &#34;&#34;&#34;
+    return self.get_metadata(id)[&#34;cluster_center&#34;]</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_one_thumbnail_by_id"><code class="name flex">
+<span>def <span class="ident">get_one_thumbnail_by_id</span></span>(<span>self, entry_id: int) ‑> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return one thumbnail specified by entry_id</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>entry_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of image whose thumbnail shall be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>thumbnail returned by GridFS</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_one_thumbnail_by_id(self, entry_id: int) -&gt; &#39;Union[Any, None]&#39;:
+    &#34;&#34;&#34;Return one thumbnail specified by entry_id
+
+    Args:
+        entry_id (int): id of image whose thumbnail shall be returned
+
+    Returns:
+        Any: thumbnail returned by GridFS
+    &#34;&#34;&#34;
+    id = self.get_thumbnail_fs_id(entry_id)
+    return self._gridfs.get(id)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.get_thumbnail_fs_id"><code class="name flex">
+<span>def <span class="ident">get_thumbnail_fs_id</span></span>(<span>self, picture_id: int) ‑> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the GridFS id for a given picture id, indicating which thumbnail to search for</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>picture_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Id of document to be found in image collection, whose thumbnail shall be returned</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>GridFS id of thumbnail</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_thumbnail_fs_id(self, picture_id: int) -&gt; &#39;Union[Any, None]&#39;:
+    &#34;&#34;&#34;Returns the GridFS id for a given picture id, indicating which thumbnail to search for
+
+    Args:
+        picture_id (int): Id of document to be found in image collection, whose thumbnail shall be returned
+
+    Returns:
+        Any: GridFS id of thumbnail
+    &#34;&#34;&#34;
+    return self.get_one_by_id(picture_id, { &#34;thumbnail&#34;: True })[&#34;thumbnail&#34;]</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.ids_to_filenames"><code class="name flex">
+<span>def <span class="ident">ids_to_filenames</span></span>(<span>self, ids: list[int]) ‑> Union[list[str], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all filenames specified by ids</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids whose filenames shall be found</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[str]</code></dt>
+<dd>list of filenames</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ids_to_filenames(self, ids: &#39;list[int]&#39;) -&gt; &#39;Union[list[str], None]&#39;:
+    &#34;&#34;&#34;Return all filenames specified by ids
+
+    Args:
+        ids (list[int]): ids whose filenames shall be found
+
+    Returns:
+        list[str]: list of filenames
+    &#34;&#34;&#34;
+    if ids is None:
+        return None
+    if not isinstance(ids, np.ndarray):
+        return None
+    if ids.ndim == 1:
+        ids = ids.reshape(1, -1)
+    filenames = []
+    for row in ids:
+        c_filenames = []
+        for item in row:
+            c_filenames.append(self.get_one_filename(int(item)))
+        filenames.append(c_filenames)
+    return filenames</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.ids_to_various"><code class="name flex">
+<span>def <span class="ident">ids_to_various</span></span>(<span>self, ids: list[int], **kwargs: dict[str, bool]) ‑> Union[dict[str, list[Any]], None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Flexible method used to find images specified by id and arguments specified in kwargs</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ids</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>ids of images to be found</dd>
+<dt><strong><code>**kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>should contain all columns of the image collection to be returned, specify by <col>=True</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict[str, list[Any]]</code></dt>
+<dd>dict containing the columns as keys and results as values</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ids_to_various(self, ids: &#39;list[int]&#39;, **kwargs: &#39;dict[str, bool]&#39;) -&gt; &#39;Union[dict[str, list[Any]], None]&#39;:
+    &#34;&#34;&#34;Flexible method used to find images specified by id and arguments specified in kwargs
+
+    Args:
+        ids (list[int]): ids of images to be found
+        **kwargs (dict): should contain all columns of the image collection to be returned, specify by &lt;col&gt;=True
+
+    Returns:
+        dict[str, list[Any]]: dict containing the columns as keys and results as values
+    &#34;&#34;&#34;
+    if ids is None:
+        return None
+    if not isinstance(ids, np.ndarray):
+        return None
+    if ids.ndim == 1:
+        ids = ids.reshape(1, -1)
+    values_correct = all(key in self.possible_search_parameters for key in kwargs.keys())
+    if not values_correct:
+        return None
+    query = { key: True for key in kwargs.keys() }
+    query[&#34;id&#34;] = True
+    results = { key: [] for key in query.keys() }
+    for row in ids:
+        row = row.tolist()
+        df = DataFrame(list(self.get_multiple_by_id(row, query)))
+        lists = { key: [] for key in query.keys() }
+        for idx in row:
+            item = df.loc[df[&#34;id&#34;] == idx].to_dict()
+            for key, val in item.items():
+                lists[key].append(
+                    self.type_reg[key](
+                        list(
+                            val.values()
+                        )[0]
+                    )
+                )
+        for key in query.keys():
+            results[key].append(lists[key])
+    return results</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.initialize"><code class="name flex">
+<span>def <span class="ident">initialize</span></span>(<span>self, flat_filenames: numpy.ndarray, coordinates: numpy.ndarray, labels: numpy.ndarray) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Call this method to initialize the blank object created on load via get_instance().
+Fills MongoDB image collection and generates a thumbnail for each image.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>flat_filenames</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>the filenames of the images in the dataset</dd>
+<dt><strong><code>coordinates</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>calculated 2D coordinates of the images in the dataset</dd>
+<dt><strong><code>labels</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>generated labels aka corresponding cluster centers of the images in the dataset</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialize(self, flat_filenames: np.ndarray, coordinates: np.ndarray, labels: np.ndarray) -&gt; None:
+    &#34;&#34;&#34;Call this method to initialize the blank object created on load via get_instance().
+    Fills MongoDB image collection and generates a thumbnail for each image.
+
+    Args:
+        flat_filenames (np.ndarray): the filenames of the images in the dataset
+        coordinates (np.ndarray): calculated 2D coordinates of the images in the dataset
+        labels (np.ndarray): generated labels aka corresponding cluster centers of the images in the dataset
+    &#34;&#34;&#34;        
+    # Concatenate parameters for accessibility
+    data = np.concatenate((flat_filenames[..., np.newaxis], coordinates, labels[..., np.newaxis]), axis=1)
+    
+    print(&#34;Initializing Database&#34;)
+    # Reset all collections
+    self.reset_col(&#34;images&#34;)
+    self.reset_col(&#34;fs.files&#34;)
+    self.reset_col(&#34;fs.chunks&#34;)
+    self.reset_col(&#34;sessions&#34;)
+    
+    # Get maximum size of thumbnails
+    thumbnail_width = environ.get(&#34;THUMBNAIL_WIDTH&#34;)
+    thumbnail_height = environ.get(&#34;THUMBNAIL_HEIGHT&#34;)
+    if thumbnail_width is None or thumbnail_height is None:
+        exit(&#34;Please update your .env file! Missing thumbnail sizes&#34;)
+    thumbnail_size = (int(thumbnail_width), int(thumbnail_height))
+    
+    # Iterate over all rows of data, inserting values for valid images into database
+    actual_thumbnail_size = None
+    images = []
+    base_path = environ.get(&#34;DATA_PATH&#34;)
+    for idx, item in enumerate(data):
+        f = path.join(base_path, item[0])
+        t_id = None
+        filename = path.split(f)[-1]
+        if allowed_file(filename):
+            # Generate thumbnail
+            with Image.open(f) as img:
+                img.thumbnail(thumbnail_size)
+                if actual_thumbnail_size is None:
+                    actual_thumbnail_size = img.size
+                with BytesIO() as output:
+                    img.save(output, format=img.format)
+                    content = output.getvalue()
+                only_filename, extension = path.splitext(filename)
+                t_id = self._gridfs.put(
+                    content, 
+                    content_type=Image.MIME[img.format], 
+                    filename=f&#34;{only_filename}_thumbnail{extension}&#34;, 
+                    metadata=&#34;thumbnail&#34;, 
+                    id=idx
+                    )
+
+            # Setup document to insert
+            x = item[1]
+            y = item[2]
+            cluster_center = item[3]
+            image = {
+                &#34;id&#34;: idx,
+                &#34;filename&#34;: filename,
+                &#34;path&#34;: f,
+                &#34;thumbnail&#34;: t_id,
+                &#34;x&#34;: x,
+                &#34;y&#34;: y,
+                &#34;cluster_center&#34;: cluster_center
+            }
+            images.append(image)
+
+    # Insert into images collection
+    self.col = self._db[&#34;images&#34;]
+    self.col.insert_many(images)
+    self.col.create_index([(&#34;id&#34;, ASCENDING)])
+
+    self.next_id = images[-1][&#34;id&#34;] + 1
+    environ[&#34;ACTUAL_THUMBNAIL_WIDTH&#34;] = str(actual_thumbnail_size[0])
+    environ[&#34;ACTUAL_THUMBNAIL_HEIGHT&#34;] = str(actual_thumbnail_size[1])
+    print(&#34;Database initialized&#34;)</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.insert_session_key"><code class="name flex">
+<span>def <span class="ident">insert_session_key</span></span>(<span>self, key: bytes) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Insert a new api session key into the database, setting next id (value) to the next valid id (self.next_id)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong> :&ensp;<code>bytes</code></dt>
+<dd>key to insert</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insert_session_key(self, key: bytes) -&gt; None:
+    &#34;&#34;&#34;Insert a new api session key into the database, setting next id (value) to the next valid id (self.next_id)
+
+    Args:
+        key (bytes): key to insert
+    &#34;&#34;&#34;
+    self._db[&#34;sessions&#34;].insert_one({ &#34;key&#34;: key, &#34;value&#34;: self.next_id })</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.is_db_empty"><code class="name flex">
+<span>def <span class="ident">is_db_empty</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if the MongoDB image collection is empty</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if empty, False if at least one document is in collection</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_db_empty(self) -&gt; bool:
+    &#34;&#34;&#34;Checks if the MongoDB image collection is empty
+
+    Returns:
+        bool: True if empty, False if at least one document is in collection
+    &#34;&#34;&#34;
+    return self.count_documents_in_collection() &lt;= 0</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.is_id_in_database"><code class="name flex">
+<span>def <span class="ident">is_id_in_database</span></span>(<span>self, id: int) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if id is present in image collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>id of image to assess</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if present, False if not in database</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_id_in_database(self, id: int) -&gt; bool:
+    &#34;&#34;&#34;Checks if id is present in image collection
+
+    Args:
+        id (int): id of image to assess
+
+    Returns:
+        bool: True if present, False if not in database
+    &#34;&#34;&#34;
+    return not self.get_one_by_id(id, self.id_projection) is None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.is_session_key_in_db"><code class="name flex">
+<span>def <span class="ident">is_session_key_in_db</span></span>(<span>self, key: bytes) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if api session key is already present in database</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong> :&ensp;<code>bytes</code></dt>
+<dd>key to assess</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if already present, False if not in database</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_session_key_in_db(self, key: bytes) -&gt; bool:
+    &#34;&#34;&#34;Check if api session key is already present in database
+
+    Args:
+        key (bytes): key to assess
+
+    Returns:
+        bool: True if already present, False if not in database
+    &#34;&#34;&#34;
+    if key is None:
+        return False
+    result = self._db[&#34;sessions&#34;].find_one({&#34;key&#34;: key})
+    return result is not None</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.reset_col"><code class="name flex">
+<span>def <span class="ident">reset_col</span></span>(<span>self, col_name: str) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reset, aka drop a MongoDB collection</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>col_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>String specifiying which collection to drip</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset_col(self, col_name: str) -&gt; None:
+    &#34;&#34;&#34;Reset, aka drop a MongoDB collection
+
+    Args:
+        col_name (str): String specifiying which collection to drip
+    &#34;&#34;&#34;
+    col = self._db[col_name]
+    if col:
+        col.drop()
+        col.drop_indexes()</code></pre>
+</details>
+</dd>
+<dt id="server.api.db.Database.update_labels"><code class="name flex">
+<span>def <span class="ident">update_labels</span></span>(<span>self, labels: list[int])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reassign values to cluster_centers </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>labels</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>cluster_centers</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_labels(self, labels: &#39;list[int]&#39;) -&gt; None:
+    &#34;&#34;&#34;Reassign values to cluster_centers 
+
+    Args:
+        labels (list[int]): cluster_centers
+    &#34;&#34;&#34;
+    updateOps = [
+        UpdateOne({ &#34;id&#34;: idx }, { &#34;$set&#34;: { &#34;cluster_center&#34;: int(item) }}) for idx, item in enumerate(labels)
+    ]
+    self.col.bulk_write(updateOps)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="server.api" href="index.html">server.api</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="server.api.db.get_instance" href="#server.api.db.get_instance">get_instance</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="server.api.db.Database" href="#server.api.db.Database">Database</a></code></h4>
+<ul class="">
+<li><code><a title="server.api.db.Database.are_all_ids_in_database" href="#server.api.db.Database.are_all_ids_in_database">are_all_ids_in_database</a></code></li>
+<li><code><a title="server.api.db.Database.count_documents_in_collection" href="#server.api.db.Database.count_documents_in_collection">count_documents_in_collection</a></code></li>
+<li><code><a title="server.api.db.Database.get_all" href="#server.api.db.Database.get_all">get_all</a></code></li>
+<li><code><a title="server.api.db.Database.get_all_coordinates_as_array" href="#server.api.db.Database.get_all_coordinates_as_array">get_all_coordinates_as_array</a></code></li>
+<li><code><a title="server.api.db.Database.get_all_fullsize" href="#server.api.db.Database.get_all_fullsize">get_all_fullsize</a></code></li>
+<li><code><a title="server.api.db.Database.get_all_ids" href="#server.api.db.Database.get_all_ids">get_all_ids</a></code></li>
+<li><code><a title="server.api.db.Database.get_all_metadata" href="#server.api.db.Database.get_all_metadata">get_all_metadata</a></code></li>
+<li><code><a title="server.api.db.Database.get_all_thumbnails" href="#server.api.db.Database.get_all_thumbnails">get_all_thumbnails</a></code></li>
+<li><code><a title="server.api.db.Database.get_coordinates" href="#server.api.db.Database.get_coordinates">get_coordinates</a></code></li>
+<li><code><a title="server.api.db.Database.get_metadata" href="#server.api.db.Database.get_metadata">get_metadata</a></code></li>
+<li><code><a title="server.api.db.Database.get_multiple" href="#server.api.db.Database.get_multiple">get_multiple</a></code></li>
+<li><code><a title="server.api.db.Database.get_multiple_by_id" href="#server.api.db.Database.get_multiple_by_id">get_multiple_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_multiple_fullsize_by_id" href="#server.api.db.Database.get_multiple_fullsize_by_id">get_multiple_fullsize_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_multiple_metadata" href="#server.api.db.Database.get_multiple_metadata">get_multiple_metadata</a></code></li>
+<li><code><a title="server.api.db.Database.get_multiple_thumbnails_by_id" href="#server.api.db.Database.get_multiple_thumbnails_by_id">get_multiple_thumbnails_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_next_ids" href="#server.api.db.Database.get_next_ids">get_next_ids</a></code></li>
+<li><code><a title="server.api.db.Database.get_one" href="#server.api.db.Database.get_one">get_one</a></code></li>
+<li><code><a title="server.api.db.Database.get_one_by_id" href="#server.api.db.Database.get_one_by_id">get_one_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_one_filename" href="#server.api.db.Database.get_one_filename">get_one_filename</a></code></li>
+<li><code><a title="server.api.db.Database.get_one_fullsize_by_id" href="#server.api.db.Database.get_one_fullsize_by_id">get_one_fullsize_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_one_label" href="#server.api.db.Database.get_one_label">get_one_label</a></code></li>
+<li><code><a title="server.api.db.Database.get_one_thumbnail_by_id" href="#server.api.db.Database.get_one_thumbnail_by_id">get_one_thumbnail_by_id</a></code></li>
+<li><code><a title="server.api.db.Database.get_thumbnail_fs_id" href="#server.api.db.Database.get_thumbnail_fs_id">get_thumbnail_fs_id</a></code></li>
+<li><code><a title="server.api.db.Database.ids_to_filenames" href="#server.api.db.Database.ids_to_filenames">ids_to_filenames</a></code></li>
+<li><code><a title="server.api.db.Database.ids_to_various" href="#server.api.db.Database.ids_to_various">ids_to_various</a></code></li>
+<li><code><a title="server.api.db.Database.initialize" href="#server.api.db.Database.initialize">initialize</a></code></li>
+<li><code><a title="server.api.db.Database.insert_session_key" href="#server.api.db.Database.insert_session_key">insert_session_key</a></code></li>
+<li><code><a title="server.api.db.Database.is_db_empty" href="#server.api.db.Database.is_db_empty">is_db_empty</a></code></li>
+<li><code><a title="server.api.db.Database.is_id_in_database" href="#server.api.db.Database.is_id_in_database">is_id_in_database</a></code></li>
+<li><code><a title="server.api.db.Database.is_session_key_in_db" href="#server.api.db.Database.is_session_key_in_db">is_session_key_in_db</a></code></li>
+<li><code><a title="server.api.db.Database.reset_col" href="#server.api.db.Database.reset_col">reset_col</a></code></li>
+<li><code><a title="server.api.db.Database.update_labels" href="#server.api.db.Database.update_labels">update_labels</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>
