@@ -1911,8 +1911,8 @@ Abschließend können wir behaupten, dass wir sehr zufrieden mit der Bearbeitung
 
 
 <h3>CSS-Dropshadow und Transformation</h3>
-Generell ist das Thema Interaktion mit dem Datensatz noch ausbaufähig. Da es uns erstmal wichtiger war, das die Anwendung möglichst Performant ist.
-Eine andere Art die Cluster in der Stackansicht zu markieren wäre beispielsweise übersichtlicher gewesen. Als alternative wurde hier der CSS-Dropshadow getestet, jedoch werden hierfür weitere Berechnungen benötigt, die sich aber negativ auf die Performance der Anwendung auswirken. Als weiteres Beispiel wäre beim markieren von Bildern eine Verschiebung an der Z-Achse gewesen. Dies scheiterte vorerst auch aus Performancegründen und Browserkompatibilität.    
+Generell ist das Thema Interaktion mit dem Datensatz noch ausbaufähig, da es uns erstmal wichtiger war, eine möglichst performante Anwendung zu kreieren.
+Eine andere Art die Cluster in der Stackansicht zu markieren wäre beispielsweise übersichtlicher und ansprechender gewesen. Als alternative wurde hier der CSS-Dropshadow getestet, jedoch werden hierfür weitere Berechnungen benötigt, die sich negativ auf die Performance der Anwendung auswirken. Als weiteres Beispiel wäre beim markieren von Bildern eine Verschiebung an der Z-Achse gewesen. Dies scheiterte vorerst auch aus Performancegründen und Browserkompatibilität.
 
 <h3>Einfachere Navigation in der Informationsansicht</h3>
 Durch Verlinkungen der Bilder in der Informationsansicht hätten wir die Navigierbarkeit und somit die User-Experience unserer Anwendung noch weiter verbessern können. Ist man in der Informationsansicht eines Bildes, ist es in dem aktuellen Stand der Anwendung nicht möglich, direkt die eines nächsten Nachbarn aufzurufen. Man muss erst die aktuelle Informationsansicht schließen und dann die des nächsten Nachbarn separat aufrufen. Einfacher wäre es, wenn man in der Informationsansicht auf das Bild des nächsten Nachbarn klicken könnte und sich dann direkt dessen detaillierte Ansicht öffnen würde.
